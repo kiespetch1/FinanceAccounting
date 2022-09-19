@@ -3,11 +3,13 @@ using System.Collections.Generic;
 
 namespace FinanceAccounting;
 
-public class MyContext: DbContext
+public class ApplicationContext: DbContext
 {
     public DbSet<User> Users { get; set; }
+    
     public DbSet<IncomeSource> IncomeSources { get; set; }
-    public MyContext()
+    
+    public ApplicationContext()
     {
         Database.EnsureCreated();
     }

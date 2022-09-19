@@ -9,43 +9,39 @@ public class AuthController : Controller
 {
 
     [Route("Auth")]
-    [HttpGet]
-    public async Task<IActionResult> Authorize(string email, string password)
+    [HttpPost]
+    public async Task<IActionResult> Authorize(AuthData user)
     {
-        await using var ctx = new MyContext();
-        var isMatched = ctx.Users.Count(x => x.Password == password && x.Email == email) == 1;
+        await using var ctx = new ApplicationContext();
+        var isMatch = ctx.Users.FirstOrDefault(x => x.Password == user.Password && x.Email == user.Email) != null;
 
         try
         {
-            if (isMatched == true)
-            {
-                var claims = new List<Claim> {new(ClaimTypes.Name, email) };
-                var jwt = new JwtSecurityToken(
-                    claims: claims,
-                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-                return Ok(new JwtSecurityTokenHandler().WriteToken(jwt));
-            }
-            else
+            if (isMatch == false)
             {
                 throw new Exception("Wrong password or login.");
             }
+            var claims = new List<Claim> {new(ClaimTypes.Name, user.Email) };
+                var jwt = new JwtSecurityToken(
+                    claims: claims,
+                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+                
+            return Ok(new JwtSecurityTokenHandler().WriteToken(jwt));
+     
         }
         catch (Exception e)
         {
             return (BadRequest(e.Message));
 
         }
-        
-        
-        
     }
 
     [Route("Registration")]
     [HttpPost]
     public async Task<IActionResult> Register(string login, string name, string email, string middleName, string lastName,
-        string birthDate, string password)
+      string birthDate, string password)
     {
-        await using var ctx = new MyContext();
+        await using var ctx = new ApplicationContext();
         var dbNameRepeat = ctx.Users.Count(x => x.Login == login) == 1;
         
         try
@@ -60,19 +56,21 @@ public class AuthController : Controller
                 var creationDate = now;
                 var editDate = now;
                 
-                int id;
-                if (!ctx.Users.OrderBy(x=> x).Any())
-                {
-                    id = 1;
-                }
-                else
-                {
-                    id = ctx.Users.OrderBy(x => x.Id).Last().Id + 1;
-                }
-                
-                var newUser = new User {Id = id, Login = login, Name = name, Email = email, MiddleName = middleName, LastName = lastName, BirthDate = Convert.ToDateTime(birthDate), Password = password,  CreationDate = creationDate, EditDate = editDate};
+                var newUser = new User 
+                    {
+                        Login = login, 
+                        Name = name, 
+                        Email = email, 
+                        MiddleName = middleName, 
+                        LastName = lastName, 
+                        BirthDate = Convert.ToDateTime(birthDate), 
+                        Password = password,  
+                        CreationDate = creationDate, 
+                        EditDate = editDate
+                    };
                 ctx.Users.Add(newUser);
                 await ctx.SaveChangesAsync();
+                
                 return (StatusCode(201));
             }
         }
