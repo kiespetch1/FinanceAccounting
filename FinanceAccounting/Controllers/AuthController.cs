@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using FinanceAccounting.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -14,12 +15,10 @@ public class AuthController : Controller
     {
         await using var ctx = new ApplicationContext();
         var isMatch = ctx.Users.FirstOrDefault(x => x.Password == user.Password && x.Email == user.Email) != null;
-
-        try
-        {
+        
             if (isMatch == false)
             {
-                throw new Exception("Wrong password or login.");
+                throw new WrongCredentialsException("Wrong password or login.");
             }
             var claims = new List<Claim> {new(ClaimTypes.Name, user.Email) };
                 var jwt = new JwtSecurityToken(
@@ -27,13 +26,6 @@ public class AuthController : Controller
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
                 
             return Ok(new JwtSecurityTokenHandler().WriteToken(jwt));
-     
-        }
-        catch (Exception e)
-        {
-            return (BadRequest(e.Message));
-
-        }
     }
 
     [Route("Registration")]
@@ -44,11 +36,10 @@ public class AuthController : Controller
         await using var ctx = new ApplicationContext();
         var dbNameRepeat = ctx.Users.Count(x => x.Login == login) == 1;
         
-        try
-        {
+        
             if (dbNameRepeat == true)
             {
-                throw new Exception("This login is taken. Pick another one.");
+                throw new ExistingLoginException("This login is taken. Pick another one.");
             }
             else
             {
@@ -68,15 +59,11 @@ public class AuthController : Controller
                         CreationDate = creationDate, 
                         EditDate = editDate
                     };
+                
                 ctx.Users.Add(newUser);
                 await ctx.SaveChangesAsync();
                 
                 return (StatusCode(201));
             }
-        }
-        catch(Exception e)
-        {
-           return (BadRequest(e.Message));
-        }
     }
 }
