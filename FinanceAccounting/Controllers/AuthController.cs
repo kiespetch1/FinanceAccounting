@@ -8,10 +8,19 @@ namespace FinanceAccounting.Controllers;
 
 public class AuthController : Controller
 {
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="user">Email and password of the user</param>
+/// <returns>User JWT Token, Status Code 200 (OK)</returns>
+/// <exception cref="WrongCredentialsException"></exception>
+/// <response code="200">User successfully logged in</response>
+/// <response code="400">If the credentials are incorrect</response>
     [Route("Auth")]
     [HttpPost]
-    public async Task<IActionResult> Authorize(AuthData user)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Authorize([FromBody]AuthData user)
     {
         await using var ctx = new ApplicationContext();
         var isMatch = ctx.Users.FirstOrDefault(x => x.Password == user.Password && x.Email == user.Email) != null;
@@ -28,13 +37,22 @@ public class AuthController : Controller
             return Ok(new JwtSecurityTokenHandler().WriteToken(jwt));
     }
 
-    [Route("Registration")]
+/// <summary>
+/// 
+/// </summary>
+/// <param name="user"> Login, name, email, middle name, last name, birth date and password of the user</param>
+/// <returns>Status Code 200 (OK)</returns>
+/// <exception cref="ExistingLoginException"></exception>
+/// <response code="200">Registration completed successfully</response>
+/// <response code="400">If the login is already taken</response>
+[Route("Registration")]
     [HttpPost]
-    public async Task<IActionResult> Register(string login, string name, string email, string middleName, string lastName,
-      string birthDate, string password)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+public async Task<IActionResult> Register([FromBody]RegistrationData user)
     {
         await using var ctx = new ApplicationContext();
-        var dbNameRepeat = ctx.Users.Count(x => x.Login == login) == 1;
+        var dbNameRepeat = ctx.Users.Count(x => x.Login == user.Login) == 1;
         
         
             if (dbNameRepeat == true)
@@ -49,13 +67,13 @@ public class AuthController : Controller
                 
                 var newUser = new User 
                     {
-                        Login = login, 
-                        Name = name, 
-                        Email = email, 
-                        MiddleName = middleName, 
-                        LastName = lastName, 
-                        BirthDate = Convert.ToDateTime(birthDate), 
-                        Password = password,  
+                        Login = user.Login, 
+                        Name = user.Name, 
+                        Email = user.Email, 
+                        MiddleName = user.MiddleName, 
+                        LastName = user.LastName, 
+                        BirthDate = Convert.ToDateTime(user.BirthDate), 
+                        Password = user.Password,  
                         CreationDate = creationDate, 
                         EditDate = editDate
                     };
@@ -63,7 +81,7 @@ public class AuthController : Controller
                 ctx.Users.Add(newUser);
                 await ctx.SaveChangesAsync();
                 
-                return (StatusCode(201));
+                return (Ok());
             }
     }
 }
