@@ -24,9 +24,8 @@ public class AuthController : Controller
     public async Task<IActionResult> Authorize([FromBody]AuthData user)
     {
         await using var ctx = new ApplicationContext();
-        var isMatch = ctx.Users.FirstOrDefault(x => x.Password == user.Password && x.Email == user.Email) != null;
         
-            if (isMatch == false)
+            if (ctx.Users.FirstOrDefault(x => x.Password == user.Password && x.Email == user.Email) == null)
             {
                 throw new WrongCredentialsException("Wrong password or login.");
             }

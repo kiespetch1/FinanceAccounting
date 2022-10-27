@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace FinanceAccounting.Exceptions;
+﻿namespace FinanceAccounting.Exceptions;
 
 public class BaseException : Exception
 {
