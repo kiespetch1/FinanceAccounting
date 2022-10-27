@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using FinanceAccounting.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -18,8 +19,8 @@ public class AuthController : Controller
 /// <response code="400">If the credentials are incorrect</response>
     [Route("Auth")]
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     public async Task<IActionResult> Authorize([FromBody]AuthData user)
     {
         await using var ctx = new ApplicationContext();
@@ -47,12 +48,12 @@ public class AuthController : Controller
 /// <response code="400">If the login is already taken</response>
 [Route("Registration")]
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
 public async Task<IActionResult> Register([FromBody]RegistrationData user)
     {
         await using var ctx = new ApplicationContext();
-        var dbNameRepeat = ctx.Users.Count(x => x.Login == user.Login) == 1;
+        var dbNameRepeat = ctx.Users.SingleOrDefault(x => x.Login == user.Login) != null;
         
         
             if (dbNameRepeat == true)
@@ -62,8 +63,6 @@ public async Task<IActionResult> Register([FromBody]RegistrationData user)
             else
             {
                 var now = DateTime.Today;
-                var creationDate = now;
-                var editDate = now;
                 
                 var newUser = new User 
                     {
@@ -74,14 +73,14 @@ public async Task<IActionResult> Register([FromBody]RegistrationData user)
                         LastName = user.LastName, 
                         BirthDate = Convert.ToDateTime(user.BirthDate), 
                         Password = user.Password,  
-                        CreationDate = creationDate, 
-                        EditDate = editDate
+                        CreationDate = now, 
+                        EditDate = now
                     };
                 
                 ctx.Users.Add(newUser);
                 await ctx.SaveChangesAsync();
                 
-                return (Ok());
+                return Ok();
             }
     }
 }

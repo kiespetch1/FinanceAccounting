@@ -1,6 +1,6 @@
 ﻿namespace FinanceAccounting.Exceptions;
 
-public class ExistingLoginException : Exception
+public class ExistingLoginException : BaseException
 {
     public ExistingLoginException(string message)
         : base(message) { }

@@ -28,14 +28,11 @@ public class ExceptionsMiddleware
             var result = exception.Message;
             switch(exception)
             {
-                case ExistingLoginException:
+                case BaseException:
                     code = HttpStatusCode.BadRequest;
                     result = exception.Message;
                     break;
-                case WrongCredentialsException:
-                    code = HttpStatusCode.BadRequest;
-                    result = exception.Message;
-                    break;
+                
             }
             context.Response.ContentType = "text/plain";
             context.Response.StatusCode = (int)code;
