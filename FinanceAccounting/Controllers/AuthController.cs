@@ -7,7 +7,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace FinanceAccounting.Controllers;
 
-public class AuthController : Controller
+[ApiController] 
+[Route("api/auth")]
+public class AuthController : ControllerBase
 {
 /// <summary>
 /// 
@@ -17,17 +19,17 @@ public class AuthController : Controller
 /// <exception cref="WrongCredentialsException"></exception>
 /// <response code="200">User successfully logged in</response>
 /// <response code="400">If the credentials are incorrect</response>
-    [Route("Auth")]
+    [Route("login")]
     [HttpPost]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
-    public async Task<IActionResult> Authorize([FromBody]AuthData user)
+    public async Task<IActionResult> Login([FromBody]AuthData user)
     {
         await using var ctx = new ApplicationContext();
         
-            if (ctx.Users.FirstOrDefault(x => x.Password == user.Password && x.Email == user.Email) == null)
+            if (ctx.Users.SingleOrDefault(x => x.Password == user.Password && x.Email == user.Email) == null)
             {
-                throw new WrongCredentialsException("Wrong password or login.");
+                throw new WrongCredentialsException();
             }
             var claims = new List<Claim> {new(ClaimTypes.Name, user.Email) };
                 var jwt = new JwtSecurityToken(
@@ -45,19 +47,17 @@ public class AuthController : Controller
 /// <exception cref="ExistingLoginException"></exception>
 /// <response code="200">Registration completed successfully</response>
 /// <response code="400">If the login is already taken</response>
-[Route("Registration")]
+[Route("registration")]
     [HttpPost]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
 public async Task<IActionResult> Register([FromBody]RegistrationData user)
     {
         await using var ctx = new ApplicationContext();
-        var dbNameRepeat = ctx.Users.SingleOrDefault(x => x.Login == user.Login) != null;
         
-        
-            if (dbNameRepeat == true)
+        if (ctx.Users.SingleOrDefault(x => x.Login == user.Login) != null || ctx.Users.SingleOrDefault(x => x.Email == user.Email) != null)
             {
-                throw new ExistingLoginException("This login is taken. Pick another one.");
+                throw new ExistingLoginException();
             }
             else
             {

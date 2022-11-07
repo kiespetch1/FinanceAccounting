@@ -24,23 +24,24 @@ public class ExceptionsMiddleware
         
         Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            var code = HttpStatusCode.InternalServerError;
-            var result = exception.Message;
+            HttpStatusCode code;
+            string result;
             switch(exception)
             {
                 case BaseException:
-                    code = HttpStatusCode.BadRequest;
                     result = exception.Message;
+                    code = BaseException.ErrorCode;
                     break;
                 
+                default:
+                    result = "Internal server error.";
+                    code = HttpStatusCode.InternalServerError;
+                    break;
+                    
             }
+            
             context.Response.ContentType = "text/plain";
             context.Response.StatusCode = (int)code;
-
-            if (result == string.Empty)
-            {
-                result = exception.Message;
-            }
 
             return context.Response.WriteAsync(result);
         }
