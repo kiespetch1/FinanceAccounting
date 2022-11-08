@@ -59,27 +59,25 @@ public async Task<IActionResult> Register([FromBody]RegistrationData user)
             {
                 throw new ExistingLoginException();
             }
-            else
-            {
-                var now = DateTime.Today;
+
+        var now = DateTime.Today;
                 
-                var newUser = new User 
-                    {
-                        Login = user.Login, 
-                        Name = user.Name, 
-                        Email = user.Email, 
-                        MiddleName = user.MiddleName, 
-                        LastName = user.LastName, 
-                        BirthDate = Convert.ToDateTime(user.BirthDate), 
-                        Password = user.Password,  
-                        CreationDate = now, 
-                        EditDate = now
-                    };
+        var newUser = new User 
+        {
+            Login = user.Login, 
+            Name = user.Name, 
+            Email = user.Email, 
+            MiddleName = user.MiddleName, 
+            LastName = user.LastName, 
+            BirthDate = Convert.ToDateTime(user.BirthDate), 
+            Password = user.Password,  
+            CreationDate = now, 
+            EditDate = now
+        };
                 
-                ctx.Users.Add(newUser);
-                await ctx.SaveChangesAsync();
+        ctx.Users.Add(newUser);
+        await ctx.SaveChangesAsync();
                 
-                return Ok();
-            }
+        return Ok();
     }
 }
