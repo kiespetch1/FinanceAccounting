@@ -1,5 +1,4 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 using System.Security.Claims;
 using FinanceAccounting.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -27,16 +26,16 @@ public class AuthController : ControllerBase
     {
         await using var ctx = new ApplicationContext();
         
-            if (ctx.Users.SingleOrDefault(x => x.Password == user.Password && x.Email == user.Email) == null)
-            {
-                throw new WrongCredentialsException();
-            }
-            var claims = new List<Claim> {new(ClaimTypes.Name, user.Email) };
-                var jwt = new JwtSecurityToken(
-                    claims: claims,
-                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+        if (ctx.Users.SingleOrDefault(x => x.Password == user.Password && x.Email == user.Email) == null)
+        {
+            throw new WrongCredentialsException();
+        }
+        var claims = new List<Claim> {new(ClaimTypes.Name, user.Email) };
+        var jwt = new JwtSecurityToken(
+            claims: claims,
+            signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
                 
-            return Ok(new JwtSecurityTokenHandler().WriteToken(jwt));
+        return Ok(new JwtSecurityTokenHandler().WriteToken(jwt));
     }
 
 /// <summary>
@@ -47,21 +46,21 @@ public class AuthController : ControllerBase
 /// <exception cref="ExistingLoginException"></exception>
 /// <response code="200">Registration completed successfully</response>
 /// <response code="400">If the login is already taken</response>
-[Route("registration")]
+    [Route("registration")]
     [HttpPost]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
-public async Task<IActionResult> Register([FromBody]RegistrationData user)
+    public async Task<IActionResult> Register([FromBody]RegistrationData user)
     {
         await using var ctx = new ApplicationContext();
-        
+            
         if (ctx.Users.SingleOrDefault(x => x.Login == user.Login) != null || ctx.Users.SingleOrDefault(x => x.Email == user.Email) != null)
-            {
-                throw new ExistingLoginException();
-            }
+        { 
+            throw new ExistingLoginException();
+        }
 
         var now = DateTime.Today;
-                
+                    
         var newUser = new User 
         {
             Login = user.Login, 
@@ -74,10 +73,10 @@ public async Task<IActionResult> Register([FromBody]RegistrationData user)
             CreationDate = now, 
             EditDate = now
         };
-                
+                    
         ctx.Users.Add(newUser);
         await ctx.SaveChangesAsync();
-                
+                    
         return Ok();
     }
 }
