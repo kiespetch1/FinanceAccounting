@@ -9,15 +9,15 @@ namespace FinanceAccounting.Controllers;
 [ApiController] 
 [Route("api/auth")]
 public class AuthController : ControllerBase
-{
+{ 
 /// <summary>
 /// 
 /// </summary>
 /// <param name="user">Email and password of the user</param>
 /// <returns>User JWT Token, Status Code 200 (OK)</returns>
-/// <exception cref="WrongCredentialsException"></exception>
+/// <exception cref="WrongCredentialsException">Credentials are incorrect</exception>
 /// <response code="200">User successfully logged in</response>
-/// <response code="400">If the credentials are incorrect</response>
+/// <response code="400">Credentials are incorrect</response>
     [Route("login")]
     [HttpPost]
     [ProducesResponseType(200)]
@@ -30,9 +30,17 @@ public class AuthController : ControllerBase
         {
             throw new WrongCredentialsException();
         }
-        var claims = new List<Claim> {new(ClaimTypes.Name, user.Email) };
+
+        var id = ctx.Users.SingleOrDefault(x => x.Email == user.Email).Id;
+        var claims = new List<Claim> {
+            new(ClaimTypes.Name, user.Email),
+            new(ClaimTypes.NameIdentifier, id.ToString())
+        };
         var jwt = new JwtSecurityToken(
+            issuer: AuthOptions.Issuer,
+            audience: AuthOptions.Audience,
             claims: claims,
+            expires: DateTime.UtcNow.AddHours(1),
             signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
                 
         return Ok(new JwtSecurityTokenHandler().WriteToken(jwt));
@@ -43,9 +51,9 @@ public class AuthController : ControllerBase
 /// </summary>
 /// <param name="user"> Login, name, email, middle name, last name, birth date and password of the user</param>
 /// <returns>Status Code 200 (OK)</returns>
-/// <exception cref="ExistingLoginException"></exception>
+/// <exception cref="ExistingLoginException">Login or email is already taken</exception>
 /// <response code="200">Registration completed successfully</response>
-/// <response code="400">If the login is already taken</response>
+/// <response code="400">Login or email is already taken</response>
     [Route("registration")]
     [HttpPost]
     [ProducesResponseType(200)]
@@ -68,7 +76,7 @@ public class AuthController : ControllerBase
             Email = user.Email, 
             MiddleName = user.MiddleName, 
             LastName = user.LastName, 
-            BirthDate = Convert.ToDateTime(user.BirthDate), 
+            BirthDate = user.BirthDate, 
             Password = user.Password,  
             CreationDate = now, 
             EditDate = now
