@@ -89,7 +89,9 @@ public class UserController : ControllerBase
     /// </summary>
     /// <param name="newEmail">Desirable new login</param>
     /// <returns>Status Code 200 (OK)</returns>
+    /// <exception cref="UserNotFoundException">User with this ID was not found</exception>
     /// <response code="200">Email changed</response>
+    /// <response code="400">User with this ID was not found</response>
     /// <response code="401">Unauthorized</response>
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
@@ -117,7 +119,9 @@ public class UserController : ControllerBase
     /// </summary>
     /// <param name="newPass">Desirable new password</param>
     /// <returns>Status Code 200 (OK)</returns>
+    /// <exception cref="UserNotFoundException">User with this ID was not found</exception>
     /// <response code="200">Password changed</response>
+    /// <response code="400">User with this ID was not found</response>
     /// <response code="401">Unauthorized</response>
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
@@ -145,7 +149,9 @@ public class UserController : ControllerBase
     /// </summary>
     /// <param name="newLogin">Desirable new login</param>
     /// <returns>Status Code 200 (OK)</returns>
+    /// <exception cref="UserNotFoundException">User with this ID was not found</exception>
     /// <response code="200">Login changed</response>
+    /// <response code="400">User with this ID was not found</response>
     /// <response code="401">Unauthorized</response>
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
