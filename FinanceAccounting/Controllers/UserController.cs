@@ -25,8 +25,7 @@ public class UserController : ControllerBase
     {
         await using var ctx = new ApplicationContext();
 
-        var allUsers = new List<User>();
-        allUsers = ctx.Users.ToList();
+        var allUsers = ctx.Users.ToList();
 
         return Ok(allUsers);
     }
@@ -104,6 +103,8 @@ public class UserController : ControllerBase
 
         var id = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
         var currentUser = ctx.Users.SingleOrDefault(x => x.Id == id);
+        if (currentUser == null)
+            throw new UserNotFoundException();
         currentUser.Email = newEmail;
         currentUser.EditDate = DateTime.Today;
         ctx.Users.Update(currentUser);
@@ -130,6 +131,8 @@ public class UserController : ControllerBase
 
         var id = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
         var currentUser = ctx.Users.SingleOrDefault(x => x.Id == id);
+        if (currentUser == null)
+            throw new UserNotFoundException();
         currentUser.Password = newPass;
         currentUser.EditDate = DateTime.Today;
         ctx.Users.Update(currentUser);
@@ -156,6 +159,8 @@ public class UserController : ControllerBase
 
         var id = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
         var currentUser = ctx.Users.SingleOrDefault(x => x.Id == id);
+        if (currentUser == null)
+            throw new UserNotFoundException();
         currentUser.Login = newLogin;
         currentUser.EditDate = DateTime.Today;
         ctx.Users.Update(currentUser);
