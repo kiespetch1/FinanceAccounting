@@ -15,11 +15,14 @@ public class UserController : ControllerBase
     /// <returns>Status Code 200 (OK)</returns>
     /// <response code="200">All users data are displayed</response>
     /// <response code="401">Unauthorized</response>
+    /// <response code="403">You don't have an access to perform this action</response>
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
+
     [Route("get/all")]
     [Authorize(AuthenticationSchemes =
-        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -39,12 +42,15 @@ public class UserController : ControllerBase
     /// <response code="200">User data with given id are displayed</response>
     /// <response code="400">User with this ID was not found</response>
     /// <response code="401">Unauthorized</response>
+    /// <response code="403">You don't have an access to perform this action</response>
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
+
     [Route("get/{id}")]
     [Authorize(AuthenticationSchemes =
-        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     [HttpGet]
     public async Task<IActionResult> GetById(string id)
     {
@@ -65,12 +71,14 @@ public class UserController : ControllerBase
     /// <response code="200">User with this ID deleted</response>
     /// <response code="400">User with this ID was not found</response>
     /// <response code="401">Unauthorized</response>
+    /// <response code="403">You don't have an access to perform this action</response>
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
     [Route("delete/{id}")]
     [Authorize(AuthenticationSchemes =
-        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     [HttpDelete]
     public async Task<IActionResult> DeleteById(string id)
     {
@@ -94,10 +102,11 @@ public class UserController : ControllerBase
     /// <response code="400">User with this ID was not found</response>
     /// <response code="401">Unauthorized</response>
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(401)]
     [Route("edit/email")]
     [Authorize(AuthenticationSchemes = 
-        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,User")]
     [HttpPost]
     public async Task<IActionResult> EditEmail([FromBody]string newEmail)
     {
@@ -124,10 +133,11 @@ public class UserController : ControllerBase
     /// <response code="400">User with this ID was not found</response>
     /// <response code="401">Unauthorized</response>
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(401)]
     [Route("edit/password")]
     [Authorize(AuthenticationSchemes = 
-        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,User")]
     [HttpPost]
     public async Task<IActionResult> EditPassword([FromBody]string newPass)
     {
@@ -154,10 +164,11 @@ public class UserController : ControllerBase
     /// <response code="400">User with this ID was not found</response>
     /// <response code="401">Unauthorized</response>
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(401)]
     [Route("edit/login")]
     [Authorize(AuthenticationSchemes = 
-        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,User")]
     [HttpPost]
     public async Task<IActionResult> EditLogin([FromBody]string newLogin)
     {

@@ -32,9 +32,11 @@ public class AuthController : ControllerBase
         }
 
         var id = ctx.Users.SingleOrDefault(x => x.Email == user.Email).Id;
+        var role = ctx.Users.SingleOrDefault(x => x.Email == user.Email).Role;
         var claims = new List<Claim> {
             new(ClaimTypes.Name, user.Email),
-            new(ClaimTypes.NameIdentifier, id.ToString())
+            new(ClaimTypes.NameIdentifier, id.ToString()),
+            new(ClaimTypes.Role, role)
         };
         var jwt = new JwtSecurityToken(
             issuer: AuthOptions.Issuer,
@@ -79,7 +81,8 @@ public class AuthController : ControllerBase
             BirthDate = user.BirthDate, 
             Password = user.Password,  
             CreationDate = now, 
-            EditDate = now
+            EditDate = now,
+            Role = "User"
         };
                     
         ctx.Users.Add(newUser);

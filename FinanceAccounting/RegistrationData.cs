@@ -18,4 +18,6 @@ public class RegistrationData
     public DateTime BirthDate { get; set; } 
     
     public string Password { get; set; }
+    
+    public string Role { get; set; }
 }

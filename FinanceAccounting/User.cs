@@ -31,6 +31,8 @@ public class User
     
     [Column(TypeName="date")]
     public DateTime EditDate { get; set; }
+    
+    public string Role { get; set; }
 
     public List<IncomeSource> IncomeSource { get; set; } = new();
     
