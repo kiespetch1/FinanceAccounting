@@ -32,7 +32,11 @@ public class User
     [Column(TypeName="date")]
     public DateTime EditDate { get; set; }
     
-    public string Role { get; set; }
+    public enum Role
+    {
+        Administrator,
+        User
+    }
 
     public List<IncomeSource> IncomeSource { get; set; } = new();
     

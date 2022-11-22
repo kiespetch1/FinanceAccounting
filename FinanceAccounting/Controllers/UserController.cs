@@ -5,7 +5,7 @@ using FinanceAccounting.Exceptions;
 
 namespace FinanceAccounting.Controllers;
 
-[ApiController] 
+[ApiController]
 [Route("api/users")]
 public class UserController : ControllerBase
 {
@@ -19,12 +19,10 @@ public class UserController : ControllerBase
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
-
-    [Route("get/all")]
     [Authorize(AuthenticationSchemes =
         Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetUsersList()
     {
         await using var ctx = new ApplicationContext();
 
@@ -32,7 +30,7 @@ public class UserController : ControllerBase
 
         return Ok(allUsers);
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -48,20 +46,20 @@ public class UserController : ControllerBase
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
 
-    [Route("get/{id}")]
+    [Route("{id:int}")]
     [Authorize(AuthenticationSchemes =
         Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     [HttpGet]
-    public async Task<IActionResult> GetById(string id)
+    public async Task<IActionResult> GetUser(int id)
     {
         await using var ctx = new ApplicationContext();
-        
-        var currentUser = ctx.Users.SingleOrDefault(x=> x.Id == Convert.ToInt32(id));
+
+        var currentUser = ctx.Users.SingleOrDefault(x => x.Id == id);
         if (currentUser == null)
             throw new UserNotFoundException();
         return Ok(currentUser);
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -76,22 +74,22 @@ public class UserController : ControllerBase
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
-    [Route("delete/{id}")]
+    [Route("{id:int}")]
     [Authorize(AuthenticationSchemes =
         Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     [HttpDelete]
-    public async Task<IActionResult> DeleteById(string id)
+    public async Task<IActionResult> DeleteUser(int id)
     {
         await using var ctx = new ApplicationContext();
-        
-        var currentUser = ctx.Users.SingleOrDefault(x=> x.Id == Convert.ToInt32(id));
+
+        var currentUser = ctx.Users.SingleOrDefault(x => x.Id == id);
         if (currentUser == null)
             throw new UserNotFoundException();
         ctx.Users.Remove(currentUser);
         await ctx.SaveChangesAsync();
         return Ok();
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -104,10 +102,10 @@ public class UserController : ControllerBase
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
-    [Route("edit/email")]
-    [Authorize(AuthenticationSchemes = 
-        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,User")]
-    [HttpPost]
+    [Authorize(AuthenticationSchemes =
+            Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+        Roles = "Administrator,User")]
+    [HttpPut]
     public async Task<IActionResult> EditEmail([FromBody]string newEmail)
     {
         await using var ctx = new ApplicationContext();

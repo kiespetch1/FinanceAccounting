@@ -18,6 +18,12 @@ public class RegistrationData
     public DateTime BirthDate { get; set; } 
     
     public string Password { get; set; }
+
+    public enum Role
+    {
+        Administrator,
+        User
+    }
     
-    public string Role { get; set; }
+    
 }
