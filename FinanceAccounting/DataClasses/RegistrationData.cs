@@ -19,11 +19,4 @@ public class RegistrationData
     
     public string Password { get; set; }
 
-    public enum Role
-    {
-        Administrator,
-        User
-    }
-    
-    
 }

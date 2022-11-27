@@ -36,7 +36,7 @@ public class AuthController : ControllerBase
         {
             new(ClaimTypes.Name, user.Email),
             new(ClaimTypes.NameIdentifier, currentUser.Id.ToString()),
-            new(ClaimTypes.Role, currentUser.Role)
+            new(ClaimTypes.Role, currentUser.Role.ToString())
         };
         var jwt = new JwtSecurityToken(
             issuer: AuthOptions.Issuer,
@@ -84,7 +84,7 @@ public class AuthController : ControllerBase
             Password = user.Password,
             CreationDate = now,
             EditDate = now,
-            Role = User
+            Role = Role.User
         };
 
         ctx.Users.Add(newUser);

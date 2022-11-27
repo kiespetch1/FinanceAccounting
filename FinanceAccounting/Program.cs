@@ -1,4 +1,3 @@
-using System.Configuration;
 using FinanceAccounting;
 using FinanceAccounting.Exceptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

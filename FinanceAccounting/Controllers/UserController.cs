@@ -93,10 +93,10 @@ public class UserController : ControllerBase
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="newEmail">Desirable new login</param>
+    /// <param name="user">Desirable new data</param>
     /// <returns>Status Code 200 (OK)</returns>
     /// <exception cref="UserNotFoundException">User with this ID was not found</exception>
-    /// <response code="200">Email changed</response>
+    /// <response code="200">Data changed</response>
     /// <response code="400">User with this ID was not found</response>
     /// <response code="401">Unauthorized</response>
     [ProducesResponseType(200)]
@@ -106,78 +106,33 @@ public class UserController : ControllerBase
             Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
         Roles = "Administrator,User")]
     [HttpPut]
-    public async Task<IActionResult> EditEmail([FromBody]string newEmail)
+    public async Task<IActionResult> EditUser([FromBody]UserUpdateData user)
     {
         await using var ctx = new ApplicationContext();
-
+        
         var id = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
         var currentUser = ctx.Users.SingleOrDefault(x => x.Id == id);
         if (currentUser == null)
             throw new UserNotFoundException();
-        currentUser.Email = newEmail;
-        currentUser.EditDate = DateTime.Today;
-        ctx.Users.Update(currentUser);
-        await ctx.SaveChangesAsync();
-        return Ok();
-    }
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="newPass">Desirable new password</param>
-    /// <returns>Status Code 200 (OK)</returns>
-    /// <exception cref="UserNotFoundException">User with this ID was not found</exception>
-    /// <response code="200">Password changed</response>
-    /// <response code="400">User with this ID was not found</response>
-    /// <response code="401">Unauthorized</response>
-    [ProducesResponseType(200)]
-    [ProducesResponseType(400)]
-    [ProducesResponseType(401)]
-    [Route("edit/password")]
-    [Authorize(AuthenticationSchemes = 
-        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,User")]
-    [HttpPost]
-    public async Task<IActionResult> EditPassword([FromBody]string newPass)
-    {
-        await using var ctx = new ApplicationContext();
 
-        var id = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        var currentUser = ctx.Users.SingleOrDefault(x => x.Id == id);
-        if (currentUser == null)
-            throw new UserNotFoundException();
-        currentUser.Password = newPass;
-        currentUser.EditDate = DateTime.Today;
-        ctx.Users.Update(currentUser);
-        await ctx.SaveChangesAsync();
-        return Ok();
-    }
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="newLogin">Desirable new login</param>
-    /// <returns>Status Code 200 (OK)</returns>
-    /// <exception cref="UserNotFoundException">User with this ID was not found</exception>
-    /// <response code="200">Login changed</response>
-    /// <response code="400">User with this ID was not found</response>
-    /// <response code="401">Unauthorized</response>
-    [ProducesResponseType(200)]
-    [ProducesResponseType(400)]
-    [ProducesResponseType(401)]
-    [Route("edit/login")]
-    [Authorize(AuthenticationSchemes = 
-        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,User")]
-    [HttpPost]
-    public async Task<IActionResult> EditLogin([FromBody]string newLogin)
-    {
-        await using var ctx = new ApplicationContext();
+        if (user.Email != string.Empty)
+        {
+            currentUser.Email = user.Email;
+            currentUser.EditDate = DateTime.Today;
+        }
 
-        var id = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        var currentUser = ctx.Users.SingleOrDefault(x => x.Id == id);
-        if (currentUser == null)
-            throw new UserNotFoundException();
-        currentUser.Login = newLogin;
-        currentUser.EditDate = DateTime.Today;
+        if (user.Password != string.Empty)
+        {
+            currentUser.Password = user.Password;
+            currentUser.EditDate = DateTime.Today;
+        }
+
+        if (user.Login != string.Empty)
+        {
+            currentUser.Login = user.Login;
+            currentUser.EditDate = DateTime.Today;
+        }
+
         ctx.Users.Update(currentUser);
         await ctx.SaveChangesAsync();
         return Ok();
