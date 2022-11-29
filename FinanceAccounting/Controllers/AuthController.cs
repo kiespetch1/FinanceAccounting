@@ -1,8 +1,11 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using FinanceAccounting.Exceptions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using static FinanceAccounting.PasswordHashing;
 
 namespace FinanceAccounting.Controllers;
 
@@ -25,13 +28,12 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login([FromBody] AuthData user)
     {
         await using var ctx = new ApplicationContext();
+        var currentUser = ctx.Users.SingleOrDefault(x => x.Email == user.Email);
 
-        if (ctx.Users.SingleOrDefault(x => x.Password == user.Password && x.Email == user.Email) == null)
+        if (currentUser == null || !VerifyHashedPassword(currentUser.Password, user.Password))
         {
             throw new WrongCredentialsException();
         }
-
-        var currentUser = ctx.Users.SingleOrDefault(x => x.Email == user.Email);
         var claims = new List<Claim>
         {
             new(ClaimTypes.Name, user.Email),
@@ -81,7 +83,7 @@ public class AuthController : ControllerBase
             MiddleName = user.MiddleName,
             LastName = user.LastName,
             BirthDate = user.BirthDate,
-            Password = user.Password,
+            Password = HashPassword(user.Password),
             CreationDate = now,
             EditDate = now,
             Role = Role.User

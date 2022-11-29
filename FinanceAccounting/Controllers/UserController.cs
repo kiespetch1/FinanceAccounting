@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FinanceAccounting.Exceptions;
+using static FinanceAccounting.PasswordHashing;
 
 namespace FinanceAccounting.Controllers;
 
@@ -114,27 +115,37 @@ public class UserController : ControllerBase
         var currentUser = ctx.Users.SingleOrDefault(x => x.Id == id);
         if (currentUser == null)
             throw new UserNotFoundException();
-
+        
+        if (ctx.Users.SingleOrDefault(x => x.Email == user.Email) != null ||
+            ctx.Users.SingleOrDefault(x => x.Password == user.Password) != null ||
+            ctx.Users.SingleOrDefault(x => x.Login == user.Login) != null) 
+            throw new ExistingLoginException();
+        
+        var changes = 0;
         if (user.Email != string.Empty)
         {
             currentUser.Email = user.Email;
-            currentUser.EditDate = DateTime.Today;
+            changes++;
         }
 
         if (user.Password != string.Empty)
         {
-            currentUser.Password = user.Password;
-            currentUser.EditDate = DateTime.Today;
+            currentUser.Password = HashPassword(user.Password);
+            changes++;
         }
 
         if (user.Login != string.Empty)
         {
             currentUser.Login = user.Login;
-            currentUser.EditDate = DateTime.Today;
+            changes++;
         }
 
+        if (changes <= 0) return Ok();
+        
+        currentUser.EditDate = DateTime.Today;
         ctx.Users.Update(currentUser);
         await ctx.SaveChangesAsync();
+
         return Ok();
     }
 }
