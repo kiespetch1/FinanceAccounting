@@ -16,7 +16,7 @@ public class AuthController : ControllerBase
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="user">Email and password of the user</param>
+    /// <param name="authData">Email and password of the user</param>
     /// <returns>User JWT Token, Status Code 200 (OK)</returns>
     /// <exception cref="WrongCredentialsException">Credentials are incorrect</exception>
     /// <response code="200">User successfully logged in</response>
@@ -25,20 +25,20 @@ public class AuthController : ControllerBase
     [HttpPost]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
-    public async Task<IActionResult> Login([FromBody] AuthData user)
+    public async Task<IActionResult> Login([FromBody] AuthData authData)
     {
         await using var ctx = new ApplicationContext();
-        var currentUser = ctx.Users.SingleOrDefault(x => x.Email == user.Email);
+        var user = ctx.Users.SingleOrDefault(x => x.Email == authData.Email);
 
-        if (currentUser == null || !VerifyHashedPassword(currentUser.Password, user.Password))
+        if (user == null || !VerifyHashedPassword(user.Password, authData.Password))
         {
             throw new WrongCredentialsException();
         }
         var claims = new List<Claim>
         {
-            new(ClaimTypes.Name, user.Email),
-            new(ClaimTypes.NameIdentifier, currentUser.Id.ToString()),
-            new(ClaimTypes.Role, currentUser.Role.ToString())
+            new(ClaimTypes.Name, authData.Email),
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Role, user.Role.ToString())
         };
         var jwt = new JwtSecurityToken(
             issuer: AuthOptions.Issuer,
@@ -67,8 +67,8 @@ public class AuthController : ControllerBase
     {
         await using var ctx = new ApplicationContext();
 
-        if (ctx.Users.SingleOrDefault(x => x.Login == user.Login) != null ||
-            ctx.Users.SingleOrDefault(x => x.Email == user.Email) != null)
+        if (ctx.Users.SingleOrDefault(x => x.Login == user.Login 
+                                            || x.Email == user.Email) != null)
         {
             throw new ExistingLoginException();
         }

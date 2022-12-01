@@ -26,6 +26,11 @@ internal static class PasswordHashing
     internal static bool VerifyHashedPassword(string hashedPassword, string password)
     {
         byte[] buffer4;
+        var buffer = new Span<byte>(new byte[hashedPassword.Length]);
+        if (!Convert.TryFromBase64String(hashedPassword, buffer, out var bytesParsed))
+        {
+            return false;
+        }
         var src = Convert.FromBase64String(hashedPassword);
         if ((src.Length != 0x31) || (src[0] != 0))
         {

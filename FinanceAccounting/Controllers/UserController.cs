@@ -23,7 +23,7 @@ public class UserController : ControllerBase
     [Authorize(AuthenticationSchemes =
         Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     [HttpGet]
-    public async Task<IActionResult> GetUsersList()
+    public async Task<IActionResult> GetList()
     {
         await using var ctx = new ApplicationContext();
 
@@ -47,11 +47,11 @@ public class UserController : ControllerBase
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
 
-    [Route("{id:int}")]
+    [Route("{id}")]
     [Authorize(AuthenticationSchemes =
         Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     [HttpGet]
-    public async Task<IActionResult> GetUser(int id)
+    public async Task<IActionResult> Get(int id)
     {
         await using var ctx = new ApplicationContext();
 
@@ -75,11 +75,11 @@ public class UserController : ControllerBase
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
-    [Route("{id:int}")]
+    [Route("{id}")]
     [Authorize(AuthenticationSchemes =
         Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     [HttpDelete]
-    public async Task<IActionResult> DeleteUser(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         await using var ctx = new ApplicationContext();
 
@@ -107,7 +107,7 @@ public class UserController : ControllerBase
             Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
         Roles = "Administrator,User")]
     [HttpPut]
-    public async Task<IActionResult> EditUser([FromBody]UserUpdateData user)
+    public async Task<IActionResult> UpdateUser([FromBody]UserUpdateData user)
     {
         await using var ctx = new ApplicationContext();
         
@@ -115,33 +115,33 @@ public class UserController : ControllerBase
         var currentUser = ctx.Users.SingleOrDefault(x => x.Id == id);
         if (currentUser == null)
             throw new UserNotFoundException();
-        
-        if (ctx.Users.SingleOrDefault(x => x.Email == user.Email) != null ||
-            ctx.Users.SingleOrDefault(x => x.Password == user.Password) != null ||
-            ctx.Users.SingleOrDefault(x => x.Login == user.Login) != null) 
-            throw new ExistingLoginException();
-        
+
         var changes = 0;
-        if (user.Email != string.Empty)
+        if (user.Email != currentUser.Email && user.Email != string.Empty) 
         {
+            if (ctx.Users.SingleOrDefault(x => x.Email == user.Email) != null)
+                throw new ExistingLoginException();
             currentUser.Email = user.Email;
             changes++;
         }
 
-        if (user.Password != string.Empty)
+        if (!VerifyHashedPassword(currentUser.Password, user.Password) && user.Password != string.Empty)
         {
             currentUser.Password = HashPassword(user.Password);
             changes++;
         }
 
-        if (user.Login != string.Empty)
+        if (user.Login != currentUser.Login && user.Login != string.Empty)
         {
+            if (ctx.Users.SingleOrDefault(x => x.Login == user.Login) != null) 
+                throw new ExistingLoginException();
             currentUser.Login = user.Login;
             changes++;
         }
 
-        if (changes <= 0) return Ok();
-        
+        if (changes == 0)
+            throw new ArgumentCannotBeNullException();
+
         currentUser.EditDate = DateTime.Today;
         ctx.Users.Update(currentUser);
         await ctx.SaveChangesAsync();
