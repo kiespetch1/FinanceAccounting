@@ -28,7 +28,6 @@ public class UserController : ControllerBase
         await using var ctx = new ApplicationContext();
 
         var allUsers = ctx.Users.ToList();
-
         return Ok(allUsers);
     }
 
@@ -55,10 +54,10 @@ public class UserController : ControllerBase
     {
         await using var ctx = new ApplicationContext();
 
-        var currentUser = ctx.Users.SingleOrDefault(x => x.Id == id);
-        if (currentUser == null)
+        var user = ctx.Users.SingleOrDefault(x => x.Id == id);
+        if (user == null)
             throw new UserNotFoundException();
-        return Ok(currentUser);
+        return Ok(user);
     }
 
     /// <summary>
@@ -83,10 +82,10 @@ public class UserController : ControllerBase
     {
         await using var ctx = new ApplicationContext();
 
-        var currentUser = ctx.Users.SingleOrDefault(x => x.Id == id);
-        if (currentUser == null)
+        var user = ctx.Users.SingleOrDefault(x => x.Id == id);
+        if (user == null)
             throw new UserNotFoundException();
-        ctx.Users.Remove(currentUser);
+        ctx.Users.Remove(user);
         await ctx.SaveChangesAsync();
         return Ok();
     }
@@ -94,7 +93,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="user">Desirable new data</param>
+    /// <param name="newUserData">Desirable new data</param>
     /// <returns>Status Code 200 (OK)</returns>
     /// <exception cref="UserNotFoundException">User with this ID was not found</exception>
     /// <response code="200">Data changed</response>
@@ -107,43 +106,24 @@ public class UserController : ControllerBase
             Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
         Roles = "Administrator,User")]
     [HttpPut]
-    public async Task<IActionResult> UpdateUser([FromBody]UserUpdateData user)
+    public async Task<IActionResult> UpdateUser([FromBody]UserUpdateData newUserData)
     {
         await using var ctx = new ApplicationContext();
         
         var id = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        var currentUser = ctx.Users.SingleOrDefault(x => x.Id == id);
-        if (currentUser == null)
+        var user = ctx.Users.SingleOrDefault(x => x.Id == id);
+        if (user == null)
             throw new UserNotFoundException();
-
-        var changes = 0;
-        if (user.Email != currentUser.Email && user.Email != string.Empty) 
-        {
-            if (ctx.Users.SingleOrDefault(x => x.Email == user.Email) != null)
-                throw new ExistingLoginException();
-            currentUser.Email = user.Email;
-            changes++;
-        }
-
-        if (!VerifyHashedPassword(currentUser.Password, user.Password) && user.Password != string.Empty)
-        {
-            currentUser.Password = HashPassword(user.Password);
-            changes++;
-        }
-
-        if (user.Login != currentUser.Login && user.Login != string.Empty)
-        {
-            if (ctx.Users.SingleOrDefault(x => x.Login == user.Login) != null) 
-                throw new ExistingLoginException();
-            currentUser.Login = user.Login;
-            changes++;
-        }
-
-        if (changes == 0)
-            throw new ArgumentCannotBeNullException();
-
-        currentUser.EditDate = DateTime.Today;
-        ctx.Users.Update(currentUser);
+        
+        if (ctx.Users.SingleOrDefault(x => x.Email == newUserData.Email && x.Id != id) != null)
+            throw new ExistingLoginException();
+        user.Email = newUserData.Email;
+        user.Password = HashPassword(newUserData.Password);
+        if (ctx.Users.SingleOrDefault(x => x.Login == newUserData.Login && x.Id != id) != null) 
+            throw new ExistingLoginException();
+        user.Login = newUserData.Login;
+        user.EditDate = DateTime.Today;
+        ctx.Users.Update(user);
         await ctx.SaveChangesAsync();
 
         return Ok();
