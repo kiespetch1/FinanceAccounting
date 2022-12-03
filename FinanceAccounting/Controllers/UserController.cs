@@ -106,7 +106,7 @@ public class UserController : ControllerBase
             Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
         Roles = "Administrator,User")]
     [HttpPut]
-    public async Task<IActionResult> UpdateUser([FromBody]UserUpdateData newUserData)
+    public async Task<IActionResult> Update([FromBody]UserUpdateData newUserData)
     {
         await using var ctx = new ApplicationContext();
         
