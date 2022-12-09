@@ -93,7 +93,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="newUserData">Desirable new data</param>
+    /// <param name="userUpdateData">Desirable new data</param>
     /// <returns>Status Code 200 (OK)</returns>
     /// <exception cref="UserNotFoundException">User with this ID was not found</exception>
     /// <response code="200">Data changed</response>
@@ -106,7 +106,7 @@ public class UserController : ControllerBase
             Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
         Roles = "Administrator,User")]
     [HttpPut]
-    public async Task<IActionResult> Update([FromBody]UserUpdateData newUserData)
+    public async Task<IActionResult> Update([FromBody]UserUpdateData userUpdateData)
     {
         await using var ctx = new ApplicationContext();
         
@@ -115,13 +115,13 @@ public class UserController : ControllerBase
         if (user == null)
             throw new UserNotFoundException();
         
-        if (ctx.Users.SingleOrDefault(x => x.Email == newUserData.Email && x.Id != id) != null)
+        if (ctx.Users.SingleOrDefault(x => x.Email == userUpdateData.Email && x.Id != id) != null)
             throw new ExistingLoginException();
-        user.Email = newUserData.Email;
-        user.Password = HashPassword(newUserData.Password);
-        if (ctx.Users.SingleOrDefault(x => x.Login == newUserData.Login && x.Id != id) != null) 
+        user.Email = userUpdateData.Email;
+        user.Password = HashPassword(userUpdateData.Password);
+        if (ctx.Users.SingleOrDefault(x => x.Login == userUpdateData.Login && x.Id != id) != null) 
             throw new ExistingLoginException();
-        user.Login = newUserData.Login;
+        user.Login = userUpdateData.Login;
         user.EditDate = DateTime.Today;
         ctx.Users.Update(user);
         await ctx.SaveChangesAsync();
