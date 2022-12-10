@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FinanceAccounting.Exceptions;
-using static FinanceAccounting.PasswordHashing;
+using FinanceAccounting.Models;
+using static FinanceAccounting.Services.UserService;
 
 namespace FinanceAccounting.Controllers;
 
@@ -10,27 +11,19 @@ namespace FinanceAccounting.Controllers;
 [Route("api/users")]
 public class UserController : ControllerBase
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns>Status Code 200 (OK)</returns>
-    /// <response code="200">All users data are displayed</response>
-    /// <response code="401">Unauthorized</response>
-    /// <response code="403">You don't have an access to perform this action</response>
-    [ProducesResponseType(200)]
-    [ProducesResponseType(401)]
-    [ProducesResponseType(403)]
-    [Authorize(AuthenticationSchemes =
-        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
-    [HttpGet]
-    public async Task<IActionResult> GetList()
+    private readonly IGetService _getService;
+    private readonly IGetListService _getListService;
+    private readonly IDeleteService _deleteService;
+    private readonly IUpdateService _updateService;
+
+    public UserController(IGetService getService, IGetListService getListService, IDeleteService deleteService, IUpdateService updateService)
     {
-        await using var ctx = new ApplicationContext();
-
-        var allUsers = ctx.Users.ToList();
-        return Ok(allUsers);
+        _getService = getService;
+        _getListService = getListService;
+        _deleteService = deleteService;
+        _updateService = updateService;
     }
-
+    
     /// <summary>
     /// 
     /// </summary>
@@ -50,16 +43,30 @@ public class UserController : ControllerBase
     [Authorize(AuthenticationSchemes =
         Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     [HttpGet]
-    public async Task<IActionResult> Get(int id)
+    public IActionResult Get(int id)
     {
-        await using var ctx = new ApplicationContext();
-
-        var user = ctx.Users.SingleOrDefault(x => x.Id == id);
-        if (user == null)
-            throw new UserNotFoundException();
+        var user = _getService.Get(id);
         return Ok(user);
     }
-
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>Status Code 200 (OK)</returns>
+    /// <response code="200">All users data are displayed</response>
+    /// <response code="401">Unauthorized</response>
+    /// <response code="403">You don't have an access to perform this action</response>
+    [ProducesResponseType(200)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
+    [Authorize(AuthenticationSchemes =
+        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+    [HttpGet]
+    public IActionResult GetList()
+    {
+        var allUsers = _getListService.GetList();
+        return Ok(allUsers);
+    }
     /// <summary>
     /// 
     /// </summary>
@@ -78,15 +85,9 @@ public class UserController : ControllerBase
     [Authorize(AuthenticationSchemes =
         Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     [HttpDelete]
-    public async Task<IActionResult> Delete(int id)
+    public IActionResult Delete(int id)
     {
-        await using var ctx = new ApplicationContext();
-
-        var user = ctx.Users.SingleOrDefault(x => x.Id == id);
-        if (user == null)
-            throw new UserNotFoundException();
-        ctx.Users.Remove(user);
-        await ctx.SaveChangesAsync();
+        _deleteService.Delete(id);
         return Ok();
     }
 
@@ -111,21 +112,7 @@ public class UserController : ControllerBase
         await using var ctx = new ApplicationContext();
         
         var id = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        var user = ctx.Users.SingleOrDefault(x => x.Id == id);
-        if (user == null)
-            throw new UserNotFoundException();
-        
-        if (ctx.Users.SingleOrDefault(x => x.Email == userUpdateData.Email && x.Id != id) != null)
-            throw new ExistingLoginException();
-        user.Email = userUpdateData.Email;
-        user.Password = HashPassword(userUpdateData.Password);
-        if (ctx.Users.SingleOrDefault(x => x.Login == userUpdateData.Login && x.Id != id) != null) 
-            throw new ExistingLoginException();
-        user.Login = userUpdateData.Login;
-        user.EditDate = DateTime.Today;
-        ctx.Users.Update(user);
-        await ctx.SaveChangesAsync();
-
+        _updateService.Update(userUpdateData, id);
         return Ok();
     }
 }
