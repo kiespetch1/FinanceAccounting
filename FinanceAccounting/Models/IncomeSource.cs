@@ -1,4 +1,4 @@
-﻿namespace FinanceAccounting;
+﻿namespace FinanceAccounting.Models;
 
 public class IncomeSource
 {

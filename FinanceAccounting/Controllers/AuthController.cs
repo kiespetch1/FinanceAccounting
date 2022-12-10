@@ -1,18 +1,26 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
 using FinanceAccounting.Exceptions;
-using Microsoft.AspNetCore.Identity;
+using FinanceAccounting.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using static FinanceAccounting.PasswordHashing;
+using static FinanceAccounting.Services.AuthService;
 
 namespace FinanceAccounting.Controllers;
+
+
 
 [ApiController]
 [Route("api/auth")]
 public class AuthController : ControllerBase
 {
+    private readonly ILoginService _loginService;
+    private readonly IRegistrationService _registrationService;
+
+    public AuthController(ILoginService loginService, IRegistrationService registrationService)
+    {
+        _loginService = loginService;
+        _registrationService = registrationService;
+    }
+    
     /// <summary>
     /// 
     /// </summary>
@@ -25,29 +33,9 @@ public class AuthController : ControllerBase
     [HttpPost]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
-    public async Task<IActionResult> Login([FromBody] AuthData authData)
+    public IActionResult Login([FromBody] AuthData authData)
     {
-        await using var ctx = new ApplicationContext();
-        var user = ctx.Users.SingleOrDefault(x => x.Email == authData.Email);
-
-        if (user == null || !VerifyHashedPassword(user.Password, authData.Password))
-        {
-            throw new WrongCredentialsException();
-        }
-        var claims = new List<Claim>
-        {
-            new(ClaimTypes.Name, authData.Email),
-            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Role, user.Role.ToString())
-        };
-        var jwt = new JwtSecurityToken(
-            issuer: AuthOptions.Issuer,
-            audience: AuthOptions.Audience,
-            claims: claims,
-            expires: DateTime.UtcNow.AddHours(1),
-            signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
-                SecurityAlgorithms.HmacSha256));
-
+        var jwt  = _loginService.Login(authData);
         return Ok(new JwtSecurityTokenHandler().WriteToken(jwt));
     }
 
@@ -63,35 +51,9 @@ public class AuthController : ControllerBase
     [HttpPost]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
-    public async Task<IActionResult> Register([FromBody] RegistrationData user)
+    public IActionResult Register([FromBody] RegistrationData user)
     {
-        await using var ctx = new ApplicationContext();
-
-        if (ctx.Users.SingleOrDefault(x => x.Login == user.Login 
-                                            || x.Email == user.Email) != null)
-        {
-            throw new ExistingLoginException();
-        }
-
-        var now = DateTime.Today;
-
-        var newUser = new User
-        {
-            Login = user.Login,
-            Name = user.Name,
-            Email = user.Email,
-            MiddleName = user.MiddleName,
-            LastName = user.LastName,
-            BirthDate = user.BirthDate,
-            Password = HashPassword(user.Password),
-            CreationDate = now,
-            EditDate = now,
-            Role = Role.User
-        };
-
-        ctx.Users.Add(newUser);
-        await ctx.SaveChangesAsync();
-
+        _registrationService.Register(user);
         return Ok();
     }
 }

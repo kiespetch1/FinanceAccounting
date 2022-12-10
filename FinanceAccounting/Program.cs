@@ -3,6 +3,8 @@ using FinanceAccounting.Exceptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using static FinanceAccounting.Services.AuthService;
+using static FinanceAccounting.Services.UserService;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +28,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddTransient<ILoginService, LoginService>();
+builder.Services.AddTransient<IRegistrationService, RegistrationService>();
+builder.Services.AddTransient<IGetService, GetService>();
+builder.Services.AddTransient<IGetListService, GetListService>();
+builder.Services.AddTransient<IDeleteService, DeleteService>();
+builder.Services.AddTransient<IUpdateService, UpdateService>();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -34,7 +42,7 @@ builder.Services.AddSwaggerGen(options =>
         Title = "FinanceAccounting",
         Description = "Personal finance system",
     });
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         BearerFormat = "JWT",
         Name = "JWT Authorization",
