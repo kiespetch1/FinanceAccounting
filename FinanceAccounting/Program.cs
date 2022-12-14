@@ -1,10 +1,9 @@
 using FinanceAccounting;
 using FinanceAccounting.Exceptions;
+using FinanceAccounting.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using static FinanceAccounting.Services.AuthService;
-using static FinanceAccounting.Services.UserService;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,12 +27,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddTransient<ILoginService, LoginService>();
-builder.Services.AddTransient<IRegistrationService, RegistrationService>();
-builder.Services.AddTransient<IGetService, GetService>();
-builder.Services.AddTransient<IGetListService, GetListService>();
-builder.Services.AddTransient<IDeleteService, DeleteService>();
-builder.Services.AddTransient<IUpdateService, UpdateService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
