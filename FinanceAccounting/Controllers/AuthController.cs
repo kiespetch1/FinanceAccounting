@@ -1,24 +1,21 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Models;
+using FinanceAccounting.Services;
 using Microsoft.AspNetCore.Mvc;
-using static FinanceAccounting.Services.AuthService;
+
 
 namespace FinanceAccounting.Controllers;
-
-
 
 [ApiController]
 [Route("api/auth")]
 public class AuthController : ControllerBase
 {
-    private readonly ILoginService _loginService;
-    private readonly IRegistrationService _registrationService;
+    private readonly IAuthService _authService;
 
-    public AuthController(ILoginService loginService, IRegistrationService registrationService)
+    public AuthController(IAuthService authService)
     {
-        _loginService = loginService;
-        _registrationService = registrationService;
+        _authService = authService;
     }
     
     /// <summary>
@@ -35,7 +32,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(400)]
     public IActionResult Login([FromBody] AuthData authData)
     {
-        var jwt  = _loginService.Login(authData);
+        var jwt  = _authService.Login(authData);
         return Ok(new JwtSecurityTokenHandler().WriteToken(jwt));
     }
 
@@ -53,7 +50,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(400)]
     public IActionResult Register([FromBody] RegistrationData user)
     {
-        _registrationService.Register(user);
+        _authService.Register(user);
         return Ok();
     }
 }

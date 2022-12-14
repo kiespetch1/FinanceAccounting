@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Models;
-using static FinanceAccounting.Services.UserService;
 
 namespace FinanceAccounting.Controllers;
 
@@ -11,17 +10,11 @@ namespace FinanceAccounting.Controllers;
 [Route("api/users")]
 public class UserController : ControllerBase
 {
-    private readonly IGetService _getService;
-    private readonly IGetListService _getListService;
-    private readonly IDeleteService _deleteService;
-    private readonly IUpdateService _updateService;
-
-    public UserController(IGetService getService, IGetListService getListService, IDeleteService deleteService, IUpdateService updateService)
+    private readonly IUserService _userService;
+    
+    public UserController(IUserService userService)
     {
-        _getService = getService;
-        _getListService = getListService;
-        _deleteService = deleteService;
-        _updateService = updateService;
+        _userService = userService;
     }
     
     /// <summary>
@@ -45,7 +38,7 @@ public class UserController : ControllerBase
     [HttpGet]
     public IActionResult Get(int id)
     {
-        var user = _getService.Get(id);
+        var user = _userService.Get(id);
         return Ok(user);
     }
     
@@ -64,7 +57,7 @@ public class UserController : ControllerBase
     [HttpGet]
     public IActionResult GetList()
     {
-        var allUsers = _getListService.GetList();
+        var allUsers = _userService.GetList();
         return Ok(allUsers);
     }
     /// <summary>
@@ -87,7 +80,7 @@ public class UserController : ControllerBase
     [HttpDelete]
     public IActionResult Delete(int id)
     {
-        _deleteService.Delete(id);
+        _userService.Delete(id);
         return Ok();
     }
 
@@ -112,7 +105,7 @@ public class UserController : ControllerBase
         await using var ctx = new ApplicationContext();
         
         var id = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        _updateService.Update(userUpdateData, id);
+        _userService.Update(id, userUpdateData);
         return Ok();
     }
 }
