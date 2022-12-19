@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FinanceAccounting;
+namespace FinanceAccounting.Models;
 
 public class RegistrationData
 {
