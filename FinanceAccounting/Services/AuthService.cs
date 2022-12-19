@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using FinanceAccounting.Exceptions;
+using FinanceAccounting.Interfaces;
 using FinanceAccounting.Models;
 using Microsoft.IdentityModel.Tokens;
 using static FinanceAccounting.PasswordHashing;
@@ -8,10 +9,15 @@ using static FinanceAccounting.PasswordHashing;
 namespace FinanceAccounting.Services;
 public class AuthService : IAuthService
 {
+    private readonly ApplicationContext _ctx;
+
+    public AuthService(ApplicationContext ctx)
+    {
+        _ctx = ctx;
+    }
     public JwtSecurityToken Login(AuthData authData)
     {
-        using var ctx = new ApplicationContext();
-        var user = ctx.Users.SingleOrDefault(x => x.Email == authData.Email);
+        var user = _ctx.Users.SingleOrDefault(x => x.Email == authData.Email);
 
         if (user == null || !VerifyHashedPassword(user.Password, authData.Password))
         {
@@ -37,15 +43,11 @@ public class AuthService : IAuthService
 
     public async Task Register(RegistrationData user)
     {
-        await using var ctx = new ApplicationContext();
-
-        if (ctx.Users.SingleOrDefault(x => x.Login == user.Login
+        if (_ctx.Users.SingleOrDefault(x => x.Login == user.Login
                                            || x.Email == user.Email) != null)
         {
             throw new ExistingLoginException();
         }
-
-        var now = DateTime.Today;
 
         var newUser = new User
         {
@@ -56,13 +58,13 @@ public class AuthService : IAuthService
             LastName = user.LastName,
             BirthDate = user.BirthDate,
             Password = HashPassword(user.Password),
-            CreationDate = now,
-            EditDate = now,
+            CreationDate = DateTime.Today,
+            EditDate = DateTime.Today,
             Role = Role.User
         };
 
-        ctx.Users.Add(newUser);
-        await ctx.SaveChangesAsync();
+        _ctx.Users.Add(newUser);
+        await _ctx.SaveChangesAsync();
     }
     
 }
