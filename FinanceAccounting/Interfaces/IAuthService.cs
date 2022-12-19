@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using FinanceAccounting.Models;
 
-namespace FinanceAccounting;
+namespace FinanceAccounting.Interfaces;
 
 public interface IAuthService
 {

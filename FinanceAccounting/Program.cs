@@ -1,7 +1,9 @@
 using FinanceAccounting;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Services;
+using FinanceAccounting.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -28,7 +30,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddDbContext<ApplicationContext>(
+    options => options.UseNpgsql(@"Server=localhost;Port=5432;Username=postgres;Password=superuser1").UseSnakeCaseNamingConvention());
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo

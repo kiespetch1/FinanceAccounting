@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FinanceAccounting.Exceptions;
+using FinanceAccounting.Interfaces;
 using FinanceAccounting.Models;
 
 namespace FinanceAccounting.Controllers;
@@ -10,9 +11,9 @@ namespace FinanceAccounting.Controllers;
 [Route("api/users")]
 public class UserController : ControllerBase
 {
-    private readonly IUserService _userService;
-    
-    public UserController(IUserService userService)
+    private readonly IUsersService _userService;
+
+    public UserController(IUsersService userService)
     {
         _userService = userService;
     }
@@ -100,10 +101,8 @@ public class UserController : ControllerBase
             Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
         Roles = "Administrator,User")]
     [HttpPut]
-    public async Task<IActionResult> Update([FromBody]UserUpdateData userUpdateData)
+    public IActionResult Update([FromBody]UserUpdateData userUpdateData)
     {
-        await using var ctx = new ApplicationContext();
-        
         var id = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
         _userService.Update(id, userUpdateData);
         return Ok();
