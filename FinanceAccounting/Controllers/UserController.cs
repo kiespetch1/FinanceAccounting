@@ -1,14 +1,17 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
 using FinanceAccounting.Models;
+// ReSharper disable RouteTemplates.ActionRoutePrefixCanBeExtractedToControllerRoute
 
 namespace FinanceAccounting.Controllers;
 
 [ApiController]
 [Route("api/users")]
+[SuppressMessage("ReSharper", "RouteTemplates.ParameterConstraintCanBeSpecified")]
 public class UserController : ControllerBase
 {
     private readonly IUsersService _userService;

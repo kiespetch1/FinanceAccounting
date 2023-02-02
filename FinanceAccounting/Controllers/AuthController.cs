@@ -49,9 +49,9 @@ public class AuthController : ControllerBase
     [HttpPost]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
-    public IActionResult Register([FromBody] RegistrationData user)
+    public async Task<IActionResult> Register([FromBody] RegistrationData user)
     {
-        _authService.Register(user);
+        await _authService.Register(user);
         return Ok();
     }
 }
