@@ -29,12 +29,12 @@ public class ExceptionsMiddleware
             switch(exception)
             {
                 case BaseException:
-                    result = exception.Message;
+                    result = $"{exception.Message} {exception.StackTrace}";
                     code = BaseException.ErrorCode;
                     break;
                 
                 default:
-                    result = "Internal server error.";
+                    result = $"Internal server error. \n {exception.Message} {exception.StackTrace}";
                     code = HttpStatusCode.InternalServerError;
                     break;
                     
