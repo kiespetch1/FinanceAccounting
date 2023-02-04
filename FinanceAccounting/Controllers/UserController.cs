@@ -35,7 +35,6 @@ public class UserController : ControllerBase
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
-
     [Route("{id}")]
     [Authorize(AuthenticationSchemes =
         Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
@@ -94,7 +93,7 @@ public class UserController : ControllerBase
     /// <param name="userUpdateData">Desirable new data</param>
     /// <returns>Status Code 200 (OK)</returns>
     /// <exception cref="UserNotFoundException">User with this ID was not found</exception>
-    /// <response code="200">Data changed</response>
+    /// <response code="200">Data updated successfully</response>
     /// <response code="400">User with this ID was not found</response>
     /// <response code="401">Unauthorized</response>
     [ProducesResponseType(200)]

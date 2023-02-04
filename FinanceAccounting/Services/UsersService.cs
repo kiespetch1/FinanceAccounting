@@ -28,13 +28,13 @@ public class UsersService : IUsersService
         return users;
     }
 
-    public async Task Delete(int id)
+    public void Delete(int id)
     {
         var user = _ctx.Users.SingleOrDefault(x => x.Id == id);
         if (user == null)
             throw new UserNotFoundException();
         _ctx.Users.Remove(user);
-        await _ctx.SaveChangesAsync();
+        _ctx.SaveChanges();
     }
     
     public async Task Update(int id, UserUpdateData userUpdateData)
