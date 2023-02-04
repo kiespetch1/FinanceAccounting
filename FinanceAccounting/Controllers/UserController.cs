@@ -1,36 +1,26 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FinanceAccounting.Exceptions;
-using static FinanceAccounting.PasswordHashing;
+using FinanceAccounting.Interfaces;
+using FinanceAccounting.Models;
+// ReSharper disable RouteTemplates.ActionRoutePrefixCanBeExtractedToControllerRoute
 
 namespace FinanceAccounting.Controllers;
 
 [ApiController]
 [Route("api/users")]
+[SuppressMessage("ReSharper", "RouteTemplates.ParameterConstraintCanBeSpecified")]
 public class UserController : ControllerBase
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns>Status Code 200 (OK)</returns>
-    /// <response code="200">All users data are displayed</response>
-    /// <response code="401">Unauthorized</response>
-    /// <response code="403">You don't have an access to perform this action</response>
-    [ProducesResponseType(200)]
-    [ProducesResponseType(401)]
-    [ProducesResponseType(403)]
-    [Authorize(AuthenticationSchemes =
-        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
-    [HttpGet]
-    public async Task<IActionResult> GetList()
+    private readonly IUsersService _userService;
+
+    public UserController(IUsersService userService)
     {
-        await using var ctx = new ApplicationContext();
-
-        var allUsers = ctx.Users.ToList();
-        return Ok(allUsers);
+        _userService = userService;
     }
-
+    
     /// <summary>
     /// 
     /// </summary>
@@ -50,16 +40,30 @@ public class UserController : ControllerBase
     [Authorize(AuthenticationSchemes =
         Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     [HttpGet]
-    public async Task<IActionResult> Get(int id)
+    public IActionResult Get(int id)
     {
-        await using var ctx = new ApplicationContext();
-
-        var user = ctx.Users.SingleOrDefault(x => x.Id == id);
-        if (user == null)
-            throw new UserNotFoundException();
+        var user = _userService.Get(id);
         return Ok(user);
     }
-
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>Status Code 200 (OK)</returns>
+    /// <response code="200">All users data are displayed</response>
+    /// <response code="401">Unauthorized</response>
+    /// <response code="403">You don't have an access to perform this action</response>
+    [ProducesResponseType(200)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(403)]
+    [Authorize(AuthenticationSchemes =
+        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+    [HttpGet]
+    public IActionResult GetList()
+    {
+        var allUsers = _userService.GetList();
+        return Ok(allUsers);
+    }
     /// <summary>
     /// 
     /// </summary>
@@ -78,15 +82,9 @@ public class UserController : ControllerBase
     [Authorize(AuthenticationSchemes =
         Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     [HttpDelete]
-    public async Task<IActionResult> Delete(int id)
+    public IActionResult Delete(int id)
     {
-        await using var ctx = new ApplicationContext();
-
-        var user = ctx.Users.SingleOrDefault(x => x.Id == id);
-        if (user == null)
-            throw new UserNotFoundException();
-        ctx.Users.Remove(user);
-        await ctx.SaveChangesAsync();
+        _userService.Delete(id);
         return Ok();
     }
 
@@ -106,26 +104,10 @@ public class UserController : ControllerBase
             Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
         Roles = "Administrator,User")]
     [HttpPut]
-    public async Task<IActionResult> Update([FromBody]UserUpdateData userUpdateData)
+    public IActionResult Update([FromBody]UserUpdateData userUpdateData)
     {
-        await using var ctx = new ApplicationContext();
-        
         var id = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        var user = ctx.Users.SingleOrDefault(x => x.Id == id);
-        if (user == null)
-            throw new UserNotFoundException();
-        
-        if (ctx.Users.SingleOrDefault(x => x.Email == userUpdateData.Email && x.Id != id) != null)
-            throw new ExistingLoginException();
-        user.Email = userUpdateData.Email;
-        user.Password = HashPassword(userUpdateData.Password);
-        if (ctx.Users.SingleOrDefault(x => x.Login == userUpdateData.Login && x.Id != id) != null) 
-            throw new ExistingLoginException();
-        user.Login = userUpdateData.Login;
-        user.EditDate = DateTime.Today;
-        ctx.Users.Update(user);
-        await ctx.SaveChangesAsync();
-
+        _userService.Update(id, userUpdateData);
         return Ok();
     }
 }
