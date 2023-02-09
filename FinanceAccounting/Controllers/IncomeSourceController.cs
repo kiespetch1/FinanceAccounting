@@ -19,16 +19,14 @@ public class IncomeSourceController : ControllerBase
     }
     
     /// <summary>
-    /// 
+    /// Creates a new income source category.
     /// </summary>
     /// <param name="id">Received user ID</param>
-    /// <returns>Status Code 200 (OK)</returns>
-    /// <exception cref="UserNotFoundException">User with this ID was not found</exception>
-    /// <exception cref="ExistingIncomeSourceException">Income source with given name already exists</exception>
-    /// <response code="200">Success</response>
+    /// <returns>Status Code 201 (Created)</returns>
+    /// <response code="201">Success</response>
     /// <response code="400">Income source with this name already exist</response>
     /// <response code="401">Unauthorized</response>
-    [ProducesResponseType(200)]
+    [ProducesResponseType(201)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
     [Authorize(AuthenticationSchemes =
@@ -38,15 +36,15 @@ public class IncomeSourceController : ControllerBase
     public async Task<IActionResult> Create(string newIncomeName)
     {
         var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        await _incomeService.Create(newIncomeName, userId);
-        return Ok();
+        var incomeSource = await _incomeService.Create(newIncomeName, userId);
+        var uri = new Uri($"https://localhost:7245/income/{incomeSource.Id}");
+        return Created(uri,incomeSource);
     }
     
     /// <summary>
-    /// 
+    /// Returns all income source categories.
     /// </summary>
-    /// <returns>Status Code 200 (OK)</returns>
-    /// <exception cref="IncomeSourceNotFoundException">No income sources was found</exception>
+    /// <returns>List of income sources of current user</returns>
     /// <response code="200">Success</response>
     /// <response code="400">Income source with this name already exist</response>
     /// <response code="401">Unauthorized</response>
@@ -60,16 +58,16 @@ public class IncomeSourceController : ControllerBase
     public IActionResult GetList()
     {
         var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        return Ok(_incomeService.GetList(userId));
+        var incomeSourcesList = _incomeService.GetList(userId);
+        
+        return Ok(incomeSourcesList);
     }
     
     /// <summary>
-    /// 
+    /// Returns income source category by ID.
     /// </summary>
     /// <param name="id">Received income source ID</param>
-    /// <returns>Status Code 200 (OK)</returns>
-    /// <exception cref="IncomeSourceNotFoundException">Income source with this ID was not found</exception>
-    /// <exception cref="NoAccessException">You don't have an access to perform this action</exception>
+    /// <returns>Requested income source category</returns>
     /// <response code="200">Success</response>
     /// <response code="400">Income source with this ID was not found</response>
     /// <response code="401">Unauthorized</response>
@@ -83,24 +81,24 @@ public class IncomeSourceController : ControllerBase
             Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
         Roles = "Administrator,User")]
     [HttpGet]
-    public IActionResult Get(int id)
+    public async Task<IActionResult> Get(int id)
     {
         var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        return Ok(_incomeService.Get(id, userId));
+        var incomeSource = await _incomeService.Get(id, userId);
+        
+        return Ok(incomeSource);
     }
     
     /// <summary>
-    /// 
+    /// Deletes income source category by ID.
     /// </summary>
     /// <param name="id">Received income source ID</param>
-    /// <returns>Status Code 200 (OK)</returns>
-    /// <exception cref="IncomeSourceNotFoundException">No income sources was found</exception>
-    /// <exception cref="NoAccessException">You don't have an access to perform this action</exception>
-    /// <response code="200">Success</response>
+    /// <returns>Status Code 204 (NoContent)</returns>
+    /// <response code="204">Success</response>
     /// <response code="400">Income source with this ID was not found</response>
     /// <response code="401">Unauthorized</response>
     /// <response code="403">You don't have an access to perform this action</response>
-    [ProducesResponseType(200)]
+    [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
@@ -109,26 +107,25 @@ public class IncomeSourceController : ControllerBase
             Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
         Roles = "Administrator,User")]
     [HttpDelete]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        _incomeService.Delete(id, userId);
-        return Ok();
+        await _incomeService.Delete(id, userId);
+        
+        return NoContent();
     }
 
     /// <summary>
-    /// 
+    /// Updates income source category by ID.
     /// </summary>
     /// <param name="id">Received income source ID</param>
     /// <param name="newName">Desired new name</param>
-    /// <returns>Status Code 200 (OK)</returns>
-    /// <exception cref="IncomeSourceNotFoundException">No income sources was found</exception>
-    /// <exception cref="NoAccessException">You don't have an access to perform this action</exception>
-    /// <response code="200">Success</response>
+    /// <returns>Status Code 204 (NoContent)</returns>
+    /// <response code="204">Success</response>
     /// <response code="400">Income source with this ID was not found</response>
     /// <response code="401">Unauthorized</response>
     /// <response code="403">You don't have an access to perform this action</response>
-    [ProducesResponseType(200)]
+    [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
@@ -141,7 +138,8 @@ public class IncomeSourceController : ControllerBase
     {
         var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
         _incomeService.Update(id, newName, userId);
-        return Ok();
+        
+        return NoContent();
     }
     
 }    

@@ -11,7 +11,6 @@ namespace FinanceAccounting.Controllers;
 
 [ApiController]
 [Route("api/users")]
-[SuppressMessage("ReSharper", "RouteTemplates.ParameterConstraintCanBeSpecified")]
 public class UserController : ControllerBase
 {
     private readonly IUsersService _userService;

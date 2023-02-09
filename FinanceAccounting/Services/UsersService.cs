@@ -22,19 +22,19 @@ public class UsersService : IUsersService
         return user;
     }
     
-    public async Task<List<User>> GetList()
+    public List<User> GetList()
     {
         var users = _ctx.Users.ToList();
         return users;
     }
 
-    public void Delete(int id)
+    public async Task Delete(int id)
     {
         var user = _ctx.Users.SingleOrDefault(x => x.Id == id);
         if (user == null)
             throw new UserNotFoundException();
         _ctx.Users.Remove(user);
-        _ctx.SaveChanges();
+        await _ctx.SaveChangesAsync();
     }
     
     public async Task Update(int id, UserUpdateData userUpdateData)
