@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,9 +28,7 @@ public class IncomeSourceController : ControllerBase
     [ProducesResponseType(201)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
-    [Authorize(AuthenticationSchemes =
-            Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Roles = "Administrator,User")]
+    [Authorize(Roles = "Administrator,User")]
     [HttpPost]
     public async Task<IActionResult> Create(string newIncomeName)
     {
@@ -51,14 +48,12 @@ public class IncomeSourceController : ControllerBase
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
-    [Authorize(AuthenticationSchemes =
-            Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Roles = "Administrator,User")]
+    [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public IActionResult GetList()
+    public async Task<IActionResult> GetList()
     {
         var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        var incomeSourcesList = _incomeService.GetList(userId);
+        var incomeSourcesList =  await _incomeService.GetList(userId);
         
         return Ok(incomeSourcesList);
     }
@@ -77,9 +72,7 @@ public class IncomeSourceController : ControllerBase
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
     [Route("{id}")]
-    [Authorize(AuthenticationSchemes =
-            Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Roles = "Administrator,User")]
+    [Authorize(Roles = "Administrator,User")]
     [HttpGet]
     public async Task<IActionResult> Get(int id)
     {
@@ -103,9 +96,7 @@ public class IncomeSourceController : ControllerBase
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
     [Route("{id}")]
-    [Authorize(AuthenticationSchemes =
-            Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Roles = "Administrator,User")]
+    [Authorize(Roles = "Administrator,User")]
     [HttpDelete]
     public async Task<IActionResult> Delete(int id)
     {
@@ -130,14 +121,12 @@ public class IncomeSourceController : ControllerBase
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
     [Route("{id}")]
-    [Authorize(AuthenticationSchemes =
-            Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Roles = "Administrator,User")]
+    [Authorize(Roles = "Administrator,User")]
     [HttpPut]
-    public IActionResult Update(int id, string newName)
+    public async Task<IActionResult> Update(int id, string newName)
     {
         var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        _incomeService.Update(id, newName, userId);
+        await _incomeService.Update(id, newName, userId);
         
         return NoContent();
     }

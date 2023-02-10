@@ -1,11 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
 using FinanceAccounting.Models;
-// ReSharper disable RouteTemplates.ActionRoutePrefixCanBeExtractedToControllerRoute
 
 namespace FinanceAccounting.Controllers;
 
@@ -35,8 +33,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
     [Route("{id}")]
-    [Authorize(AuthenticationSchemes =
-        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+    [Authorize(Roles = "Administrator")]
     [HttpGet]
     public IActionResult Get(int id)
     {
@@ -54,8 +51,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
-    [Authorize(AuthenticationSchemes =
-        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+    [Authorize(Roles = "Administrator")]
     [HttpGet]
     public IActionResult GetList()
     {
@@ -77,8 +73,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
     [Route("{id}")]
-    [Authorize(AuthenticationSchemes =
-        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+    [Authorize(Roles = "Administrator")]
     [HttpDelete]
     public IActionResult Delete(int id)
     {
@@ -98,9 +93,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
-    [Authorize(AuthenticationSchemes =
-            Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Roles = "Administrator,User")]
+    [Authorize(Roles = "Administrator,User")]
     [HttpPut]
     public IActionResult Update([FromBody]UserUpdateData userUpdateData)
     {
