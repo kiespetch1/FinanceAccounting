@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using FinanceAccounting.Models;
 
 namespace FinanceAccounting;
 
@@ -14,6 +13,4 @@ public class IncomeSource
     
     [ForeignKey("User")]
     public int UserId { get; set; }
-
-    public User User { get; set; }
 }

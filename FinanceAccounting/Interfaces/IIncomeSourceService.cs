@@ -4,7 +4,7 @@ public interface IIncomeSourceService
 {
     Task<IncomeSource> Create(string incomeName, int userId);
     
-    List<IncomeSource> GetList(int userId);
+    Task<List<IncomeSource>> GetList(int userId);
 
     Task<IncomeSource> Get(int id, int userId);
     

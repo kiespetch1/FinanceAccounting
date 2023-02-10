@@ -42,9 +42,9 @@ public class IncomeSourceService : IIncomeSourceService
         return incomeSource;
     }
 
-    public List<IncomeSource> GetList(int userId)
+    public async Task<List<IncomeSource>> GetList(int userId)
     {
-        var incomeSourceList = _ctx.IncomeSources.Where(x => x.UserId == userId).ToList();
+        var incomeSourceList = await _ctx.IncomeSources.Where(x => x.UserId == userId).ToListAsync();
         return incomeSourceList;
     }
 
