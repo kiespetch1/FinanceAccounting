@@ -1,4 +1,5 @@
-﻿using FinanceAccounting.Exceptions;
+﻿using Microsoft.EntityFrameworkCore;
+using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
 using FinanceAccounting.Models;
 using static FinanceAccounting.PasswordHashing;
@@ -22,9 +23,9 @@ public class UsersService : IUsersService
         return user;
     }
     
-    public List<User> GetList()
+    public async Task<List<User>> GetList()
     {
-        var users = _ctx.Users.ToList();
+        var users = await _ctx.Users.ToListAsync();
         return users;
     }
 

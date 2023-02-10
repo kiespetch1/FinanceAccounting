@@ -16,11 +16,11 @@ public class IncomeSourceController : ControllerBase
     {
         _incomeService = incomeService;
     }
-    
+
     /// <summary>
     /// Creates a new income source category.
     /// </summary>
-    /// <param name="id">Received user ID</param>
+    /// <param name="newIncomeName"></param>
     /// <returns>Status Code 201 (Created)</returns>
     /// <response code="201">Success</response>
     /// <response code="400">Income source with this name already exist</response>
@@ -34,8 +34,7 @@ public class IncomeSourceController : ControllerBase
     {
         var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
         var incomeSource = await _incomeService.Create(newIncomeName, userId);
-        var uri = new Uri($"https://localhost:7245/income/{incomeSource.Id}");
-        return Created(uri,incomeSource);
+        return CreatedAtAction(nameof(Create), incomeSource);
     }
     
     /// <summary>

@@ -29,7 +29,7 @@ public class ExceptionsMiddleware
             switch(exception)
             {
                 case BaseException:
-                    result = $"{exception.Message} {exception.StackTrace}";
+                    result = exception.Message;
                     code = BaseException.ErrorCode;
                     break;
                 

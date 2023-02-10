@@ -53,9 +53,9 @@ public class UserController : ControllerBase
     [ProducesResponseType(403)]
     [Authorize(Roles = "Administrator")]
     [HttpGet]
-    public IActionResult GetList()
+    public async Task<IActionResult> GetList()
     {
-        var allUsers = _userService.GetList();
+        var allUsers = await _userService.GetList();
         return Ok(allUsers);
     }
     /// <summary>
