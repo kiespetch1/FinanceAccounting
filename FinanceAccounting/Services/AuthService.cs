@@ -15,31 +15,6 @@ public class AuthService : IAuthService
     {
         _ctx = ctx;
     }
-    public JwtSecurityToken Login(AuthData authData)
-    {
-        var user = _ctx.Users.SingleOrDefault(x => x.Email == authData.Email);
-
-        if (user == null || !VerifyHashedPassword(user.Password, authData.Password))
-        {
-            throw new WrongCredentialsException();
-        }
-
-        var claims = new List<Claim>
-        {
-            new(ClaimTypes.Name, authData.Email),
-            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Role, user.Role.ToString())
-        };
-        var jwt = new JwtSecurityToken(
-            issuer: AuthOptions.Issuer,
-            audience: AuthOptions.Audience,
-            claims: claims,
-            expires: DateTime.UtcNow.AddHours(1),
-            signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
-                SecurityAlgorithms.HmacSha256));
-
-        return jwt;
-    }
 
     public async Task Register(RegistrationData user)
     {
@@ -65,6 +40,32 @@ public class AuthService : IAuthService
 
         _ctx.Users.Add(newUser);
         await _ctx.SaveChangesAsync();
+    }
+    
+    public JwtSecurityToken Login(AuthData authData)
+    {
+        var user = _ctx.Users.SingleOrDefault(x => x.Email == authData.Email);
+
+        if (user == null || !VerifyHashedPassword(user.Password, authData.Password))
+        {
+            throw new WrongCredentialsException();
+        }
+
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.Name, authData.Email),
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Role, user.Role.ToString())
+        };
+        var jwt = new JwtSecurityToken(
+            issuer: AuthOptions.Issuer,
+            audience: AuthOptions.Audience,
+            claims: claims,
+            expires: DateTime.UtcNow.AddHours(1),
+            signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
+                SecurityAlgorithms.HmacSha256));
+
+        return jwt;
     }
     
 }

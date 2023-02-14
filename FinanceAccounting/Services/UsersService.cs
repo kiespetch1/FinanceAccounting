@@ -14,6 +14,12 @@ public class UsersService : IUsersService
     {
         _ctx = ctx;
     }
+    
+    public async Task<List<User>> GetList()
+    {
+        var users = await _ctx.Users.ToListAsync();
+        return users;
+    }
     public async Task<User> Get(int id)
     {
         
@@ -22,22 +28,7 @@ public class UsersService : IUsersService
             throw new UserNotFoundException();
         return user;
     }
-    
-    public async Task<List<User>> GetList()
-    {
-        var users = await _ctx.Users.ToListAsync();
-        return users;
-    }
 
-    public async Task Delete(int id)
-    {
-        var user = _ctx.Users.SingleOrDefault(x => x.Id == id);
-        if (user == null)
-            throw new UserNotFoundException();
-        _ctx.Users.Remove(user);
-        await _ctx.SaveChangesAsync();
-    }
-    
     public async Task Update(int id, UserUpdateData userUpdateData)
     {
         var user = _ctx.Users.SingleOrDefault(x => x.Id == id);
@@ -53,6 +44,15 @@ public class UsersService : IUsersService
         user.Login = userUpdateData.Login;
         user.EditDate = DateTime.Today;
         _ctx.Users.Update(user);
+        await _ctx.SaveChangesAsync();
+    }
+    
+    public async Task Delete(int id)
+    {
+        var user = _ctx.Users.SingleOrDefault(x => x.Id == id);
+        if (user == null)
+            throw new UserNotFoundException();
+        _ctx.Users.Remove(user);
         await _ctx.SaveChangesAsync();
     }
 }
