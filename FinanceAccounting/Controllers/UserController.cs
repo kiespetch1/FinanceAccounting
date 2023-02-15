@@ -1,17 +1,14 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
 using FinanceAccounting.Models;
-// ReSharper disable RouteTemplates.ActionRoutePrefixCanBeExtractedToControllerRoute
 
 namespace FinanceAccounting.Controllers;
 
 [ApiController]
 [Route("api/users")]
-[SuppressMessage("ReSharper", "RouteTemplates.ParameterConstraintCanBeSpecified")]
 public class UserController : ControllerBase
 {
     private readonly IUsersService _userService;
@@ -35,10 +32,8 @@ public class UserController : ControllerBase
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
-
     [Route("{id}")]
-    [Authorize(AuthenticationSchemes =
-        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+    [Authorize(Roles = "Administrator")]
     [HttpGet]
     public IActionResult Get(int id)
     {
@@ -56,12 +51,11 @@ public class UserController : ControllerBase
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
-    [Authorize(AuthenticationSchemes =
-        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+    [Authorize(Roles = "Administrator")]
     [HttpGet]
-    public IActionResult GetList()
+    public async Task<IActionResult> GetList()
     {
-        var allUsers = _userService.GetList();
+        var allUsers = await _userService.GetList();
         return Ok(allUsers);
     }
     /// <summary>
@@ -79,8 +73,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
     [Route("{id}")]
-    [Authorize(AuthenticationSchemes =
-        Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+    [Authorize(Roles = "Administrator")]
     [HttpDelete]
     public IActionResult Delete(int id)
     {
@@ -94,15 +87,13 @@ public class UserController : ControllerBase
     /// <param name="userUpdateData">Desirable new data</param>
     /// <returns>Status Code 200 (OK)</returns>
     /// <exception cref="UserNotFoundException">User with this ID was not found</exception>
-    /// <response code="200">Data changed</response>
+    /// <response code="200">Data updated successfully</response>
     /// <response code="400">User with this ID was not found</response>
     /// <response code="401">Unauthorized</response>
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
-    [Authorize(AuthenticationSchemes =
-            Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Roles = "Administrator,User")]
+    [Authorize(Roles = "Administrator,User")]
     [HttpPut]
     public IActionResult Update([FromBody]UserUpdateData userUpdateData)
     {

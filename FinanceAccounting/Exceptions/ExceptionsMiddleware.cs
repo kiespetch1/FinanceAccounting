@@ -34,7 +34,7 @@ public class ExceptionsMiddleware
                     break;
                 
                 default:
-                    result = "Internal server error.";
+                    result = $"Internal server error. \n {exception.Message} {exception.StackTrace}";
                     code = HttpStatusCode.InternalServerError;
                     break;
                     
