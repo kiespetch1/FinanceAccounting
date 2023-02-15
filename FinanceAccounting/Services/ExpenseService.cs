@@ -21,6 +21,9 @@ public class ExpenseService : IExpenseService
             throw new UserNotFoundException();
         if (await _ctx.ExpenseSources.SingleOrDefaultAsync(x => x.Id == categoryId) == null)
             throw new CategoryNotFoundException();
+        if (_ctx.ExpenseSources.SingleOrDefault(x => x.Id == categoryId).UserId != userId)
+            throw new NoAccessException();
+        
         var newExpense = new Expense
         {
             Name = expenseName,

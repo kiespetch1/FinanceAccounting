@@ -21,6 +21,9 @@ public class IncomeService : IIncomeService
             throw new UserNotFoundException();
         if (await _ctx.IncomeSources.SingleOrDefaultAsync(x => x.Id == categoryId) == null)
             throw new CategoryNotFoundException();
+        if (_ctx.IncomeSources.SingleOrDefault(x => x.Id == categoryId).UserId != userId)
+            throw new NoAccessException();
+        
         
         var newIncome = new Income
         {
