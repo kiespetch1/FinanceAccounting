@@ -1,5 +1,6 @@
 ﻿using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
+using FinanceAccounting.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceAccounting.Services;
@@ -20,7 +21,7 @@ public class IncomeSourceService : IIncomeSourceService
             throw new UserNotFoundException();
         if (await _ctx.IncomeSources
                 .SingleOrDefaultAsync(x => x.Name == incomeName && x.UserId == userId) != null)
-            throw new ExistingIncomeSourceException();
+            throw new ExistingCategoryException();
         var newIncomeSource = new IncomeSource
         {
             Name = incomeName,
@@ -42,7 +43,7 @@ public class IncomeSourceService : IIncomeSourceService
     {
         var incomeSource = await _ctx.IncomeSources.SingleOrDefaultAsync(x => x.Id == id);
         if (incomeSource == null)
-            throw new IncomeSourceNotFoundException();
+            throw new CategoryNotFoundException();
         if (incomeSource.UserId != userId)
             throw new NoAccessException();
 
@@ -53,11 +54,11 @@ public class IncomeSourceService : IIncomeSourceService
     {
         var incomeSource = _ctx.IncomeSources.SingleOrDefault(x => x.Id == id);
         if (incomeSource == null)
-            throw new IncomeSourceNotFoundException();
+            throw new CategoryNotFoundException();
         if (userId != incomeSource.UserId)
             throw new NoAccessException();
         if (_ctx.IncomeSources.SingleOrDefault(x => x.Name == newName && x.UserId == userId) != null)
-            throw new ExistingIncomeSourceException();
+            throw new ExistingCategoryException();
         incomeSource.Name = newName;
         _ctx.IncomeSources.Update(incomeSource);
         await _ctx.SaveChangesAsync();
@@ -67,7 +68,7 @@ public class IncomeSourceService : IIncomeSourceService
     {
         var incomeSource = await _ctx.IncomeSources.SingleOrDefaultAsync(x => x.Id == id);
         if (incomeSource == null)
-            throw new IncomeSourceNotFoundException();
+            throw new CategoryNotFoundException();
         if (incomeSource.UserId != userId)
             throw new NoAccessException();
         _ctx.IncomeSources.Remove(incomeSource);

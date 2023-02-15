@@ -10,7 +10,7 @@ public interface IIncomeService
     
     Task<Income> Get(int id, int userId);
 
-    Task Update(int userId, IncomeUpdateData incomeUpdateData);
+    Task Update(int id, int userId, CategoryUpdateData categoryUpdateData);
     
     Task Delete(int id, int userId);
 }

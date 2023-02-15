@@ -7,43 +7,44 @@ using Microsoft.AspNetCore.Mvc;
 namespace FinanceAccounting.Controllers;
 
 [ApiController]
-[Route("income")]
-public class IncomeController : ControllerBase
+[Route("expense")]
+
+public class ExpenseController : ControllerBase
 {
 
-    private readonly IIncomeService _incomeService;
+    private readonly IExpenseService _expenseService;
 
-    public IncomeController(IIncomeService incomeService)
+    public ExpenseController(IExpenseService expenseService)
     {
-        _incomeService = incomeService;
+        _expenseService = expenseService;
     }
 
     /// <summary>
-    /// Creates a new income.
+    /// Creates a new expense.
     /// </summary>
-    /// <param name="amount">The amount of income in rubles accurate to a penny</param>
-    /// <param name="categoryId">ID of income source category</param>
-    /// <param name="incomeName">Name of new income</param>
+    /// <param name="amount">The amount of expense in rubles accurate to a penny</param>
+    /// <param name="categoryId">ID of income expense category</param>
+    /// <param name="expenseName">Name of new expense</param>
     /// <returns>Status Code 201 (Created)</returns>
     /// <response code="201">Success</response>
-    /// <response code="400">Income with this name already exist</response>
+    /// <response code="400">Expense with this name already exist</response>
     /// <response code="401">Unauthorized</response>
     [ProducesResponseType(201)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
     [Authorize(Roles = "Administrator,User")]
     [HttpPost]
-    public async Task<IActionResult> Create(string incomeName, float amount, int categoryId)
+    public async Task<IActionResult> Create(string expenseName, float amount, int categoryId)
     {
         var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        var income = await _incomeService.Create(incomeName, userId, amount, categoryId);
-        return CreatedAtAction(nameof(Create), income);
+        var expense = await _expenseService.Create(expenseName, userId, amount, categoryId);
+        return CreatedAtAction(nameof(Create), expense);
     }
     
     /// <summary>
-    /// Returns all income for the specified period.
+    /// Returns all expense for the specified period.
     /// </summary>
-    /// <returns>List of the specified user's income for a given period</returns>
+    /// <returns>List of the specified user's expense for a given period</returns>
     /// <response code="200">Success</response>
     /// <response code="401">Unauthorized</response>
     [ProducesResponseType(200)]
@@ -54,18 +55,18 @@ public class IncomeController : ControllerBase
     public async Task<IActionResult> GetList(DateTime from, DateTime to)
     {
         var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        var incomeList =  await _incomeService.GetList(userId, from, to);
+        var expenseList =  await _expenseService.GetList(userId, from, to);
         
-        return Ok(incomeList);
+        return Ok(expenseList);
     }
 
     /// <summary>
-    /// Returns income by ID.
+    /// Returns expense by ID.
     /// </summary>
-    /// <param name="id">Received income ID</param>
-    /// <returns>Requested income</returns>
+    /// <param name="id">Received expense ID</param>
+    /// <returns>Requested expense</returns>
     /// <response code="200">Success</response>
-    /// <response code="400">Income with this ID was not found</response>
+    /// <response code="400">Expense with this ID was not found</response>
     /// <response code="401">Unauthorized</response>
     /// <response code="403">You don't have an access to perform this action</response>
     [ProducesResponseType(200)]
@@ -78,19 +79,20 @@ public class IncomeController : ControllerBase
     public async Task<IActionResult> Get(int id)
     {
         var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        var income = await _incomeService.Get(id, userId);
+        var expense = await _expenseService.Get(id, userId);
         
-        return Ok(income);
+        return Ok(expense);
     }
-    
+
+
     /// <summary>
-    /// Updates income data.
+    /// Updates expense data.
     /// </summary>
-    /// <param name="id">Received income source ID</param>
-    /// <param name="categoryUpdateData">Desirable new data</param>
+    /// <param name="id">Received expense source ID</param>
+    /// <param name="expenseUpdateData">Desirable new data</param>
     /// <returns>Status Code 200 (OK)</returns>
     /// <response code="200">Data updated successfully</response>
-    /// <response code="400">Income with this ID was not found</response>
+    /// <response code="400">Expense with this ID was not found</response>
     /// <response code="401">Unauthorized</response>
     /// <response code="403">You don't have an access to perform this action</response>
     [ProducesResponseType(200)]
@@ -100,20 +102,20 @@ public class IncomeController : ControllerBase
     [Route("{id}")]
     [Authorize(Roles = "Administrator,User")]
     [HttpPut]
-    public async Task<IActionResult> Update(int id, CategoryUpdateData categoryUpdateData)
+    public async Task<IActionResult> Update(int id, CategoryUpdateData expenseUpdateData)
     {
         var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        await _incomeService.Update(id, userId, categoryUpdateData);
+        await _expenseService.Update(id, userId, expenseUpdateData);
         return Ok();
     }
     
     /// <summary>
-    /// Deletes income category.
+    /// Deletes expense category.
     /// </summary>
-    /// <param name="id">Received income source ID</param>
+    /// <param name="id">Received expense source ID</param>
     /// <returns>Status Code 204 (NoContent)</returns>
     /// <response code="204">Success</response>
-    /// <response code="400">Income with this ID was not found</response>
+    /// <response code="400">Expense with this ID was not found</response>
     /// <response code="401">Unauthorized</response>
     /// <response code="403">You don't have an access to perform this action</response>
     [ProducesResponseType(204)]
@@ -126,7 +128,7 @@ public class IncomeController : ControllerBase
     public async Task<IActionResult> Delete(int id)
     {
         var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        await _incomeService.Delete(id, userId);
+        await _expenseService.Delete(id, userId);
         
         return NoContent();
     }

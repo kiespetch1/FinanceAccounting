@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinanceAccounting.Models;
 
-public class IncomeSource
+public class ExpenseSource
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

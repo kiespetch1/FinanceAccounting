@@ -19,6 +19,9 @@ public class IncomeService : IIncomeService
         var user = await _ctx.Users.SingleOrDefaultAsync(x => x.Id == userId);
         if (user == null)
             throw new UserNotFoundException();
+        if (await _ctx.IncomeSources.SingleOrDefaultAsync(x => x.Id == categoryId) == null)
+            throw new CategoryNotFoundException();
+        
         var newIncome = new Income
         {
             Name = incomeName,
@@ -56,19 +59,21 @@ public class IncomeService : IIncomeService
     }
     
     
-    public async Task Update(int userId, IncomeUpdateData incomeUpdateData)
+    public async Task Update(int id, int userId, CategoryUpdateData categoryUpdateData)
     {
-        var income = _ctx.Income.SingleOrDefault(x => x.Id == incomeUpdateData.CategoryId);
+        var income = _ctx.Income.SingleOrDefault(x => x.Id == id);
         if (income == null)
             throw new IncomeNotFoundException();
         if (income.UserId != userId)
             throw new NoAccessException();
-        if (_ctx.IncomeSources.SingleOrDefault(x => x.Id == incomeUpdateData.CategoryId).UserId != userId)
+        if (await _ctx.IncomeSources.SingleOrDefaultAsync(x => x.Id == categoryUpdateData.CategoryId) == null)
+            throw new CategoryNotFoundException();
+        if (_ctx.IncomeSources.SingleOrDefault(x => x.Id == categoryUpdateData.CategoryId).UserId != userId)
             throw new NoAccessException();
-            
-        income.Name = incomeUpdateData.Name;
-        income.Amount = incomeUpdateData.Amount;
-        income.CategoryId = incomeUpdateData.CategoryId;
+        
+        income.Name = categoryUpdateData.Name;
+        income.Amount = categoryUpdateData.Amount;
+        income.CategoryId = categoryUpdateData.CategoryId;
         income.EditDate = DateTime.Today;
         
         _ctx.Income.Update(income);
