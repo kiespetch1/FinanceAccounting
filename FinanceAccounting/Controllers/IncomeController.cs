@@ -21,9 +21,7 @@ public class IncomeController : ControllerBase
     /// <summary>
     /// Creates a new income.
     /// </summary>
-    /// <param name="amount">The amount of income in rubles accurate to a penny</param>
-    /// <param name="categoryId">ID of income source category</param>
-    /// <param name="incomeName">Name of new income</param>
+    /// <param name="incomeCreateData">Desired income data</param>
     /// <returns>Status Code 201 (Created)</returns>
     /// <response code="201">Success</response>
     /// <response code="400">Income with this name already exist</response>
@@ -33,10 +31,10 @@ public class IncomeController : ControllerBase
     [ProducesResponseType(401)]
     [Authorize(Roles = "Administrator,User")]
     [HttpPost]
-    public async Task<IActionResult> Create(string incomeName, float amount, int categoryId)
+    public async Task<IActionResult> Create([FromBody]IncomeCreateData incomeCreateData)
     {
         var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        var income = await _incomeService.Create(incomeName, userId, amount, categoryId);
+        var income = await _incomeService.Create(incomeCreateData.Name, userId, incomeCreateData.Amount, incomeCreateData.CategoryId);
         return CreatedAtAction(nameof(Create), income);
     }
     
