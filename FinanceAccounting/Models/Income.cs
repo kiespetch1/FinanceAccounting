@@ -17,12 +17,12 @@ public class Income
     [ForeignKey("IncomeSource")]
     public int CategoryId { get; set; }
 
-    [Column(TypeName = "date")] 
-    public DateTime CreationDate { get; set; } 
+    [Column(TypeName = "timestamp")] 
+    public DateTime CreatedAt { get; set; } 
     
-    [Column(TypeName="date")]
-    public DateTime EditDate { get; set; }
+    [Column(TypeName = "timestamp")]
+    public DateTime UpdatedAt { get; set; }
 
     [ForeignKey("User")]
-    public int UserId { get; set; }
+    public int User { get; set; }
 }

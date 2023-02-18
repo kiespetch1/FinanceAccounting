@@ -32,7 +32,7 @@ internal static class PasswordHashing
             return false;
         }
         var src = Convert.FromBase64String(hashedPassword);
-        if ((src.Length != 0x31) || (src[0] != 0))
+        if (src.Length != 0x31 || src[0] != 0)
         {
             return false;
         }
