@@ -9,7 +9,7 @@ namespace FinanceAccounting.Controllers;
 [ApiController]
 [Route("expense")]
 
-public class ExpenseController : ControllerBase
+public class ExpenseController : BaseController
 {
 
     private readonly IExpenseService _expenseService;
@@ -34,10 +34,10 @@ public class ExpenseController : ControllerBase
     [ProducesResponseType(401)]
     [Authorize(Roles = "Administrator,User")]
     [HttpPost]
-    public async Task<IActionResult> Create(string expenseName, float amount, int categoryId)
+    public async Task<IActionResult> Create([FromBody]IncomeCreateData expenseCreateData)
     {
-        var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        var expense = await _expenseService.Create(expenseName, userId, amount, categoryId);
+        var userId = GetUserId();
+        var expense = await _expenseService.Create(userId, expenseCreateData);
         return CreatedAtAction(nameof(Create), expense);
     }
     
@@ -52,10 +52,10 @@ public class ExpenseController : ControllerBase
     [ProducesResponseType(401)]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public async Task<IActionResult> GetList(DateTime from, DateTime to)
+    public async Task<IActionResult> GetList(IncomeSearchContext incomeSearchContext)
     {
-        var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        var expenseList =  await _expenseService.GetList(userId, from, to);
+        var userId = GetUserId();
+        var expenseList =  await _expenseService.GetList(userId, incomeSearchContext);
         
         return Ok(expenseList);
     }
@@ -78,7 +78,7 @@ public class ExpenseController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get(int id)
     {
-        var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
+        var userId = GetUserId();
         var expense = await _expenseService.Get(id, userId);
         
         return Ok(expense);
@@ -102,10 +102,10 @@ public class ExpenseController : ControllerBase
     [Route("{id}")]
     [Authorize(Roles = "Administrator,User")]
     [HttpPut]
-    public async Task<IActionResult> Update(int id, CategoryUpdateData expenseUpdateData)
+    public async Task<IActionResult> Update(int id, IncomeUpdateData expenseUpdateData)
     {
-        var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        await _expenseService.Update(id, userId, expenseUpdateData);
+        var userId = GetUserId();
+        await _expenseService.Update(id, expenseUpdateData);
         return Ok();
     }
     
@@ -127,7 +127,7 @@ public class ExpenseController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> Delete(int id)
     {
-        var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
+        var userId = GetUserId();
         await _expenseService.Delete(id, userId);
         
         return NoContent();

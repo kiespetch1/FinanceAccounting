@@ -1,14 +1,13 @@
-﻿using System.Security.Claims;
-using FinanceAccounting.Interfaces;
+﻿using FinanceAccounting.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinanceAccounting.Controllers;
 
 [ApiController]
-[Route("expensesource")]
+[Route("expense-source")]
 
-public class ExpenseSourceController : ControllerBase
+public class ExpenseSourceController : BaseController
 {
     
     private readonly IExpenseSourceService _expenseSourceService;
@@ -33,7 +32,7 @@ public class ExpenseSourceController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(string newExpenseName)
     {
-        var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
+        var userId = GetUserId();
         var expenseSource = await _expenseSourceService.Create(newExpenseName, userId);
         return CreatedAtAction(nameof(Create), expenseSource);
     }
@@ -51,7 +50,7 @@ public class ExpenseSourceController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetList()
     {
-        var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
+        var userId = GetUserId();
         var expenseSourcesList =  await _expenseSourceService.GetList(userId);
         
         return Ok(expenseSourcesList);
@@ -75,7 +74,7 @@ public class ExpenseSourceController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get(int id)
     {
-        var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
+        var userId = GetUserId();
         var expenseSource = await _expenseSourceService.Get(id, userId);
         
         return Ok(expenseSource);
@@ -100,7 +99,7 @@ public class ExpenseSourceController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> Update(int id, string newName)
     {
-        var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
+        var userId = GetUserId();
         await _expenseSourceService.Update(id, newName, userId);
         
         return NoContent();
@@ -124,7 +123,7 @@ public class ExpenseSourceController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> Delete(int id)
     {
-        var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
+        var userId = GetUserId();
         await _expenseSourceService.Delete(id, userId);
         
         return NoContent();

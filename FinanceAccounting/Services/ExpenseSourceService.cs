@@ -32,7 +32,7 @@ public class ExpenseSourceService : IExpenseSourceService
         await _ctx.ExpenseSources.AddAsync(newExpenseSource);
         await _ctx.SaveChangesAsync();
 
-        return (newExpenseSource);
+        return newExpenseSource;
     }
     
     public async Task<List<ExpenseSource>> GetList(int userId)

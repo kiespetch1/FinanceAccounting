@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
@@ -9,7 +8,7 @@ namespace FinanceAccounting.Controllers;
 
 [ApiController]
 [Route("api/users")]
-public class UserController : ControllerBase
+public class UserController : BaseController
 {
     private readonly IUsersService _userService;
 
@@ -54,9 +53,9 @@ public class UserController : ControllerBase
     [Route("{id}")]
     [Authorize(Roles = "Administrator")]
     [HttpGet]
-    public IActionResult Get(int id)
+    public async Task<IActionResult> Get(int id)
     {
-        var user = _userService.Get(id);
+        var user = await _userService.Get(id);
         return Ok(user);
     }
 
@@ -74,10 +73,10 @@ public class UserController : ControllerBase
     [ProducesResponseType(401)]
     [Authorize(Roles = "Administrator,User")]
     [HttpPut]
-    public IActionResult Update([FromBody]UserUpdateData userUpdateData)
+    public async Task<IActionResult> Update([FromBody]UserUpdateData userUpdateData)
     {
-        var id = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        _userService.Update(id, userUpdateData);
+        var id = GetUserId();
+        await _userService.Update(id, userUpdateData);
         return NoContent();
     }
     
@@ -98,9 +97,9 @@ public class UserController : ControllerBase
     [Route("{id}")]
     [Authorize(Roles = "Administrator")]
     [HttpDelete]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        _userService.Delete(id);
+        await _userService.Delete(id);
         return NoContent();
     }
 }

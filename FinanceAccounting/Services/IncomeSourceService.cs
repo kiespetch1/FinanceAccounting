@@ -30,7 +30,7 @@ public class IncomeSourceService : IIncomeSourceService
         await _ctx.IncomeSources.AddAsync(newIncomeSource);
         await _ctx.SaveChangesAsync();
 
-        return (newIncomeSource);
+        return newIncomeSource;
     }
     
     public async Task<List<IncomeSource>> GetList(int userId)

@@ -24,5 +24,5 @@ public class Expense
     public DateTime EditDate { get; set; }
 
     [ForeignKey("User")]
-    public int UserId { get; set; }
+    public int User { get; set; }
 }

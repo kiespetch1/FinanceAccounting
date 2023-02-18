@@ -14,36 +14,36 @@ public class ExpenseService : IExpenseService
         _ctx = ctx;
     }
 
-    public async Task<Expense> Create(string expenseName, int userId, float amount, int categoryId)
+    public async Task<Expense> Create(int userId, IncomeCreateData incomeCreateData)
     {
         var user = await _ctx.Users.SingleOrDefaultAsync(x => x.Id == userId);
         if (user == null)
             throw new UserNotFoundException();
-        if (await _ctx.ExpenseSources.SingleOrDefaultAsync(x => x.Id == categoryId) == null)
+        if (await _ctx.ExpenseSources.SingleOrDefaultAsync(x => x.Id == incomeCreateData.CategoryId) == null)
             throw new CategoryNotFoundException();
-        if (_ctx.ExpenseSources.SingleOrDefault(x => x.Id == categoryId).UserId != userId)
+        if (_ctx.ExpenseSources.SingleOrDefault(x => x.Id == incomeCreateData.CategoryId).UserId != userId)
             throw new NoAccessException();
         
         var newExpense = new Expense
         {
-            Name = expenseName,
-            Amount = amount,
-            CategoryId = categoryId,
+            Name = incomeCreateData.Name,
+            Amount = incomeCreateData.Amount,
+            CategoryId = incomeCreateData.CategoryId,
             CreationDate = DateTime.Today,
             EditDate = DateTime.Today,
-            UserId = userId
+            User = userId
             
         };
         await _ctx.Expense.AddAsync(newExpense);
         await _ctx.SaveChangesAsync();
 
-        return (newExpense);
+        return newExpense;
     }
     
-    public async Task<List<Expense>> GetList(int userId, DateTime from, DateTime to)
+    public async Task<List<Expense>> GetList(int userId, IncomeSearchContext incomeSearchContext)
     {
         var expenseList = await _ctx.Expense
-            .Where(x => x.UserId == userId && x.CreationDate >= from && x.CreationDate <= to)
+            .Where(x => x.User == userId && x.CreationDate >= incomeSearchContext.From && x.CreationDate <= incomeSearchContext.To)
             .ToListAsync();
         
         return expenseList;
@@ -54,19 +54,19 @@ public class ExpenseService : IExpenseService
         var expense = await _ctx.Expense.SingleOrDefaultAsync(x => x.Id == id);
         if (expense == null)
             throw new IncomeNotFoundException();
-        if (expense.UserId != userId)
+        if (expense.User != userId)
             throw new NoAccessException();
 
         return expense;
     }
     
     
-    public async Task Update(int id, int userId, CategoryUpdateData expenseUpdateData)
+    public async Task Update(int userId, IncomeUpdateData expenseUpdateData)
     {
-        var expense = _ctx.Expense.SingleOrDefault(x => x.Id == id);
+        var expense = _ctx.Expense.SingleOrDefault(x => x.Id == expenseUpdateData.Id);
         if (expense == null)
             throw new ExpenseNotFoundException();
-        if (expense.UserId != userId)
+        if (expense.User != userId)
             throw new NoAccessException();
         if (await _ctx.ExpenseSources.SingleOrDefaultAsync(x => x.Id == expenseUpdateData.CategoryId) == null)
             throw new CategoryNotFoundException();
@@ -87,7 +87,7 @@ public class ExpenseService : IExpenseService
         var expense = await _ctx.Expense.SingleOrDefaultAsync(x => x.Id == id);
         if (expense == null)
             throw new IncomeNotFoundException();
-        if (expense.UserId != userId)
+        if (expense.User != userId)
             throw new NoAccessException();
         
         _ctx.Expense.Remove(expense);

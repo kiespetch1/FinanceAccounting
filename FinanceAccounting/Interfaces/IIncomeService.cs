@@ -4,13 +4,13 @@ namespace FinanceAccounting.Interfaces;
 
 public interface IIncomeService
 {
-    Task<Income> Create(string incomeName, int userId, float amount, int categoryId);
+    Task<Income> Create(int userId, IncomeCreateData incomeCreateData);
     
-    Task<List<Income>> GetList(int userId, DateTime from, DateTime to);
+    Task<List<Income>> GetList(int userId, IncomeSearchContext incomeSearchContext);
     
     Task<Income> Get(int id, int userId);
 
-    Task Update(int id, int userId, CategoryUpdateData categoryUpdateData);
+    Task Update(int userId, IncomeUpdateData incomeUpdateData);
     
     Task Delete(int id, int userId);
 }
