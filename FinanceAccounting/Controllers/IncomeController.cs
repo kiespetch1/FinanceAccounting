@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using FinanceAccounting.Interfaces;
+﻿using FinanceAccounting.Interfaces;
 using FinanceAccounting.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +7,7 @@ namespace FinanceAccounting.Controllers;
 
 [ApiController]
 [Route("income")]
-public class IncomeController : ControllerBase
+public class IncomeController : BaseController
 {
 
     private readonly IIncomeService _incomeService;
@@ -33,8 +32,8 @@ public class IncomeController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody]IncomeCreateData incomeCreateData)
     {
-        var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        var income = await _incomeService.Create(incomeCreateData.Name, userId, incomeCreateData.Amount, incomeCreateData.CategoryId);
+        var userId = GetUserId();
+        var income = await _incomeService.Create(userId, incomeCreateData);
         return CreatedAtAction(nameof(Create), income);
     }
     
@@ -49,10 +48,10 @@ public class IncomeController : ControllerBase
     [ProducesResponseType(401)]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public async Task<IActionResult> GetList(DateTime from, DateTime to)
+    public async Task<IActionResult> GetList(IncomeSearchContext incomeSearchContext)
     {
-        var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-        var incomeList =  await _incomeService.GetList(userId, from, to);
+        var userId = GetUserId();
+        var incomeList =  await _incomeService.GetList(userId, incomeSearchContext);
         
         return Ok(incomeList);
     }
@@ -75,7 +74,7 @@ public class IncomeController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get(int id)
     {
-        var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
+        var userId = GetUserId();
         var income = await _incomeService.Get(id, userId);
         
         return Ok(income);
@@ -99,7 +98,7 @@ public class IncomeController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> Update(IncomeUpdateData incomeUpdateData)
     {
-        var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
+        var userId = GetUserId();
         await _incomeService.Update(userId, incomeUpdateData);
         return Ok();
     }
@@ -122,7 +121,7 @@ public class IncomeController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> Delete(int id)
     {
-        var userId = Convert.ToInt32(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
+        var userId = GetUserId();
         await _incomeService.Delete(id, userId);
         
         return NoContent();

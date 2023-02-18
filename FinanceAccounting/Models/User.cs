@@ -26,11 +26,11 @@ public class User
 
     public string Password { get; set; }
     
-    [Column(TypeName = "date")] 
-    public DateTime CreationDate { get; set; } 
+    [Column(TypeName = "timestamp")] 
+    public DateTime CreatedAt { get; set; } 
     
-    [Column(TypeName="date")]
-    public DateTime EditDate { get; set; }
+    [Column(TypeName="timestamp")]
+    public DateTime UpdatedAt { get; set; }
     
     public Role Role { get; set; }
 

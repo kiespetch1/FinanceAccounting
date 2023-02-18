@@ -42,7 +42,7 @@ public class UsersService : IUsersService
         if (_ctx.Users.SingleOrDefault(x => x.Login == userUpdateData.Login && x.Id != id) != null)
             throw new ExistingLoginException();
         user.Login = userUpdateData.Login;
-        user.EditDate = DateTime.Today;
+        user.UpdatedAt = DateTime.Now;
         _ctx.Users.Update(user);
         await _ctx.SaveChangesAsync();
     }

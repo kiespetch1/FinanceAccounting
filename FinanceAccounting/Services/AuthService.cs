@@ -33,8 +33,8 @@ public class AuthService : IAuthService
             LastName = user.LastName,
             BirthDate = user.BirthDate,
             Password = HashPassword(user.Password),
-            CreationDate = DateTime.Today,
-            EditDate = DateTime.Today,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now,
             Role = Role.User
         };
 
@@ -61,7 +61,7 @@ public class AuthService : IAuthService
             issuer: AuthOptions.Issuer,
             audience: AuthOptions.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(1),
+            expires: DateTime.Now.AddHours(1),
             signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
                 SecurityAlgorithms.HmacSha256));
 
