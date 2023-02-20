@@ -6,6 +6,7 @@ namespace FinanceAccounting.Controllers;
 
 [ApiController]
 [Route("income-source")]
+
 public class IncomeSourceController : BaseController
 {
     

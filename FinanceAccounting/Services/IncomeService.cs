@@ -76,7 +76,7 @@ public class IncomeService : IIncomeService
         income.Name = incomeUpdateData.Name;
         income.Amount = incomeUpdateData.Amount;
         income.CategoryId = incomeUpdateData.CategoryId;
-        income.UpdatedAt = DateTime.Today;
+        income.UpdatedAt = DateTime.Now;
         
         _ctx.Income.Update(income);
         await _ctx.SaveChangesAsync();
