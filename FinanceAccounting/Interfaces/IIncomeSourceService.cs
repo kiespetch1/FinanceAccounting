@@ -1,4 +1,6 @@
-﻿namespace FinanceAccounting.Interfaces;
+﻿using FinanceAccounting.Entities;
+
+namespace FinanceAccounting.Interfaces;
 
 public interface IIncomeSourceService
 {
