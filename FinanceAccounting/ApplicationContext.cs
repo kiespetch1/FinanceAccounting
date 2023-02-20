@@ -1,4 +1,4 @@
-﻿using FinanceAccounting.Models;
+﻿using FinanceAccounting.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceAccounting;

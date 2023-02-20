@@ -1,4 +1,4 @@
-﻿namespace FinanceAccounting.Models;
+﻿namespace FinanceAccounting.SearchContexts;
 
 public class IncomeSearchContext
 {

@@ -1,4 +1,6 @@
-﻿using FinanceAccounting.Models;
+﻿using FinanceAccounting.Entities;
+using FinanceAccounting.Models;
+using FinanceAccounting.SearchContexts;
 
 namespace FinanceAccounting.Interfaces;
 
