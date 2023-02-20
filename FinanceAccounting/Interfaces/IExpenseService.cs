@@ -6,13 +6,13 @@ namespace FinanceAccounting.Interfaces;
 
 public interface IExpenseService
 {
-    Task<Expense> Create(int userId, IncomeCreateData incomeCreateData);
+    Task<Expense> Create(int userId, ExpenseCreateData expenseCreateData);
     
-    Task<List<Expense>> GetList(int userId, IncomeSearchContext incomeSearchContext);
+    Task<List<Expense>> GetList(int userId, ExpenseSearchContext expenseSearchContext);
     
     Task<Expense> Get(int id, int userId);
 
-    Task Update(int userId, IncomeUpdateData incomeUpdateData);
+    Task Update(int userId, ExpenseUpdateData expenseUpdateData);
     
     Task Delete(int id, int userId);
 }

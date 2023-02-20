@@ -1,12 +1,10 @@
 ﻿namespace FinanceAccounting.Models;
 
-public class IncomeUpdateData
+public class ExpenseCreateData
 {
-    public int Id { get; set; }
-    
     public string Name { get; set; }
     
-    public float Amount { get; set; } 
+    public float Amount { get; set; }
     
     public int CategoryId { get; set; }
 }

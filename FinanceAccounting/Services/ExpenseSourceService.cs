@@ -22,7 +22,7 @@ public class ExpenseSourceService : IExpenseSourceService
             throw new UserNotFoundException();
         if (await _ctx.ExpenseSources
                 .SingleOrDefaultAsync(x => x.Name == expenseName && x.UserId == userId) != null)
-            throw new ExistingCategoryException();
+            throw new ExistingExpenseSourceException();
         
         var newExpenseSource = new ExpenseSource
         {
@@ -45,7 +45,7 @@ public class ExpenseSourceService : IExpenseSourceService
     {
         var expenseSource = await _ctx.ExpenseSources.SingleOrDefaultAsync(x => x.Id == id);
         if (expenseSource == null)
-            throw new CategoryNotFoundException();
+            throw new ExpenseSourceNotFoundException();
         if (expenseSource.UserId != userId)
             throw new NoAccessException();
 
@@ -56,11 +56,11 @@ public class ExpenseSourceService : IExpenseSourceService
     {
         var expenseSource = _ctx.ExpenseSources.SingleOrDefault(x => x.Id == id);
         if (expenseSource == null)
-            throw new CategoryNotFoundException();
+            throw new ExpenseSourceNotFoundException();
         if (userId != expenseSource.UserId)
             throw new NoAccessException();
         if (_ctx.ExpenseSources.SingleOrDefault(x => x.Name == newName && x.UserId == userId) != null)
-            throw new ExistingCategoryException();
+            throw new ExistingExpenseSourceException();
         
         expenseSource.Name = newName;
         _ctx.ExpenseSources.Update(expenseSource);
@@ -71,7 +71,7 @@ public class ExpenseSourceService : IExpenseSourceService
     {
         var expenseSource = await _ctx.ExpenseSources.SingleOrDefaultAsync(x => x.Id == id);
         if (expenseSource == null)
-            throw new CategoryNotFoundException();
+            throw new ExpenseSourceNotFoundException();
         if (expenseSource.UserId != userId)
             throw new NoAccessException();
         _ctx.ExpenseSources.Remove(expenseSource);

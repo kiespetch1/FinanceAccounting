@@ -22,7 +22,7 @@ public class IncomeService : IIncomeService
         if (user == null)
             throw new UserNotFoundException();
         if (await _ctx.IncomeSources.SingleOrDefaultAsync(x => x.Id == incomeCreateData.CategoryId) == null)
-            throw new CategoryNotFoundException();
+            throw new IncomeSourceNotFoundException();
         if (_ctx.IncomeSources.SingleOrDefault(x => x.Id == incomeCreateData.CategoryId).UserId != userId)
             throw new NoAccessException();
         
@@ -71,14 +71,14 @@ public class IncomeService : IIncomeService
         if (income.User != userId)
             throw new NoAccessException();
         if (await _ctx.IncomeSources.SingleOrDefaultAsync(x => x.Id == incomeUpdateData.CategoryId) == null)
-            throw new CategoryNotFoundException();
+            throw new IncomeSourceNotFoundException();
         if (_ctx.IncomeSources.SingleOrDefault(x => x.Id == incomeUpdateData.CategoryId).UserId != userId)
             throw new NoAccessException();
             
         income.Name = incomeUpdateData.Name;
         income.Amount = incomeUpdateData.Amount;
         income.CategoryId = incomeUpdateData.CategoryId;
-        income.UpdatedAt = DateTime.Today;
+        income.UpdatedAt = DateTime.Now;
         
         _ctx.Income.Update(income);
         await _ctx.SaveChangesAsync();

@@ -1,6 +1,6 @@
 ﻿namespace FinanceAccounting.Models;
 
-public class IncomeUpdateData
+public class ExpenseUpdateData
 {
     public int Id { get; set; }
     

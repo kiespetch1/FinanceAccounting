@@ -21,7 +21,7 @@ public class IncomeSourceService : IIncomeSourceService
             throw new UserNotFoundException();
         if (await _ctx.IncomeSources
                 .SingleOrDefaultAsync(x => x.Name == incomeName && x.UserId == userId) != null)
-            throw new ExistingCategoryException();
+            throw new ExistingIncomeSourceException();
         var newIncomeSource = new IncomeSource
         {
             Name = incomeName,
@@ -43,7 +43,7 @@ public class IncomeSourceService : IIncomeSourceService
     {
         var incomeSource = await _ctx.IncomeSources.SingleOrDefaultAsync(x => x.Id == id);
         if (incomeSource == null)
-            throw new CategoryNotFoundException();
+            throw new IncomeSourceNotFoundException();
         if (incomeSource.UserId != userId)
             throw new NoAccessException();
 
@@ -54,11 +54,11 @@ public class IncomeSourceService : IIncomeSourceService
     {
         var incomeSource = _ctx.IncomeSources.SingleOrDefault(x => x.Id == id);
         if (incomeSource == null)
-            throw new CategoryNotFoundException();
+            throw new IncomeSourceNotFoundException();
         if (userId != incomeSource.UserId)
             throw new NoAccessException();
         if (_ctx.IncomeSources.SingleOrDefault(x => x.Name == newName && x.UserId == userId) != null)
-            throw new ExistingCategoryException();
+            throw new ExistingIncomeSourceException();
         incomeSource.Name = newName;
         _ctx.IncomeSources.Update(incomeSource);
         await _ctx.SaveChangesAsync();
@@ -68,7 +68,7 @@ public class IncomeSourceService : IIncomeSourceService
     {
         var incomeSource = await _ctx.IncomeSources.SingleOrDefaultAsync(x => x.Id == id);
         if (incomeSource == null)
-            throw new CategoryNotFoundException();
+            throw new IncomeSourceNotFoundException();
         if (incomeSource.UserId != userId)
             throw new NoAccessException();
         _ctx.IncomeSources.Remove(incomeSource);

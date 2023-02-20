@@ -22,9 +22,7 @@ public class ExpenseController : BaseController
     /// <summary>
     /// Creates a new expense.
     /// </summary>
-    /// <param name="amount">The amount of expense in rubles accurate to a penny</param>
-    /// <param name="categoryId">ID of income expense category</param>
-    /// <param name="expenseName">Name of new expense</param>
+    /// <param name="expenseCreateData">Desired expense data</param>
     /// <returns>Status Code 201 (Created)</returns>
     /// <response code="201">Success</response>
     /// <response code="400">Expense with this name already exist</response>
@@ -34,7 +32,7 @@ public class ExpenseController : BaseController
     [ProducesResponseType(401)]
     [Authorize(Roles = "Administrator,User")]
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody]IncomeCreateData expenseCreateData)
+    public async Task<IActionResult> Create([FromBody]ExpenseCreateData expenseCreateData)
     {
         var userId = GetUserId();
         var expense = await _expenseService.Create(userId, expenseCreateData);
@@ -52,10 +50,10 @@ public class ExpenseController : BaseController
     [ProducesResponseType(401)]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public async Task<IActionResult> GetList(IncomeSearchContext incomeSearchContext)
+    public async Task<IActionResult> GetList(ExpenseSearchContext expenseSearchContext)
     {
         var userId = GetUserId();
-        var expenseList =  await _expenseService.GetList(userId, incomeSearchContext);
+        var expenseList =  await _expenseService.GetList(userId, expenseSearchContext);
         
         return Ok(expenseList);
     }
@@ -88,7 +86,6 @@ public class ExpenseController : BaseController
     /// <summary>
     /// Updates expense data.
     /// </summary>
-    /// <param name="id">Received expense source ID</param>
     /// <param name="expenseUpdateData">Desirable new data</param>
     /// <returns>Status Code 200 (OK)</returns>
     /// <response code="200">Data updated successfully</response>
@@ -102,10 +99,10 @@ public class ExpenseController : BaseController
     [Route("{id}")]
     [Authorize(Roles = "Administrator,User")]
     [HttpPut]
-    public async Task<IActionResult> Update(int id, IncomeUpdateData expenseUpdateData)
+    public async Task<IActionResult> Update(ExpenseUpdateData expenseUpdateData)
     {
         var userId = GetUserId();
-        await _expenseService.Update(id, expenseUpdateData);
+        await _expenseService.Update(userId, expenseUpdateData);
         return Ok();
     }
     
