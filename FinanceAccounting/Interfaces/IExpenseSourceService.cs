@@ -1,4 +1,4 @@
-﻿using FinanceAccounting.Models;
+﻿using FinanceAccounting.Entities;
 
 namespace FinanceAccounting.Interfaces;
 

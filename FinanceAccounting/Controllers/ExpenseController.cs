@@ -1,6 +1,6 @@
-﻿using System.Security.Claims;
-using FinanceAccounting.Interfaces;
+﻿using FinanceAccounting.Interfaces;
 using FinanceAccounting.Models;
+using FinanceAccounting.SearchContexts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

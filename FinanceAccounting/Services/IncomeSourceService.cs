@@ -1,6 +1,6 @@
-﻿using FinanceAccounting.Exceptions;
+﻿using FinanceAccounting.Entities;
+using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
-using FinanceAccounting.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceAccounting.Services;
