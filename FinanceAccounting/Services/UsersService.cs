@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FinanceAccounting.Entities;
+using Microsoft.EntityFrameworkCore;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
 using FinanceAccounting.Models;
@@ -14,6 +15,12 @@ public class UsersService : IUsersService
     {
         _ctx = ctx;
     }
+    
+    public async Task<List<User>> GetList()
+    {
+        var users = await _ctx.Users.ToListAsync();
+        return users;
+    }
     public async Task<User> Get(int id)
     {
         
@@ -22,22 +29,7 @@ public class UsersService : IUsersService
             throw new UserNotFoundException();
         return user;
     }
-    
-    public async Task<List<User>> GetList()
-    {
-        var users = await _ctx.Users.ToListAsync();
-        return users;
-    }
 
-    public async Task Delete(int id)
-    {
-        var user = _ctx.Users.SingleOrDefault(x => x.Id == id);
-        if (user == null)
-            throw new UserNotFoundException();
-        _ctx.Users.Remove(user);
-        await _ctx.SaveChangesAsync();
-    }
-    
     public async Task Update(int id, UserUpdateData userUpdateData)
     {
         var user = _ctx.Users.SingleOrDefault(x => x.Id == id);
@@ -51,8 +43,17 @@ public class UsersService : IUsersService
         if (_ctx.Users.SingleOrDefault(x => x.Login == userUpdateData.Login && x.Id != id) != null)
             throw new ExistingLoginException();
         user.Login = userUpdateData.Login;
-        user.EditDate = DateTime.Today;
+        user.UpdatedAt = DateTime.Now;
         _ctx.Users.Update(user);
+        await _ctx.SaveChangesAsync();
+    }
+    
+    public async Task Delete(int id)
+    {
+        var user = _ctx.Users.SingleOrDefault(x => x.Id == id);
+        if (user == null)
+            throw new UserNotFoundException();
+        _ctx.Users.Remove(user);
         await _ctx.SaveChangesAsync();
     }
 }

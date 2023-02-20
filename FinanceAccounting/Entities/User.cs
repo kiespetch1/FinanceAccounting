@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FinanceAccounting.Models;
+namespace FinanceAccounting.Entities;
 
 
 public class User
@@ -26,11 +26,11 @@ public class User
 
     public string Password { get; set; }
     
-    [Column(TypeName = "date")] 
-    public DateTime CreationDate { get; set; } 
+    [Column(TypeName = "timestamp")] 
+    public DateTime CreatedAt { get; set; } 
     
-    [Column(TypeName="date")]
-    public DateTime EditDate { get; set; }
+    [Column(TypeName="timestamp")]
+    public DateTime UpdatedAt { get; set; }
     
     public Role Role { get; set; }
 

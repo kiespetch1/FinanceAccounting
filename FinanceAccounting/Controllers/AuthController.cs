@@ -1,5 +1,4 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
 using FinanceAccounting.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -19,29 +18,10 @@ public class AuthController : ControllerBase
     }
     
     /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="authData">Email and password of the user</param>
-    /// <returns>User JWT Token, Status Code 200 (OK)</returns>
-    /// <exception cref="WrongCredentialsException">Credentials are incorrect</exception>
-    /// <response code="200">User successfully logged in</response>
-    /// <response code="400">Credentials are incorrect</response>
-    [Route("login")]
-    [HttpPost]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(400)]
-    public IActionResult Login([FromBody] AuthData authData)
-    {
-        var jwt  = _authService.Login(authData);
-        return Ok(new JwtSecurityTokenHandler().WriteToken(jwt));
-    }
-
-    /// <summary>
-    /// 
+    /// Registers a user.
     /// </summary>
     /// <param name="user"> Login, name, email, middle name, last name, birth date and password of the user</param>
     /// <returns>Status Code 200 (OK)</returns>
-    /// <exception cref="ExistingLoginException">Login or email is already taken</exception>
     /// <response code="200">Registration completed successfully</response>
     /// <response code="400">Login or email is already taken</response>
     [Route("registration")]
@@ -52,5 +32,22 @@ public class AuthController : ControllerBase
     {
         await _authService.Register(user);
         return Ok();
+    }
+    
+    /// <summary>
+    /// Returns a JWT authorization token.
+    /// </summary>
+    /// <param name="authData">Email and password of the user</param>
+    /// <returns>User JWT Token</returns>
+    /// <response code="200">User successfully logged in</response>
+    /// <response code="400">Credentials are incorrect</response>
+    [Route("login")]
+    [HttpPost]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    public IActionResult Login([FromBody] AuthData authData)
+    {
+        var jwt  = _authService.Login(authData);
+        return Ok(new JwtSecurityTokenHandler().WriteToken(jwt));
     }
 }

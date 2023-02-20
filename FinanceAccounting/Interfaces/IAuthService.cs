@@ -5,6 +5,7 @@ namespace FinanceAccounting.Interfaces;
 
 public interface IAuthService
 {
-    JwtSecurityToken Login(AuthData authData);
     Task Register(RegistrationData user);
+    
+    JwtSecurityToken Login(AuthData authData);
 }

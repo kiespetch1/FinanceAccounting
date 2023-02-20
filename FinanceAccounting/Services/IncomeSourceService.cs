@@ -1,4 +1,5 @@
-﻿using FinanceAccounting.Exceptions;
+﻿using FinanceAccounting.Entities;
+using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +19,8 @@ public class IncomeSourceService : IIncomeSourceService
         var user = await _ctx.Users.SingleOrDefaultAsync(x => x.Id == userId);
         if (user == null)
             throw new UserNotFoundException();
-        if (await _ctx.IncomeSources.SingleOrDefaultAsync(x => x.Name == incomeName && x.UserId == userId) != null)
+        if (await _ctx.IncomeSources
+                .SingleOrDefaultAsync(x => x.Name == incomeName && x.UserId == userId) != null)
             throw new ExistingIncomeSourceException();
         var newIncomeSource = new IncomeSource
         {
@@ -28,7 +30,13 @@ public class IncomeSourceService : IIncomeSourceService
         await _ctx.IncomeSources.AddAsync(newIncomeSource);
         await _ctx.SaveChangesAsync();
 
-        return (newIncomeSource);
+        return newIncomeSource;
+    }
+    
+    public async Task<List<IncomeSource>> GetList(int userId)
+    {
+        var incomeSourceList = await _ctx.IncomeSources.Where(x => x.UserId == userId).ToListAsync();
+        return incomeSourceList;
     }
 
     public async Task<IncomeSource> Get(int id, int userId)
@@ -42,23 +50,6 @@ public class IncomeSourceService : IIncomeSourceService
         return incomeSource;
     }
 
-    public async Task<List<IncomeSource>> GetList(int userId)
-    {
-        var incomeSourceList = await _ctx.IncomeSources.Where(x => x.UserId == userId).ToListAsync();
-        return incomeSourceList;
-    }
-
-    public async Task Delete(int id, int userId)
-    {
-        var incomeSource = await _ctx.IncomeSources.SingleOrDefaultAsync(x => x.Id == id);
-        if (incomeSource == null)
-            throw new IncomeSourceNotFoundException();
-        if (incomeSource.UserId != userId)
-            throw new NoAccessException();
-        _ctx.IncomeSources.Remove(incomeSource);
-        await _ctx.SaveChangesAsync();
-    }
-
     public async Task Update(int id, string newName, int userId)
     {
         var incomeSource = _ctx.IncomeSources.SingleOrDefault(x => x.Id == id);
@@ -70,6 +61,17 @@ public class IncomeSourceService : IIncomeSourceService
             throw new ExistingIncomeSourceException();
         incomeSource.Name = newName;
         _ctx.IncomeSources.Update(incomeSource);
+        await _ctx.SaveChangesAsync();
+    }
+    
+    public async Task Delete(int id, int userId)
+    {
+        var incomeSource = await _ctx.IncomeSources.SingleOrDefaultAsync(x => x.Id == id);
+        if (incomeSource == null)
+            throw new IncomeSourceNotFoundException();
+        if (incomeSource.UserId != userId)
+            throw new NoAccessException();
+        _ctx.IncomeSources.Remove(incomeSource);
         await _ctx.SaveChangesAsync();
     }
 }
