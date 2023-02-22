@@ -3,7 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinanceAccounting.Entities;
 
-
+/// <summary>
+/// Represents a user.
+/// </summary>
 public class User
 {
     [Key]

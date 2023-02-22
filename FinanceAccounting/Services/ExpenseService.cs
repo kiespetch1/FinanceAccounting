@@ -15,7 +15,8 @@ public class ExpenseService : IExpenseService
     {
         _ctx = ctx;
     }
-
+    
+    /// <inheritdoc cref="IExpenseService.Create(int, ExpenseCreateData)"/>
     public async Task<Expense> Create(int userId, ExpenseCreateData expenseCreateData)
     {
         var user = await _ctx.Users.SingleOrDefaultAsync(x => x.Id == userId);
@@ -42,6 +43,7 @@ public class ExpenseService : IExpenseService
         return newExpense;
     }
     
+    /// <inheritdoc cref="IExpenseService.GetList(int, ExpenseSearchContext)"/>
     public async Task<List<Expense>> GetList(int userId, ExpenseSearchContext expenseSearchContext)
     {
         var expenseList = await _ctx.Expense
@@ -51,6 +53,7 @@ public class ExpenseService : IExpenseService
         return expenseList;
     }
     
+    /// <inheritdoc cref="IExpenseService.Get(int, int)"/>
     public async Task<Expense> Get(int id, int userId)
     {
         var expense = await _ctx.Expense.SingleOrDefaultAsync(x => x.Id == id);
@@ -62,10 +65,10 @@ public class ExpenseService : IExpenseService
         return expense;
     }
     
-    
-    public async Task Update(int userId, ExpenseUpdateData expenseUpdateData)
+    /// <inheritdoc cref="IExpenseService.Update(int, int, ExpenseUpdateData)"/>
+    public async Task Update(int userId, int id, ExpenseUpdateData expenseUpdateData)
     {
-        var expense = _ctx.Expense.SingleOrDefault(x => x.Id == expenseUpdateData.Id);
+        var expense = _ctx.Expense.SingleOrDefault(x => x.Id == id);
         if (expense == null)
             throw new ExpenseNotFoundException();
         if (expense.User != userId)
@@ -84,6 +87,7 @@ public class ExpenseService : IExpenseService
         await _ctx.SaveChangesAsync();
     }
     
+    /// <inheritdoc cref="IExpenseService.Delete(int, int)"/>
     public async Task Delete(int id, int userId)
     {
         var expense = await _ctx.Expense.SingleOrDefaultAsync(x => x.Id == id);

@@ -1,6 +1,8 @@
 ﻿using FinanceAccounting.Entities;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
+using FinanceAccounting.Models;
+using FinanceAccounting.SearchContexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceAccounting.Services;
@@ -15,6 +17,7 @@ public class ExpenseSourceService : IExpenseSourceService
         _ctx = ctx;
     }
     
+    /// <inheritdoc cref="IExpenseService.Create(int, ExpenseCreateData)"/>
     public async Task<ExpenseSource> Create(string expenseName, int userId)
     {
         var user = await _ctx.Users.SingleOrDefaultAsync(x => x.Id == userId);
@@ -35,12 +38,15 @@ public class ExpenseSourceService : IExpenseSourceService
         return newExpenseSource;
     }
     
+    /// <inheritdoc cref="IExpenseService.GetList(int, ExpenseSearchContext)"/>
     public async Task<List<ExpenseSource>> GetList(int userId)
     {
         var expenseSourceList = await _ctx.ExpenseSources.Where(x => x.UserId == userId).ToListAsync();
+        
         return expenseSourceList;
     }
 
+    /// <inheritdoc cref="IExpenseService.Get(int, int)"/>
     public async Task<ExpenseSource> Get(int id, int userId)
     {
         var expenseSource = await _ctx.ExpenseSources.SingleOrDefaultAsync(x => x.Id == id);
@@ -52,6 +58,7 @@ public class ExpenseSourceService : IExpenseSourceService
         return expenseSource;
     }
 
+    /// <inheritdoc cref="IExpenseService.Update(int, int, ExpenseUpdateData)"/>
     public async Task Update(int id, string newName, int userId)
     {
         var expenseSource = _ctx.ExpenseSources.SingleOrDefault(x => x.Id == id);
@@ -66,7 +73,7 @@ public class ExpenseSourceService : IExpenseSourceService
         _ctx.ExpenseSources.Update(expenseSource);
         await _ctx.SaveChangesAsync();
     }
-    
+    /// <inheritdoc cref="IExpenseService.Delete(int, int)"/>
     public async Task Delete(int id, int userId)
     {
         var expenseSource = await _ctx.ExpenseSources.SingleOrDefaultAsync(x => x.Id == id);

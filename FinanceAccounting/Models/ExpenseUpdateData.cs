@@ -1,9 +1,10 @@
 ﻿namespace FinanceAccounting.Models;
 
+/// <summary>
+/// Represents the data required to update an expense.
+/// </summary>
 public class ExpenseUpdateData
 {
-    public int Id { get; set; }
-    
     public string Name { get; set; }
     
     public float Amount { get; set; } 

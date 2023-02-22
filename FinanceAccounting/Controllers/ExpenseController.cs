@@ -1,4 +1,5 @@
-﻿using FinanceAccounting.Interfaces;
+﻿using FinanceAccounting.Controllers.Abstractions;
+using FinanceAccounting.Interfaces;
 using FinanceAccounting.Models;
 using FinanceAccounting.SearchContexts;
 using Microsoft.AspNetCore.Authorization;
@@ -11,9 +12,10 @@ namespace FinanceAccounting.Controllers;
 
 public class ExpenseController : BaseController
 {
-
+    ///<summary/>
     private readonly IExpenseService _expenseService;
-
+    
+    ///<summary/>
     public ExpenseController(IExpenseService expenseService)
     {
         _expenseService = expenseService;
@@ -22,11 +24,11 @@ public class ExpenseController : BaseController
     /// <summary>
     /// Creates a new expense.
     /// </summary>
-    /// <param name="expenseCreateData">Desired expense data</param>
-    /// <returns>Status Code 201 (Created)</returns>
-    /// <response code="201">Success</response>
-    /// <response code="400">Expense with this name already exist</response>
-    /// <response code="401">Unauthorized</response>
+    /// <param name="expenseCreateData">Desired expense data.</param>
+    /// <returns>Status Code 201 (Created).</returns>
+    /// <response code="201">Success.</response>
+    /// <response code="400">Expense with this name already exist.</response>
+    /// <response code="401">Unauthorized.</response>
     [ProducesResponseType(201)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
@@ -36,15 +38,17 @@ public class ExpenseController : BaseController
     {
         var userId = GetUserId();
         var expense = await _expenseService.Create(userId, expenseCreateData);
+        
         return CreatedAtAction(nameof(Create), expense);
     }
     
     /// <summary>
-    /// Returns all expense for the specified period.
+    /// Returns all expenses for the specified period.
     /// </summary>
-    /// <returns>List of the specified user's expense for a given period</returns>
-    /// <response code="200">Success</response>
-    /// <response code="401">Unauthorized</response>
+    /// <param name="expenseSearchContext">Specified period of time.</param>
+    /// <returns>List of the specified user's expense for a given period.</returns>
+    /// <response code="200">Success.</response>
+    /// <response code="401">Unauthorized.</response>
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
@@ -61,12 +65,12 @@ public class ExpenseController : BaseController
     /// <summary>
     /// Returns expense by ID.
     /// </summary>
-    /// <param name="id">Received expense ID</param>
-    /// <returns>Requested expense</returns>
-    /// <response code="200">Success</response>
-    /// <response code="400">Expense with this ID was not found</response>
-    /// <response code="401">Unauthorized</response>
-    /// <response code="403">You don't have an access to perform this action</response>
+    /// <param name="id">ID of desired expense.</param>
+    /// <returns>Requested expense.</returns>
+    /// <response code="200">Success.</response>
+    /// <response code="400">Expense with this ID was not found.</response>
+    /// <response code="401">Unauthorized.</response>
+    /// <response code="403">You don't have an access to perform this action.</response>
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
@@ -82,39 +86,40 @@ public class ExpenseController : BaseController
         return Ok(expense);
     }
 
-
     /// <summary>
     /// Updates expense data.
     /// </summary>
-    /// <param name="expenseUpdateData">Desirable new data</param>
-    /// <returns>Status Code 200 (OK)</returns>
-    /// <response code="200">Data updated successfully</response>
-    /// <response code="400">Expense with this ID was not found</response>
-    /// <response code="401">Unauthorized</response>
-    /// <response code="403">You don't have an access to perform this action</response>
-    [ProducesResponseType(200)]
+    /// <param name="id">Id of expense to update.</param>
+    /// <param name="expenseUpdateData">Desirable new data.</param>
+    /// <returns>Status code 204 (NoContent).</returns>
+    /// <response code="204">Data updated successfully.</response>
+    /// <response code="400">Expense with this ID was not found.</response>
+    /// <response code="401">Unauthorized.</response>
+    /// <response code="403">You don't have an access to perform this action.</response>
+    [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
     [Route("{id}")]
     [Authorize(Roles = "Administrator,User")]
     [HttpPut]
-    public async Task<IActionResult> Update(ExpenseUpdateData expenseUpdateData)
+    public async Task<IActionResult> Update(int id, [FromBody]ExpenseUpdateData expenseUpdateData)
     {
         var userId = GetUserId();
-        await _expenseService.Update(userId, expenseUpdateData);
-        return Ok();
+        await _expenseService.Update(userId, id, expenseUpdateData);
+        
+        return NoContent();
     }
     
     /// <summary>
-    /// Deletes expense category.
+    /// Deletes expense.
     /// </summary>
-    /// <param name="id">Received expense source ID</param>
-    /// <returns>Status Code 204 (NoContent)</returns>
-    /// <response code="204">Success</response>
-    /// <response code="400">Expense with this ID was not found</response>
-    /// <response code="401">Unauthorized</response>
-    /// <response code="403">You don't have an access to perform this action</response>
+    /// <param name="id">Desired expense ID.</param>
+    /// <returns>Status code 204 (NoContent).</returns>
+    /// <response code="204">Success.</response>
+    /// <response code="400">Expense with this ID was not found.</response>
+    /// <response code="401">Unauthorized.</response>
+    /// <response code="403">You don't have an access to perform this action.</response>
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]

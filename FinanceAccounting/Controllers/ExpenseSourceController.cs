@@ -1,4 +1,5 @@
-﻿using FinanceAccounting.Interfaces;
+﻿using FinanceAccounting.Controllers.Abstractions;
+using FinanceAccounting.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +10,10 @@ namespace FinanceAccounting.Controllers;
 
 public class ExpenseSourceController : BaseController
 {
-    
+    ///<summary/>
     private readonly IExpenseSourceService _expenseSourceService;
 
+    ///<summary/>
     public ExpenseSourceController(IExpenseSourceService expenseSourceService)
     {
         _expenseSourceService = expenseSourceService;
@@ -20,11 +22,11 @@ public class ExpenseSourceController : BaseController
     /// <summary>
     /// Creates a new expense source category.
     /// </summary>
-    /// <param name="newExpenseName"></param>
-    /// <returns>Status Code 201 (Created)</returns>
-    /// <response code="201">Success</response>
-    /// <response code="400">Expense source with this name already exist</response>
-    /// <response code="401">Unauthorized</response>
+    /// <param name="newExpenseName">The name of the new expense.</param>
+    /// <returns>Status code 201 (Created).</returns>
+    /// <response code="201">Success.</response>
+    /// <response code="400">Expense source with this name already exist.</response>
+    /// <response code="401">Unauthorized.</response>
     [ProducesResponseType(201)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
@@ -40,9 +42,9 @@ public class ExpenseSourceController : BaseController
     /// <summary>
     /// Returns all expense source categories.
     /// </summary>
-    /// <returns>List of expense sources of current user</returns>
-    /// <response code="200">Success</response>
-    /// <response code="401">Unauthorized</response>
+    /// <returns>List of expense sources of current user.</returns>
+    /// <response code="200">Success.</response>
+    /// <response code="401">Unauthorized.</response>
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
@@ -59,12 +61,12 @@ public class ExpenseSourceController : BaseController
     /// <summary>
     /// Returns expense source category by ID.
     /// </summary>
-    /// <param name="id">Received expense source ID</param>
-    /// <returns>Requested expense source category</returns>
-    /// <response code="200">Success</response>
-    /// <response code="400">Expense source with this ID was not found</response>
-    /// <response code="401">Unauthorized</response>
-    /// <response code="403">You don't have an access to perform this action</response>
+    /// <param name="id">Received expense source ID.</param>
+    /// <returns>Requested expense source category.</returns>
+    /// <response code="200">Success.</response>
+    /// <response code="400">Expense source with this ID was not found.</response>
+    /// <response code="401">Unauthorized.</response>
+    /// <response code="403">You don't have an access to perform this action.</response>
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
@@ -83,13 +85,13 @@ public class ExpenseSourceController : BaseController
     /// <summary>
     /// Updates expense source category data.
     /// </summary>
-    /// <param name="id">Received expense source ID</param>
-    /// <param name="newName">Desired new name</param>
-    /// <returns>Status Code 204 (NoContent)</returns>
-    /// <response code="204">Success</response>
-    /// <response code="400">Expense source with this ID was not found</response>
-    /// <response code="401">Unauthorized</response>
-    /// <response code="403">You don't have an access to perform this action</response>
+    /// <param name="id">Received expense source ID.</param>
+    /// <param name="newName">Desired new name.</param>
+    /// <returns>Status code 204 (NoContent).</returns>
+    /// <response code="204">Success.</response>
+    /// <response code="400">Expense source with this ID was not found.</response>
+    /// <response code="401">Unauthorized.</response>
+    /// <response code="403">You don't have an access to perform this action.</response>
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
@@ -108,12 +110,12 @@ public class ExpenseSourceController : BaseController
     /// <summary>
     /// Deletes expense source category.
     /// </summary>
-    /// <param name="id">Received expense source ID</param>
-    /// <returns>Status Code 204 (NoContent)</returns>
-    /// <response code="204">Success</response>
-    /// <response code="400">Expense source with this ID was not found</response>
-    /// <response code="401">Unauthorized</response>
-    /// <response code="403">You don't have an access to perform this action</response>
+    /// <param name="id">Received expense source ID.</param>
+    /// <returns>Status code 204 (NoContent).</returns>
+    /// <response code="204">Success.</response>
+    /// <response code="400">Expense source with this ID was not found.</response>
+    /// <response code="401">Unauthorized.</response>
+    /// <response code="403">You don't have an access to perform this action.</response>
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]

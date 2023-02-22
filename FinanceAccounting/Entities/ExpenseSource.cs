@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinanceAccounting.Entities;
 
+/// <summary>
+/// Represents the source of the expense.
+/// </summary>
 public class ExpenseSource
 {
     [Key]

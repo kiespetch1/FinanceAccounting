@@ -14,6 +14,7 @@ public class IncomeSourceService : IIncomeSourceService
         _ctx = ctx;
     }
 
+    /// <inheritdoc cref="IIncomeSourceService.Create(string, int)"/>
     public async Task<IncomeSource> Create(string incomeName, int userId)
     {
         var user = await _ctx.Users.SingleOrDefaultAsync(x => x.Id == userId);
@@ -33,12 +34,15 @@ public class IncomeSourceService : IIncomeSourceService
         return newIncomeSource;
     }
     
+    /// <inheritdoc cref="IIncomeSourceService.GetList(int)"/>
     public async Task<List<IncomeSource>> GetList(int userId)
     {
         var incomeSourceList = await _ctx.IncomeSources.Where(x => x.UserId == userId).ToListAsync();
+        
         return incomeSourceList;
     }
 
+    /// <inheritdoc cref="IIncomeSourceService.Get(int, int)"/>
     public async Task<IncomeSource> Get(int id, int userId)
     {
         var incomeSource = await _ctx.IncomeSources.SingleOrDefaultAsync(x => x.Id == id);
@@ -50,6 +54,7 @@ public class IncomeSourceService : IIncomeSourceService
         return incomeSource;
     }
 
+    /// <inheritdoc cref="IIncomeSourceService.Update(int, string, int)"/>
     public async Task Update(int id, string newName, int userId)
     {
         var incomeSource = _ctx.IncomeSources.SingleOrDefault(x => x.Id == id);
@@ -64,6 +69,7 @@ public class IncomeSourceService : IIncomeSourceService
         await _ctx.SaveChangesAsync();
     }
     
+    /// <inheritdoc cref="IIncomeSourceService.Delete(int, int)"/>
     public async Task Delete(int id, int userId)
     {
         var incomeSource = await _ctx.IncomeSources.SingleOrDefaultAsync(x => x.Id == id);

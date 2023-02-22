@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FinanceAccounting.Controllers.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
@@ -10,8 +11,10 @@ namespace FinanceAccounting.Controllers;
 [Route("api/users")]
 public class UserController : BaseController
 {
+    ///<summary/>
     private readonly IUsersService _userService;
 
+    ///<summary/>
     public UserController(IUsersService userService)
     {
         _userService = userService;
@@ -21,10 +24,10 @@ public class UserController : BaseController
     /// <summary>
     /// Returns all users.
     /// </summary>
-    /// <returns>Status Code 200 (OK)</returns>
-    /// <response code="200">All users data are displayed</response>
-    /// <response code="401">Unauthorized</response>
-    /// <response code="403">You don't have an access to perform this action</response>
+    /// <returns>List of all users.</returns>
+    /// <response code="200">Success.</response>
+    /// <response code="401">Unauthorized.</response>
+    /// <response code="403">You don't have an access to perform this action.</response>
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
@@ -33,19 +36,19 @@ public class UserController : BaseController
     public async Task<IActionResult> GetList()
     {
         var allUsers = await _userService.GetList();
+        
         return Ok(allUsers);
     }
     
     /// <summary>
     /// Returns user by ID.
     /// </summary>
-    /// <param name="id">Received user ID</param>
-    /// <returns>Status Code 200 (OK)</returns>
-    /// <exception cref="UserNotFoundException">User with this ID was not found</exception>
-    /// <response code="200">User data with given id are displayed</response>
-    /// <response code="400">User with this ID was not found</response>
-    /// <response code="401">Unauthorized</response>
-    /// <response code="403">You don't have an access to perform this action</response>
+    /// <param name="id">Desired user ID.</param>
+    /// <returns>User with the specified ID.</returns>
+    /// <response code="200">Success.</response>
+    /// <response code="400">User with this ID was not found.</response>
+    /// <response code="401">Unauthorized.</response>
+    /// <response code="403">You don't have an access to perform this action.</response>
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
@@ -56,18 +59,19 @@ public class UserController : BaseController
     public async Task<IActionResult> Get(int id)
     {
         var user = await _userService.Get(id);
+        
         return Ok(user);
     }
 
     /// <summary>
     /// Updates current user data.
     /// </summary>
-    /// <param name="userUpdateData">Desirable new data</param>
-    /// <returns>Status Code 200 (OK)</returns>
-    /// <exception cref="UserNotFoundException">User with this ID was not found</exception>
-    /// <response code="204">Data updated successfully</response>
-    /// <response code="400">User with this ID was not found</response>
-    /// <response code="401">Unauthorized</response>
+    /// <param name="userUpdateData">Desirable new user data.</param>
+    /// <returns>Status code 200 (OK).</returns>
+    /// <exception cref="UserNotFoundException">User with this ID was not found.</exception>
+    /// <response code="204">Success.</response>
+    /// <response code="400">User with this ID was not found.</response>
+    /// <response code="401">Unauthorized.</response>
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
@@ -77,19 +81,20 @@ public class UserController : BaseController
     {
         var id = GetUserId();
         await _userService.Update(id, userUpdateData);
+        
         return NoContent();
     }
     
     /// <summary>
     /// Deletes a user.
     /// </summary>
-    /// <param name="id">Received user ID</param>
-    /// <returns>Status Code 200 (OK)</returns>
-    /// <exception cref="UserNotFoundException">User with this ID was not found</exception>
-    /// <response code="204">Success</response>
-    /// <response code="400">User with this ID was not found</response>
-    /// <response code="401">Unauthorized</response>
-    /// <response code="403">You don't have an access to perform this action</response>
+    /// <param name="id">Received user ID.</param>
+    /// <returns>Status code 200 (OK).</returns>
+    /// <exception cref="UserNotFoundException">User with this ID was not found.</exception>
+    /// <response code="204">Success.</response>
+    /// <response code="400">User with this ID was not found.</response>
+    /// <response code="401">Unauthorized.</response>
+    /// <response code="403">You don't have an access to perform this action.6</response>
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
@@ -100,6 +105,7 @@ public class UserController : BaseController
     public async Task<IActionResult> Delete(int id)
     {
         await _userService.Delete(id);
+        
         return NoContent();
     }
 }

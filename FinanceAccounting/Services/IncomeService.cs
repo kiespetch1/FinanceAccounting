@@ -15,7 +15,7 @@ public class IncomeService : IIncomeService
     {
         _ctx = ctx;
     }
-
+    /// <inheritdoc cref="IIncomeService.Create(int, IncomeCreateData)"/>
     public async Task<Income> Create(int userId, IncomeCreateData incomeCreateData)
     {
         var user = await _ctx.Users.SingleOrDefaultAsync(x => x.Id == userId);
@@ -42,6 +42,7 @@ public class IncomeService : IIncomeService
         return newIncome;
     }
     
+    /// <inheritdoc cref="IIncomeService.GetList(int, IncomeSearchContext)"/>
     public async Task<List<Income>> GetList(int userId, IncomeSearchContext incomeSearchContext)
     {
         var incomeList = await _ctx.Income
@@ -51,6 +52,7 @@ public class IncomeService : IIncomeService
         return incomeList;
     }
     
+    /// <inheritdoc cref="IIncomeService.Get(int, int)"/>
     public async Task<Income> Get(int id, int userId)
     {
         var income = await _ctx.Income.SingleOrDefaultAsync(x => x.Id == id);
@@ -62,10 +64,10 @@ public class IncomeService : IIncomeService
         return income;
     }
     
-    
-    public async Task Update(int userId, IncomeUpdateData incomeUpdateData)
+    /// <inheritdoc cref="IIncomeService.Update(int, int, IncomeUpdateData)"/>
+    public async Task Update(int userId, int id, IncomeUpdateData incomeUpdateData)
     {
-        var income = _ctx.Income.SingleOrDefault(x => x.Id == incomeUpdateData.CategoryId);
+        var income = _ctx.Income.SingleOrDefault(x => x.Id == id);
         if (income == null)
             throw new IncomeNotFoundException();
         if (income.User != userId)
@@ -84,6 +86,7 @@ public class IncomeService : IIncomeService
         await _ctx.SaveChangesAsync();
     }
     
+    /// <inheritdoc cref="IIncomeService.Delete(int, int)"/>
     public async Task Delete(int id, int userId)
     {
         var income = await _ctx.Income.SingleOrDefaultAsync(x => x.Id == id);

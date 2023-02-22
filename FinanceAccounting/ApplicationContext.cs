@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinanceAccounting;
 
+/// <summary>
+/// Database context class
+/// </summary>
 public class ApplicationContext: DbContext
 {
     public DbSet<User> Users { get; set; }
@@ -15,6 +18,7 @@ public class ApplicationContext: DbContext
     
     public DbSet<Expense> Expense { get; set; }
 
+    /// <summary/>
     public ApplicationContext(DbContextOptions<ApplicationContext> options)
         : base(options)
     {

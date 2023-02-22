@@ -2,6 +2,9 @@
 
 namespace FinanceAccounting.Models;
 
+/// <summary>
+/// Represents the data needed to update the user.
+/// </summary>
 public class UserUpdateData
 {
     [Required]

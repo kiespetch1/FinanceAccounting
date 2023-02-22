@@ -1,5 +1,8 @@
 ﻿namespace FinanceAccounting.Models;
 
+/// <summary>
+/// Represents the data required to create an income.
+/// </summary>
 public class IncomeCreateData
 {
     public string Name { get; set; }
