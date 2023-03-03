@@ -2,6 +2,9 @@
 
 namespace FinanceAccounting;
 
+/// <summary>
+/// Password hashing method.
+/// </summary>
 internal static class PasswordHashing
 {
     internal static string HashPassword(string password)

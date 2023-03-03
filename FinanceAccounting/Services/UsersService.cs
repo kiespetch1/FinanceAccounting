@@ -16,20 +16,26 @@ public class UsersService : IUsersService
         _ctx = ctx;
     }
     
+    /// <inheritdoc cref="IUsersService.GetList()"/>
     public async Task<List<User>> GetList()
     {
         var users = await _ctx.Users.ToListAsync();
+        
         return users;
     }
+    
+    /// <inheritdoc cref="IUsersService.Get(int)"/>
     public async Task<User> Get(int id)
     {
         
         var user = _ctx.Users.SingleOrDefault(x => x.Id == id);
         if (user == null)
             throw new UserNotFoundException();
+        
         return user;
     }
 
+    /// <inheritdoc cref="IUsersService.Update(int, UserUpdateData)"/>
     public async Task Update(int id, UserUpdateData userUpdateData)
     {
         var user = _ctx.Users.SingleOrDefault(x => x.Id == id);
@@ -48,6 +54,7 @@ public class UsersService : IUsersService
         await _ctx.SaveChangesAsync();
     }
     
+    /// <inheritdoc cref="IUsersService.Delete(int)"/>
     public async Task Delete(int id)
     {
         var user = _ctx.Users.SingleOrDefault(x => x.Id == id);
