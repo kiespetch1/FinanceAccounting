@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinanceAccounting.Entities;
 
+/// <summary>
+/// Represents the income.
+/// </summary>
 public class Income
 {
     [Key]
