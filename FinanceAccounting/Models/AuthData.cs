@@ -2,6 +2,9 @@
 
 namespace FinanceAccounting.Models;
 
+/// <summary>
+/// Represents login information.
+/// </summary>
 public class AuthData
 {
     [EmailAddress]

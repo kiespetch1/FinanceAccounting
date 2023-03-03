@@ -1,9 +1,9 @@
 ﻿namespace FinanceAccounting.Models;
 
 /// <summary>
-/// Represents the data required to update an income.
+/// Represents the data required to update an expense.
 /// </summary>
-public class IncomeUpdateData
+public class ExpenseUpdateData
 {
     public string Name { get; set; }
     

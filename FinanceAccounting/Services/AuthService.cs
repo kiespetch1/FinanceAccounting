@@ -16,7 +16,8 @@ public class AuthService : IAuthService
     {
         _ctx = ctx;
     }
-
+    
+    /// <inheritdoc cref="IAuthService.Register(RegistrationData)"/>
     public async Task Register(RegistrationData user)
     {
         if (_ctx.Users.SingleOrDefault(x => x.Login == user.Login
@@ -43,6 +44,7 @@ public class AuthService : IAuthService
         await _ctx.SaveChangesAsync();
     }
     
+    /// <inheritdoc cref="IAuthService.Login(AuthData)"/>
     public JwtSecurityToken Login(AuthData authData)
     {
         var user = _ctx.Users.SingleOrDefault(x => x.Email == authData.Email);

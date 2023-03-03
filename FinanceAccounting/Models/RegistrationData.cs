@@ -2,6 +2,9 @@
 
 namespace FinanceAccounting.Models;
 
+/// <summary>
+/// Represents the data required for registration.
+/// </summary>
 public class RegistrationData
 {
     public string Login { get; set; }
