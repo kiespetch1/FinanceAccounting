@@ -8,4 +8,3 @@ public enum Role
     Administrator,
     User
 }
-
