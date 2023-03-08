@@ -41,6 +41,7 @@ builder.Services.AddScoped<IIncomeSourceService, IncomeSourceService>();
 builder.Services.AddScoped<IIncomeService, IncomeService>();
 builder.Services.AddScoped<IExpenseSourceService, ExpenseSourceService>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
+builder.Services.AddScoped<IExcelService, ExcelService>();
 builder.Services.AddDbContext<ApplicationContext>(
     options => options.UseNpgsql(@"Server=localhost;Port=5432;Username=postgres;Password=superuser1").UseSnakeCaseNamingConvention());
 builder.Services.AddSwaggerGen(options =>
