@@ -43,8 +43,8 @@ public class ExpenseService : IExpenseService
         return newExpense;
     }
     
-    /// <inheritdoc cref="IExpenseService.GetList(int, ExpenseSearchContext)"/>
-    public async Task<List<Expense>> GetList(int userId, ExpenseSearchContext expenseSearchContext)
+    /// <inheritdoc cref="IExpenseService.GetList(int, CashflowSearchContext)"/>
+    public async Task<List<Expense>> GetList(int userId, CashflowSearchContext expenseSearchContext)
     {
         var expenseList = await _ctx.Expense
             .Where(x => x.User == userId && x.CreatedAt >= expenseSearchContext.From && x.CreatedAt <= expenseSearchContext.To)

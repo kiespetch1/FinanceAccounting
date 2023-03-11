@@ -42,8 +42,8 @@ public class IncomeService : IIncomeService
         return newIncome;
     }
     
-    /// <inheritdoc cref="IIncomeService.GetList(int, IncomeSearchContext)"/>
-    public async Task<List<Income>> GetList(int userId, IncomeSearchContext incomeSearchContext)
+    /// <inheritdoc cref="IIncomeService.GetList(int, CashflowSearchContext)"/>
+    public async Task<List<Income>> GetList(int userId, CashflowSearchContext incomeSearchContext)
     {
         var incomeList = await _ctx.Income
             .Where(x => x.User == userId && x.CreatedAt >= incomeSearchContext.From && x.CreatedAt <= incomeSearchContext.To)

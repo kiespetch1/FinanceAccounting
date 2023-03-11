@@ -12,7 +12,8 @@ public class ExcelService : IExcelService
     {
         _ctx = ctx;
     }
-    public async Task<XLWorkbook> GetFile(ExpenseSearchContext searchContext, int userId)
+    /// <inheritdoc cref="IExcelService.GetFile(int, CashflowSearchContext)"/>
+    public async Task<XLWorkbook> GetFile(int userId, CashflowSearchContext searchContext)
     {
         using var workbook = new XLWorkbook();
         var file = Task.Run(() =>
@@ -69,5 +70,65 @@ public class ExcelService : IExcelService
             return wb;
         });
         return await file;
+    }
+
+    /// <inheritdoc cref="IExcelService.ApplyChangesFromXlsx(int, IFormFile)"/>
+    public async Task ApplyChangesFromXlsx(int userId, IFormFile report)
+    {
+        if (report == null)
+        {
+            throw new ArgumentNullException();
+        }
+        await using var reportPath = report.OpenReadStream();
+
+        var wb = new XLWorkbook(reportPath);
+        var incomeSheet = wb.Worksheet("Income");
+        var incomeFirstCellUsed = incomeSheet.Cell("A3");
+        var incomeLastCellUsed = incomeSheet.LastCellUsed();
+        var incomeDataRange = incomeSheet.Range(incomeFirstCellUsed, incomeLastCellUsed);
+
+        var incomeRowNumber = 3;
+        foreach (var record in incomeDataRange.Rows())
+        {
+            var idCell = Convert.ToInt32(incomeSheet.Cell($"A{incomeRowNumber}").GetString());
+            var nameCell = incomeSheet.Cell($"B{incomeRowNumber}").GetString();
+            var amountCell = Convert.ToSingle(incomeSheet.Cell($"C{incomeRowNumber}").GetString());
+            var dateCell = incomeSheet.Cell($"D{incomeRowNumber}").GetDateTime();
+                
+            var currentRecord = _ctx.Income.SingleOrDefault(x => x.Id == idCell);
+            if (currentRecord.User == userId)
+            {
+                currentRecord.Name = nameCell;
+                currentRecord.Amount = amountCell;
+                currentRecord.CreatedAt = dateCell;
+                currentRecord.UpdatedAt = DateTime.Now;
+            }
+            incomeRowNumber++;
+        }
+        
+        var expenseSheet = wb.Worksheet("Expenses");
+        var expenseFirstCellUsed = expenseSheet.Cell("A3");
+        var expenseLastCellUsed = expenseSheet.LastCellUsed();
+        var expenseDataRange = expenseSheet.Range(expenseFirstCellUsed, expenseLastCellUsed);
+
+        var expenseRowNumber = 3;
+        foreach (var record in expenseDataRange.Rows())
+        {
+            var idCell = Convert.ToInt32(expenseSheet.Cell($"A{expenseRowNumber}").GetString());
+            var nameCell = expenseSheet.Cell($"B{expenseRowNumber}").GetString();
+            var amountCell = Convert.ToSingle(expenseSheet.Cell($"C{expenseRowNumber}").GetString());
+            var dateCell = expenseSheet.Cell($"D{expenseRowNumber}").GetDateTime();
+                
+            var currentRecord = _ctx.Expense.SingleOrDefault(x => x.Id == idCell);
+            if (currentRecord.User == userId)
+            {
+                currentRecord.Name = nameCell;
+                currentRecord.Amount = amountCell;
+                currentRecord.CreatedAt = dateCell;
+                currentRecord.UpdatedAt = DateTime.Now;
+            }
+            expenseRowNumber++;
+        }
+        await _ctx.SaveChangesAsync();
     }
 }

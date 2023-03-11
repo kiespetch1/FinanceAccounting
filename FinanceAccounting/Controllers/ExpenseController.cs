@@ -54,7 +54,7 @@ public class ExpenseController : BaseController
     [ProducesResponseType(401)]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public async Task<IActionResult> GetList([FromQuery]ExpenseSearchContext expenseSearchContext)
+    public async Task<IActionResult> GetList([FromQuery]CashflowSearchContext expenseSearchContext)
     {
         var userId = GetUserId();
         var expenseList =  await _expenseService.GetList(userId, expenseSearchContext);

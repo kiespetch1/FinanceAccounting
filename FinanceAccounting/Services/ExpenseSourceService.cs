@@ -38,7 +38,7 @@ public class ExpenseSourceService : IExpenseSourceService
         return newExpenseSource;
     }
     
-    /// <inheritdoc cref="IExpenseService.GetList(int, ExpenseSearchContext)"/>
+    /// <inheritdoc cref="IExpenseService.GetList(int, CashflowSearchContext)"/>
     public async Task<List<ExpenseSource>> GetList(int userId)
     {
         var expenseSourceList = await _ctx.ExpenseSources.Where(x => x.UserId == userId).ToListAsync();

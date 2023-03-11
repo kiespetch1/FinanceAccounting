@@ -54,7 +54,7 @@ public class IncomeController : BaseController
     [ProducesResponseType(401)]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public async Task<IActionResult> GetList(IncomeSearchContext incomeSearchContext)
+    public async Task<IActionResult> GetList(CashflowSearchContext incomeSearchContext)
     {
         var userId = GetUserId();
         var incomeList =  await _incomeService.GetList(userId, incomeSearchContext);

@@ -21,15 +21,31 @@ public class ExcelController : BaseController
         _excelService = excelService;
     }
     
-    //TODO сделать все суммари
+    /// <summary>
+    /// Returns income and expenses Excel report of the current user.
+    /// </summary>
+    /// <param name="searchContext">Specified period of time.</param>
+    /// <returns>Excel file with income and expenses for specified period of time/ </returns>
     [Authorize(Roles = "Administrator,User")]
     [HttpPost]
-    //TODO сделать выбор не только даты но и времени
-    public async Task<IActionResult> GetExcelFile([FromQuery]ExpenseSearchContext searchContext)
+    public async Task<IActionResult> GetExcelFile([FromQuery]CashflowSearchContext searchContext)
     {
         var userId = GetUserId();
-        var wb = await _excelService.GetFile(searchContext, userId);
+        var wb = await _excelService.GetFile(userId, searchContext);
         return wb.Deliver("ExcelReport.xlsx");
+    }
+    
+    /// <summary>
+    /// Changes the data in the database according to the loaded Excel report file.
+    /// </summary>
+    /// <param name="reportFile">Excel report file with changes.</param>
+    [Authorize(Roles = "Administrator,User")]
+    [HttpPut]
+    public async Task<ActionResult>ApplyChangesFromXlsx(IFormFile reportFile)
+    {
+        var userId = GetUserId();
+        await _excelService.ApplyChangesFromXlsx(userId, reportFile);
+        return Ok();
     }
 
 }

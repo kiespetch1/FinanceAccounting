@@ -23,7 +23,7 @@ public interface IExpenseService
     /// <param name="userId">Current user ID.</param>
     /// <param name="expenseSearchContext">Specified period of time.</param>
     /// <returns>List of expenses.</returns>
-    Task<List<Expense>> GetList(int userId, ExpenseSearchContext expenseSearchContext);
+    Task<List<Expense>> GetList(int userId, CashflowSearchContext expenseSearchContext);
     
     /// <summary>
     /// Returns expense by ID.
