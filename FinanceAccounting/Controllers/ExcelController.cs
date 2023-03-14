@@ -28,10 +28,10 @@ public class ExcelController : BaseController
     /// <returns>Excel file with income and expenses for specified period of time/ </returns>
     [Authorize(Roles = "Administrator,User")]
     [HttpPost]
-    public async Task<IActionResult> GetExcelFile([FromQuery]CashflowSearchContext searchContext)
+    public IActionResult GetExcelFile([FromQuery]CashflowSearchContext searchContext)
     {
         var userId = GetUserId();
-        var wb = await _excelService.GetFile(userId, searchContext);
+        var wb = _excelService.GetFile(userId, searchContext);
         return wb.Deliver("ExcelReport.xlsx");
     }
     

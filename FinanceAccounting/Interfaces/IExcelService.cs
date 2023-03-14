@@ -11,7 +11,7 @@ public interface IExcelService
     /// <param name="userId">Current user ID.</param>
     /// <param name="searchContext">Specified period of time.</param>
     /// <returns></returns>
-    Task<XLWorkbook> GetFile(int userId, CashflowSearchContext searchContext);
+    XLWorkbook GetFile(int userId, CashflowSearchContext searchContext);
     
     /// <summary>
     /// 
