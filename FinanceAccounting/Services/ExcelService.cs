@@ -13,7 +13,7 @@ public class ExcelService : IExcelService
         _ctx = ctx;
     }
     /// <inheritdoc cref="IExcelService.GetFile(int, CashflowSearchContext)"/>
-    public XLWorkbook GetFile(int userId, CashflowSearchContext searchContext)
+    public async Task<XLWorkbook> GetFile(int userId, CashflowSearchContext searchContext)
     {
         using var workbook = new XLWorkbook();
         var wb = new XLWorkbook();
@@ -22,13 +22,6 @@ public class ExcelService : IExcelService
             .SetFirstCellValue($"Income from {searchContext.From} to {searchContext.To}")
             .AddHeader();
 
-        incomeSheet.FirstCell().SetValue($"Income from {searchContext.From} to {searchContext.To}");
-        incomeSheet.Cell("A2").SetValue("ID");
-        incomeSheet.Cell("B2").SetValue("Name");
-        incomeSheet.Cell("C2").SetValue("Amount");
-        incomeSheet.Cell("D2").SetValue("Date");
-        incomeSheet.Range("A2:D2").Style.Font.Bold = true;
-            
         var incomeList = _ctx.Income
             .Where(x => x.User == userId && x.CreatedAt >= searchContext.From && x.CreatedAt <= searchContext.To)
             .OrderBy(x => x.Id)
@@ -64,7 +57,7 @@ public class ExcelService : IExcelService
             
         expenseSheet.Column(1).Width = 20;
         expenseSheet.Columns().AdjustToContents(2, expensesList.Count() + 2);
-        return wb;
+        return await Task.FromResult(wb);
     }
 
     /// <inheritdoc cref="IExcelService.ApplyChangesFromXlsx(int, IFormFile)"/>
@@ -74,9 +67,9 @@ public class ExcelService : IExcelService
 
         var wb = new XLWorkbook(reportPath);
         var incomeSheet = wb.Worksheet("Income");
+        var incomeLastRowNumber = incomeSheet.LastCellUsed().Address.RowNumber;
 
-        var incomeRowNumber = 3;
-        for (var i = 0; i < incomeRowNumber; i++)
+        for (var incomeRowNumber = 3; incomeRowNumber <= incomeLastRowNumber; incomeRowNumber++)
         {
             var idCell = Convert.ToInt32(incomeSheet.Cell($"A{incomeRowNumber}").GetString());
             var nameCell = incomeSheet.Cell($"B{incomeRowNumber}").GetString();
@@ -91,13 +84,13 @@ public class ExcelService : IExcelService
                 currentRecord.CreatedAt = dateCell;
                 currentRecord.UpdatedAt = DateTime.Now;
             }
-            incomeRowNumber++;
         }
         
         var expenseSheet = wb.Worksheet("Expenses");
         
-        var expenseRowNumber = 3;
-        for (var i = 0; i < expenseRowNumber; i++)
+        var expenseLastRowNumber = expenseSheet.LastCellUsed().Address.RowNumber;
+        
+        for (var expenseRowNumber = 3; expenseRowNumber <= expenseLastRowNumber; expenseRowNumber++)
         {
             var idCell = Convert.ToInt32(expenseSheet.Cell($"A{expenseRowNumber}").GetString());
             var nameCell = expenseSheet.Cell($"B{expenseRowNumber}").GetString();
@@ -112,7 +105,6 @@ public class ExcelService : IExcelService
                 currentRecord.CreatedAt = dateCell;
                 currentRecord.UpdatedAt = DateTime.Now;
             }
-            expenseRowNumber++;
         }
         await _ctx.SaveChangesAsync();
     }
