@@ -20,27 +20,6 @@ public class ExpenseController : BaseController
     {
         _expenseService = expenseService;
     }
-
-    /// <summary>
-    /// Creates a new expense.
-    /// </summary>
-    /// <param name="expenseCreateData">Desired expense data.</param>
-    /// <returns>Status Code 201 (Created).</returns>
-    /// <response code="201">Success.</response>
-    /// <response code="400">Expense with this name already exist.</response>
-    /// <response code="401">Unauthorized.</response>
-    [ProducesResponseType(201)]
-    [ProducesResponseType(400)]
-    [ProducesResponseType(401)]
-    [Authorize(Roles = "Administrator,User")]
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody]ExpenseCreateData expenseCreateData)
-    {
-        var userId = GetUserId();
-        var expense = await _expenseService.Create(userId, expenseCreateData);
-        
-        return CreatedAtAction(nameof(Create), expense);
-    }
     
     /// <summary>
     /// Returns all expenses for the specified period.
@@ -84,6 +63,27 @@ public class ExpenseController : BaseController
         var expense = await _expenseService.Get(id, userId);
         
         return Ok(expense);
+    }
+
+    /// <summary>
+    /// Creates a new expense.
+    /// </summary>
+    /// <param name="expenseCreateData">Desired expense data.</param>
+    /// <returns>Status Code 201 (Created).</returns>
+    /// <response code="201">Success.</response>
+    /// <response code="400">Expense with this name already exist.</response>
+    /// <response code="401">Unauthorized.</response>
+    [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [Authorize(Roles = "Administrator,User")]
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody]ExpenseCreateData expenseCreateData)
+    {
+        var userId = GetUserId();
+        var expense = await _expenseService.Create(userId, expenseCreateData);
+        
+        return CreatedAtAction(nameof(Create), expense);
     }
 
     /// <summary>

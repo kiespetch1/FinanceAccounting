@@ -7,14 +7,7 @@ namespace FinanceAccounting.Interfaces;
 /// </summary>
 public interface IExpenseSourceService
 {
-    /// <summary>
-    /// Creates a new expense source category.
-    /// </summary>
-    /// <param name="expenseName">The name of the new expense.</param>
-    /// <param name="userId">Current user ID.</param>
-    /// <returns>Created expense source.</returns>
-    Task<ExpenseSource> Create(string expenseName, int userId);
-
+    
     /// <summary>
     /// Returns all expense source categories.
     /// </summary>
@@ -29,6 +22,14 @@ public interface IExpenseSourceService
     /// <param name="userId">Current user ID.</param>
     /// <returns>Expense source with the specified ID.</returns>
     Task<ExpenseSource> Get(int id, int userId);
+    
+    /// <summary>
+    /// Creates a new expense source category.
+    /// </summary>
+    /// <param name="expenseName">The name of the new expense.</param>
+    /// <param name="userId">Current user ID.</param>
+    /// <returns>Created expense source.</returns>
+    Task<ExpenseSource> Create(string expenseName, int userId);
 
     /// <summary>
     /// Updates expense source category data.

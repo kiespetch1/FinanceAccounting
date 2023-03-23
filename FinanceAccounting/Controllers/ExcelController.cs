@@ -32,6 +32,7 @@ public class ExcelController : BaseController
     {
         var userId = GetUserId();
         var wb = await _excelService.GetFile(userId, searchContext);
+        
         return wb.Deliver("ExcelReport.xlsx");
     }
     
@@ -45,6 +46,7 @@ public class ExcelController : BaseController
     {
         var userId = GetUserId();
         await _excelService.ApplyChangesFromXlsx(userId, reportFile);
+        
         return Ok();
     }
 

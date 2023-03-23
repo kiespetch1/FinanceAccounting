@@ -10,14 +10,6 @@ namespace FinanceAccounting.Interfaces;
 public interface IExpenseService
 {
     /// <summary>
-    /// Creates a new expense.
-    /// </summary>
-    /// <param name="userId">Current user ID.</param>
-    /// <param name="expenseCreateData">Desired expense data.</param>
-    /// <returns>Created expense.</returns>
-    Task<Expense> Create(int userId, ExpenseCreateData expenseCreateData);
-    
-    /// <summary>
     /// Returns all expenses for the specified period.
     /// </summary>
     /// <param name="userId">Current user ID.</param>
@@ -33,6 +25,14 @@ public interface IExpenseService
     /// <returns>Expense with the specified ID.</returns>
     Task<Expense> Get(int id, int userId);
     
+    /// <summary>
+    /// Creates a new expense.
+    /// </summary>
+    /// <param name="userId">Current user ID.</param>
+    /// <param name="expenseCreateData">Desired expense data.</param>
+    /// <returns>Created expense.</returns>
+    Task<Expense> Create(int userId, ExpenseCreateData expenseCreateData);
+
     /// <summary>
     /// Updates expense data.
     /// </summary>

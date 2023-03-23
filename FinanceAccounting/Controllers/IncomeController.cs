@@ -20,27 +20,6 @@ public class IncomeController : BaseController
     {
         _incomeService = incomeService;
     }
-
-    /// <summary>
-    /// Creates a new income.
-    /// </summary>
-    /// <param name="incomeCreateData">Desired income data.</param>
-    /// <returns>Status code 201 (Created).</returns>
-    /// <response code="201">Success.</response>
-    /// <response code="400">Income with this name already exist.</response>
-    /// <response code="401">Unauthorized.</response>
-    [ProducesResponseType(201)]
-    [ProducesResponseType(400)]
-    [ProducesResponseType(401)]
-    [Authorize(Roles = "Administrator,User")]
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody]IncomeCreateData incomeCreateData)
-    {
-        var userId = GetUserId();
-        var income = await _incomeService.Create(userId, incomeCreateData);
-        
-        return CreatedAtAction(nameof(Create), income);
-    }
     
     /// <summary>
     /// Returns all income for the specified period.
@@ -86,7 +65,27 @@ public class IncomeController : BaseController
         return Ok(income);
     }
 
-
+    /// <summary>
+    /// Creates a new income.
+    /// </summary>
+    /// <param name="incomeCreateData">Desired income data.</param>
+    /// <returns>Status code 201 (Created).</returns>
+    /// <response code="201">Success.</response>
+    /// <response code="400">Income with this name already exist.</response>
+    /// <response code="401">Unauthorized.</response>
+    [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [Authorize(Roles = "Administrator,User")]
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody]IncomeCreateData incomeCreateData)
+    {
+        var userId = GetUserId();
+        var income = await _incomeService.Create(userId, incomeCreateData);
+        
+        return CreatedAtAction(nameof(Create), income);
+    }
+    
     /// <summary>
     /// Updates income data.
     /// </summary>

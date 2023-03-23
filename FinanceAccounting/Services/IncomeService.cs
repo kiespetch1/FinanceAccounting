@@ -15,6 +15,29 @@ public class IncomeService : IIncomeService
     {
         _ctx = ctx;
     }
+    
+    /// <inheritdoc cref="IIncomeService.GetList(int, CashflowSearchContext)"/>
+    public async Task<List<Income>> GetList(int userId, CashflowSearchContext incomeSearchContext)
+    {
+        var incomeList = await _ctx.Income
+            .Where(x => x.User == userId && x.CreatedAt >= incomeSearchContext.From && x.CreatedAt <= incomeSearchContext.To)
+            .ToListAsync();
+        
+        return incomeList;
+    }
+    
+    /// <inheritdoc cref="IIncomeService.Get(int, int)"/>
+    public async Task<Income> Get(int id, int userId)
+    {
+        var income = await _ctx.Income.SingleOrDefaultAsync(x => x.Id == id);
+        if (income == null)
+            throw new IncomeNotFoundException();
+        if (income.User != userId)
+            throw new NoAccessException();
+
+        return income;
+    }
+    
     /// <inheritdoc cref="IIncomeService.Create(int, IncomeCreateData)"/>
     public async Task<Income> Create(int userId, IncomeCreateData incomeCreateData)
     {
@@ -41,29 +64,7 @@ public class IncomeService : IIncomeService
 
         return newIncome;
     }
-    
-    /// <inheritdoc cref="IIncomeService.GetList(int, CashflowSearchContext)"/>
-    public async Task<List<Income>> GetList(int userId, CashflowSearchContext incomeSearchContext)
-    {
-        var incomeList = await _ctx.Income
-            .Where(x => x.User == userId && x.CreatedAt >= incomeSearchContext.From && x.CreatedAt <= incomeSearchContext.To)
-            .ToListAsync();
-        
-        return incomeList;
-    }
-    
-    /// <inheritdoc cref="IIncomeService.Get(int, int)"/>
-    public async Task<Income> Get(int id, int userId)
-    {
-        var income = await _ctx.Income.SingleOrDefaultAsync(x => x.Id == id);
-        if (income == null)
-            throw new IncomeNotFoundException();
-        if (income.User != userId)
-            throw new NoAccessException();
 
-        return income;
-    }
-    
     /// <inheritdoc cref="IIncomeService.Update(int, int, IncomeUpdateData)"/>
     public async Task Update(int userId, int id, IncomeUpdateData incomeUpdateData)
     {

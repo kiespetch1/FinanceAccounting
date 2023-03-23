@@ -23,6 +23,7 @@ internal static class PasswordHashing
         var dst = new byte[0x31];
         Buffer.BlockCopy(salt, 0, dst, 1, 0x10);
         Buffer.BlockCopy(buffer2, 0, dst, 0x11, 0x20);
+        
         return Convert.ToBase64String(dst);
     }
     
@@ -47,6 +48,7 @@ internal static class PasswordHashing
         {
             buffer4 = bytes.GetBytes(0x20);
         }
+        
         return buffer3.SequenceEqual(buffer4);
     }
 }

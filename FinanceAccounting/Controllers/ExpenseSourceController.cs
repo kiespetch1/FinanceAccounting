@@ -20,26 +20,6 @@ public class ExpenseSourceController : BaseController
     }
     
     /// <summary>
-    /// Creates a new expense source category.
-    /// </summary>
-    /// <param name="newExpenseName">The name of the new expense.</param>
-    /// <returns>Status code 201 (Created).</returns>
-    /// <response code="201">Success.</response>
-    /// <response code="400">Expense source with this name already exist.</response>
-    /// <response code="401">Unauthorized.</response>
-    [ProducesResponseType(201)]
-    [ProducesResponseType(400)]
-    [ProducesResponseType(401)]
-    [Authorize(Roles = "Administrator,User")]
-    [HttpPost]
-    public async Task<IActionResult> Create(string newExpenseName)
-    {
-        var userId = GetUserId();
-        var expenseSource = await _expenseSourceService.Create(newExpenseName, userId);
-        return CreatedAtAction(nameof(Create), expenseSource);
-    }
-    
-    /// <summary>
     /// Returns all expense source categories.
     /// </summary>
     /// <returns>List of expense sources of current user.</returns>
@@ -80,6 +60,27 @@ public class ExpenseSourceController : BaseController
         var expenseSource = await _expenseSourceService.Get(id, userId);
         
         return Ok(expenseSource);
+    }
+    
+    /// <summary>
+    /// Creates a new expense source category.
+    /// </summary>
+    /// <param name="newExpenseName">The name of the new expense.</param>
+    /// <returns>Status code 201 (Created).</returns>
+    /// <response code="201">Success.</response>
+    /// <response code="400">Expense source with this name already exist.</response>
+    /// <response code="401">Unauthorized.</response>
+    [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [Authorize(Roles = "Administrator,User")]
+    [HttpPost]
+    public async Task<IActionResult> Create(string newExpenseName)
+    {
+        var userId = GetUserId();
+        var expenseSource = await _expenseSourceService.Create(newExpenseName, userId);
+        
+        return CreatedAtAction(nameof(Create), expenseSource);
     }
 
     /// <summary>

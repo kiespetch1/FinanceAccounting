@@ -57,6 +57,7 @@ public class ExcelService : IExcelService
             
         expenseSheet.Column(1).Width = 20;
         expenseSheet.Columns().AdjustToContents(2, expensesList.Count() + 2);
+        
         return await Task.FromResult(wb);
     }
 

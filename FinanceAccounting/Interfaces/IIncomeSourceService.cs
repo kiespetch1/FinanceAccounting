@@ -8,14 +8,6 @@ namespace FinanceAccounting.Interfaces;
 public interface IIncomeSourceService
 {
     /// <summary>
-    /// Creates a new income source category.
-    /// </summary>
-    /// <param name="incomeName">The name of the new income.</param>
-    /// <param name="userId">Current user ID.</param>
-    /// <returns>Created income source.</returns>
-    Task<IncomeSource> Create(string incomeName, int userId);
-
-    /// <summary>
     /// Returns all income source categories.
     /// </summary>
     /// <param name="userId">Current user ID.</param>
@@ -29,6 +21,14 @@ public interface IIncomeSourceService
     /// <param name="userId">Current user ID.</param>
     /// <returns>Income source with the specified ID.</returns>
     Task<IncomeSource> Get(int id, int userId);
+    
+    /// <summary>
+    /// Creates a new income source category.
+    /// </summary>
+    /// <param name="incomeName">The name of the new income.</param>
+    /// <param name="userId">Current user ID.</param>
+    /// <returns>Created income source.</returns>
+    Task<IncomeSource> Create(string incomeName, int userId);
 
     /// <summary>
     /// Updates income source category data.

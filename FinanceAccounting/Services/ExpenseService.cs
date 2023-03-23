@@ -16,6 +16,28 @@ public class ExpenseService : IExpenseService
         _ctx = ctx;
     }
     
+    /// <inheritdoc cref="IExpenseService.GetList(int, CashflowSearchContext)"/>
+    public async Task<List<Expense>> GetList(int userId, CashflowSearchContext expenseSearchContext)
+    {
+        var expenseList = await _ctx.Expense
+            .Where(x => x.User == userId && x.CreatedAt >= expenseSearchContext.From && x.CreatedAt <= expenseSearchContext.To)
+            .ToListAsync();
+        
+        return expenseList;
+    }
+    
+    /// <inheritdoc cref="IExpenseService.Get(int, int)"/>
+    public async Task<Expense> Get(int id, int userId)
+    {
+        var expense = await _ctx.Expense.SingleOrDefaultAsync(x => x.Id == id);
+        if (expense == null)
+            throw new ExpenseNotFoundException();
+        if (expense.User != userId)
+            throw new NoAccessException();
+
+        return expense;
+    }
+    
     /// <inheritdoc cref="IExpenseService.Create(int, ExpenseCreateData)"/>
     public async Task<Expense> Create(int userId, ExpenseCreateData expenseCreateData)
     {
@@ -42,29 +64,7 @@ public class ExpenseService : IExpenseService
 
         return newExpense;
     }
-    
-    /// <inheritdoc cref="IExpenseService.GetList(int, CashflowSearchContext)"/>
-    public async Task<List<Expense>> GetList(int userId, CashflowSearchContext expenseSearchContext)
-    {
-        var expenseList = await _ctx.Expense
-            .Where(x => x.User == userId && x.CreatedAt >= expenseSearchContext.From && x.CreatedAt <= expenseSearchContext.To)
-            .ToListAsync();
-        
-        return expenseList;
-    }
-    
-    /// <inheritdoc cref="IExpenseService.Get(int, int)"/>
-    public async Task<Expense> Get(int id, int userId)
-    {
-        var expense = await _ctx.Expense.SingleOrDefaultAsync(x => x.Id == id);
-        if (expense == null)
-            throw new ExpenseNotFoundException();
-        if (expense.User != userId)
-            throw new NoAccessException();
 
-        return expense;
-    }
-    
     /// <inheritdoc cref="IExpenseService.Update(int, int, ExpenseUpdateData)"/>
     public async Task Update(int userId, int id, ExpenseUpdateData expenseUpdateData)
     {

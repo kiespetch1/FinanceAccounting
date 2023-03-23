@@ -17,6 +17,7 @@ public static class ExcelExtension
         ws.Cell("C2").SetValue("Amount");
         ws.Cell("D2").SetValue("Date");
         ws.Range("A2:D2").Style.Font.Bold = true;
+        
         return ws;
     }
     /// <summary>
@@ -28,6 +29,7 @@ public static class ExcelExtension
     public static IXLWorksheet SetFirstCellValue(this IXLWorksheet ws, string value)
     {
         ws.FirstCell().SetValue(value);
+        
         return ws;
     }
 }
