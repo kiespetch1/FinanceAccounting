@@ -10,20 +10,12 @@ namespace FinanceAccounting.Interfaces;
 public interface IIncomeService
 {
     /// <summary>
-    /// Creates a new income.
-    /// </summary>
-    /// <param name="userId">Current user ID.</param>
-    /// <param name="incomeCreateData">Desired income data.</param>
-    /// <returns>Created income.</returns>
-    Task<Income> Create(int userId, IncomeCreateData incomeCreateData);
-    
-    /// <summary>
     /// Returns all income for the specified period.
     /// </summary>
     /// <param name="userId">Current user ID.</param>
     /// <param name="incomeSearchContext">Specified period of time.</param>
     /// <returns>List of the specified user's income for a given period.</returns>
-    Task<List<Income>> GetList(int userId, IncomeSearchContext incomeSearchContext);
+    Task<List<Income>> GetList(int userId, CashflowSearchContext incomeSearchContext);
     
     /// <summary>
     /// Returns income by ID.
@@ -32,6 +24,14 @@ public interface IIncomeService
     /// <param name="userId">Current user ID.</param>
     /// <returns>List of income.</returns>
     Task<Income> Get(int id, int userId);
+    
+    /// <summary>
+    /// Creates a new income.
+    /// </summary>
+    /// <param name="userId">Current user ID.</param>
+    /// <param name="incomeCreateData">Desired income data.</param>
+    /// <returns>Created income.</returns>
+    Task<Income> Create(int userId, IncomeCreateData incomeCreateData);
 
     /// <summary>
     /// Updates income data.

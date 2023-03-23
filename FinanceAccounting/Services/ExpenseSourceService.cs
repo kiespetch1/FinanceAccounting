@@ -17,6 +17,26 @@ public class ExpenseSourceService : IExpenseSourceService
         _ctx = ctx;
     }
     
+    /// <inheritdoc cref="IExpenseService.GetList(int, CashflowSearchContext)"/>
+    public async Task<List<ExpenseSource>> GetList(int userId)
+    {
+        var expenseSourceList = await _ctx.ExpenseSources.Where(x => x.UserId == userId).ToListAsync();
+        
+        return expenseSourceList;
+    }
+
+    /// <inheritdoc cref="IExpenseService.Get(int, int)"/>
+    public async Task<ExpenseSource> Get(int id, int userId)
+    {
+        var expenseSource = await _ctx.ExpenseSources.SingleOrDefaultAsync(x => x.Id == id);
+        if (expenseSource == null)
+            throw new ExpenseSourceNotFoundException();
+        if (expenseSource.UserId != userId)
+            throw new NoAccessException();
+
+        return expenseSource;
+    }
+    
     /// <inheritdoc cref="IExpenseService.Create(int, ExpenseCreateData)"/>
     public async Task<ExpenseSource> Create(string expenseName, int userId)
     {
@@ -36,26 +56,6 @@ public class ExpenseSourceService : IExpenseSourceService
         await _ctx.SaveChangesAsync();
 
         return newExpenseSource;
-    }
-    
-    /// <inheritdoc cref="IExpenseService.GetList(int, ExpenseSearchContext)"/>
-    public async Task<List<ExpenseSource>> GetList(int userId)
-    {
-        var expenseSourceList = await _ctx.ExpenseSources.Where(x => x.UserId == userId).ToListAsync();
-        
-        return expenseSourceList;
-    }
-
-    /// <inheritdoc cref="IExpenseService.Get(int, int)"/>
-    public async Task<ExpenseSource> Get(int id, int userId)
-    {
-        var expenseSource = await _ctx.ExpenseSources.SingleOrDefaultAsync(x => x.Id == id);
-        if (expenseSource == null)
-            throw new ExpenseSourceNotFoundException();
-        if (expenseSource.UserId != userId)
-            throw new NoAccessException();
-
-        return expenseSource;
     }
 
     /// <inheritdoc cref="IExpenseService.Update(int, int, ExpenseUpdateData)"/>

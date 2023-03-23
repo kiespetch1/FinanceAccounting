@@ -14,26 +14,6 @@ public class IncomeSourceService : IIncomeSourceService
         _ctx = ctx;
     }
 
-    /// <inheritdoc cref="IIncomeSourceService.Create(string, int)"/>
-    public async Task<IncomeSource> Create(string incomeName, int userId)
-    {
-        var user = await _ctx.Users.SingleOrDefaultAsync(x => x.Id == userId);
-        if (user == null)
-            throw new UserNotFoundException();
-        if (await _ctx.IncomeSources
-                .SingleOrDefaultAsync(x => x.Name == incomeName && x.UserId == userId) != null)
-            throw new ExistingIncomeSourceException();
-        var newIncomeSource = new IncomeSource
-        {
-            Name = incomeName,
-            UserId = userId
-        };
-        await _ctx.IncomeSources.AddAsync(newIncomeSource);
-        await _ctx.SaveChangesAsync();
-
-        return newIncomeSource;
-    }
-    
     /// <inheritdoc cref="IIncomeSourceService.GetList(int)"/>
     public async Task<List<IncomeSource>> GetList(int userId)
     {
@@ -52,6 +32,26 @@ public class IncomeSourceService : IIncomeSourceService
             throw new NoAccessException();
 
         return incomeSource;
+    }
+    
+    /// <inheritdoc cref="IIncomeSourceService.Create(string, int)"/>
+    public async Task<IncomeSource> Create(string incomeName, int userId)
+    {
+        var user = await _ctx.Users.SingleOrDefaultAsync(x => x.Id == userId);
+        if (user == null)
+            throw new UserNotFoundException();
+        if (await _ctx.IncomeSources
+                .SingleOrDefaultAsync(x => x.Name == incomeName && x.UserId == userId) != null)
+            throw new ExistingIncomeSourceException();
+        var newIncomeSource = new IncomeSource
+        {
+            Name = incomeName,
+            UserId = userId
+        };
+        await _ctx.IncomeSources.AddAsync(newIncomeSource);
+        await _ctx.SaveChangesAsync();
+
+        return newIncomeSource;
     }
 
     /// <inheritdoc cref="IIncomeSourceService.Update(int, string, int)"/>

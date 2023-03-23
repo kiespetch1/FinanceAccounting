@@ -18,27 +18,6 @@ public class IncomeSourceController : BaseController
     {
         _incomeSourceService = incomeSourceService;
     }
-
-    /// <summary>
-    /// Creates a new income source category.
-    /// </summary>
-    /// <param name="newIncomeName">The name of the new income.</param>
-    /// <returns>Status code 201 (Created).</returns>
-    /// <response code="201">Success.</response>
-    /// <response code="400">Income source with this name already exist.</response>
-    /// <response code="401">Unauthorized.</response>
-    [ProducesResponseType(201)]
-    [ProducesResponseType(400)]
-    [ProducesResponseType(401)]
-    [Authorize(Roles = "Administrator,User")]
-    [HttpPost]
-    public async Task<IActionResult> Create(string newIncomeName)
-    {
-        var userId = GetUserId();
-        var incomeSource = await _incomeSourceService.Create(newIncomeName, userId);
-        
-        return CreatedAtAction(nameof(Create), incomeSource);
-    }
     
     /// <summary>
     /// Returns all income source categories.
@@ -80,6 +59,27 @@ public class IncomeSourceController : BaseController
         var incomeSource = await _incomeSourceService.Get(id, userId);
         
         return Ok(incomeSource);
+    }
+
+    /// <summary>
+    /// Creates a new income source category.
+    /// </summary>
+    /// <param name="newIncomeName">The name of the new income.</param>
+    /// <returns>Status code 201 (Created).</returns>
+    /// <response code="201">Success.</response>
+    /// <response code="400">Income source with this name already exist.</response>
+    /// <response code="401">Unauthorized.</response>
+    [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [Authorize(Roles = "Administrator,User")]
+    [HttpPost]
+    public async Task<IActionResult> Create(string newIncomeName)
+    {
+        var userId = GetUserId();
+        var incomeSource = await _incomeSourceService.Create(newIncomeName, userId);
+        
+        return CreatedAtAction(nameof(Create), incomeSource);
     }
 
     /// <summary>
