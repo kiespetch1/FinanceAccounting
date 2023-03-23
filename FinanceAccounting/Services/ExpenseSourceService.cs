@@ -37,7 +37,7 @@ public class ExpenseSourceService : IExpenseSourceService
 
         return newExpenseSource;
     }
-    
+
     /// <inheritdoc cref="IExpenseService.GetList(int, CashflowSearchContext)"/>
     public async Task<List<ExpenseSource>> GetList(int userId)
     {
