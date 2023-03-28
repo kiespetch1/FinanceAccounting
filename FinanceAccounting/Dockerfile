@@ -2,6 +2,8 @@
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
+ENV ConnectionString__DefaultConnection=Host=db-app;Port=5432;Username=postgres;Password=superuser1;Database=app-db
+ENV ASPNETCORE_URLS=http://+:80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src

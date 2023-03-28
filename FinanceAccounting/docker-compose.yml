@@ -6,18 +6,15 @@ networks:
 
 services:
   finance-app:
-    image: docker.io/library/defauft-ports
+    image: finance-app:api
     depends_on:
       - "db-app"
-    container_name: finance-accounting-app
+    container_name: api
     ports:
       - "8088:80"
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      - ConnectionString__DefaultConnection=User ID=postgres;Password=superuser1;Server=db_app;Port=5432;Database=app-db;Username=postgres;IntegratedSecurity=true;Pooling=true;
-      - ASPNETCORE_URLS=http://+:80
     networks:
       - dev
 
@@ -28,8 +25,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=superuser1
       - POSTGRES_DB=app_db
-    ports:
-      - "5433:5432"
     restart: always
     volumes:
       - app_data:/var/lib/postgresql/data

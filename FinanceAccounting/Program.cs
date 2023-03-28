@@ -42,9 +42,9 @@ builder.Services.AddScoped<IIncomeService, IncomeService>();
 builder.Services.AddScoped<IExpenseSourceService, ExpenseSourceService>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddScoped<IExcelService, ExcelService>();
-var conn = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationContext>(
-    options => options.UseNpgsql(conn).UseSnakeCaseNamingConvention());
+    options => options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
