@@ -16,7 +16,8 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - ConnectionString__DefaultConnection=Host=db-app;Port=5432;Username=postgres;Password=superuser1;Database=app-db    
+      - ConnectionStrings__DefaultConnection=Host=db-app;Port=5432;Username=postgres;Password=superuser1;Database=app-db
+      - ASPNETCORE_ENVIRONMENT=Development
     networks:
       - dev
 
