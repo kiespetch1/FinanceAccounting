@@ -1,0 +1,38 @@
+﻿version: "3.4"
+
+networks:
+  dev:
+    driver: bridge
+
+services:
+  finance-app:
+    image: finance-app:api
+    depends_on:
+      - "db-app"
+    container_name: api
+    ports:
+      - "8088:80"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db-app;Port=5432;Username=postgres;Password=superuser1;Database=app-db
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - dev
+
+  db-app:
+    image: postgres:14-alpine
+    container_name: db_app
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=superuser1
+      - POSTGRES_DB=app_db
+    restart: always
+    volumes:
+      - app_data:/var/lib/postgresql/data
+    networks:
+      - dev
+
+volumes:
+  app_data:
