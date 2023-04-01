@@ -1,4 +1,5 @@
 ﻿using FinanceAccounting.Controllers.Abstractions;
+using FinanceAccounting.Entities;
 using FinanceAccounting.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,11 +19,12 @@ public class IncomeSourceController : BaseController
     {
         _incomeSourceService = incomeSourceService;
     }
-    
+
     /// <summary>
     /// Returns all income source categories.
     /// </summary>
-    /// <param name="page">Number of income sources list page</param>
+    /// <param name="page">Number of income sources list page.</param>
+    /// <param name="sortingOrder">Sorting order.</param>
     /// <returns>List of income sources of current user.</returns>
     /// <response code="200">Success.</response>
     /// <response code="401">Unauthorized.</response>
@@ -31,10 +33,10 @@ public class IncomeSourceController : BaseController
     [Route("list/{page}")]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public async Task<IActionResult> GetList(int page = 1)
+    public async Task<IActionResult> GetList(int page = 1, CategoriesSort sortingOrder = CategoriesSort.NameAsc)
     {
         var userId = GetUserId();
-        var incomeSourcesList =  await _incomeSourceService.GetList(userId, page);
+        var incomeSourcesList =  await _incomeSourceService.GetList(userId, page, sortingOrder);
         
         return Ok(incomeSourcesList);
     }

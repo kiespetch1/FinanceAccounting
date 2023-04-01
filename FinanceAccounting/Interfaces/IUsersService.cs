@@ -8,13 +8,13 @@ namespace FinanceAccounting.Interfaces;
 /// </summary>
 public interface IUsersService
 {
-
     /// <summary>
     /// Returns all users.
     /// </summary>
-    /// <param name="page">Number of users list page</param>
+    /// <param name="page">Number of users list page.</param>
+    /// <param name="usersSortOrder">Sorting order.</param>
     /// <returns>List of all users.</returns>
-    Task<TypeResponse<User>> GetList(int page);
+    Task<TypeResponse<User>> GetList(int page, UsersSort usersSortOrder);
     
     /// <summary>
     /// Returns user by ID.

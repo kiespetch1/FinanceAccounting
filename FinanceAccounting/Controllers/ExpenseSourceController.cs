@@ -1,4 +1,5 @@
 ﻿using FinanceAccounting.Controllers.Abstractions;
+using FinanceAccounting.Entities;
 using FinanceAccounting.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,8 @@ public class ExpenseSourceController : BaseController
     /// <summary>
     /// Returns all expense source categories.
     /// </summary>
-    /// <param name="page">Number of expense sources list page</param>
+    /// <param name="page">Number of expense sources list page.</param>
+    /// <param name="sortingOrder">Sorting order.</param>
     /// <returns>List of expense sources of current user.</returns>
     /// <response code="200">Success.</response>
     /// <response code="401">Unauthorized.</response>
@@ -32,10 +34,10 @@ public class ExpenseSourceController : BaseController
     [Route("list/{page}")]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public async Task<IActionResult> GetList(int page = 1)
+    public async Task<IActionResult> GetList(int page = 1, CategoriesSort sortingOrder = CategoriesSort.NameAsc)
     {
         var userId = GetUserId();
-        var expenseSourcesList =  await _expenseSourceService.GetList(userId, page);
+        var expenseSourcesList =  await _expenseSourceService.GetList(userId, page, sortingOrder);
         
         return Ok(expenseSourcesList);
     }

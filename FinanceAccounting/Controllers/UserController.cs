@@ -1,4 +1,5 @@
 ﻿using FinanceAccounting.Controllers.Abstractions;
+using FinanceAccounting.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FinanceAccounting.Exceptions;
@@ -19,12 +20,13 @@ public class UserController : BaseController
     {
         _userService = userService;
     }
-    
-    
+
+
     /// <summary>
     /// Returns all users.
     /// </summary>
-    /// <param name="page">Number of users list page</param>
+    /// <param name="page">Number of users list page.</param>
+    /// <param name="sortingOrder">Sorting order.</param>
     /// <returns>List of all users.</returns>
     /// <response code="200">Success.</response>
     /// <response code="401">Unauthorized.</response>
@@ -32,12 +34,12 @@ public class UserController : BaseController
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
-    [Route("list/{page}")]
+    [Route("list/{page}/{sortingOrder}")]
     [Authorize(Roles = "Administrator")]
     [HttpGet]
-    public async Task<IActionResult> GetList(int page = 1)
+    public async Task<IActionResult> GetList(int page = 1, UsersSort sortingOrder = UsersSort.NameAsc)
     {
-        var allUsers = await _userService.GetList(page);
+        var allUsers = await _userService.GetList(page, sortingOrder);
         
         return Ok(allUsers);
     }

@@ -1,4 +1,5 @@
 ﻿using FinanceAccounting.Controllers.Abstractions;
+using FinanceAccounting.Entities;
 using FinanceAccounting.Interfaces;
 using FinanceAccounting.Models;
 using FinanceAccounting.SearchContexts;
@@ -25,7 +26,8 @@ public class IncomeController : BaseController
     /// Returns all income for the specified period.
     /// </summary>
     /// <param name="incomeSearchContext">Specified period of time.</param>
-    /// <param name="page">Number of income list page</param>
+    /// <param name="sortingOrder">Sorting order.</param>
+    /// <param name="page">Number of income list page.</param>
     /// <returns>List of the specified user's income for a given period.</returns>
     /// <response code="200">Success.</response>
     /// <response code="401">Unauthorized.</response>
@@ -35,10 +37,10 @@ public class IncomeController : BaseController
     [Route("list/{page}")]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public async Task<IActionResult> GetList(CashflowSearchContext incomeSearchContext, int page = 1)
+    public async Task<IActionResult> GetList(CashflowSearchContext incomeSearchContext, int page = 1, CashflowSort sortingOrder = CashflowSort.NameAsc)
     {
         var userId = GetUserId();
-        var incomeList =  await _incomeService.GetList(userId, incomeSearchContext, page);
+        var incomeList =  await _incomeService.GetList(userId, incomeSearchContext, page, sortingOrder);
         
         return Ok(incomeList);
     }

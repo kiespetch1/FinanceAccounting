@@ -12,9 +12,10 @@ public interface IExpenseSourceService
     /// Returns all expense source categories.
     /// </summary>
     /// <param name="userId">Current user ID.</param>
-    /// <param name="page">Number of expence sources list page</param>
+    /// <param name="page">Number of expence sources list page.</param>
+    /// <param name="expenseSortOrder">Sorting order.</param>
     /// <returns>List of expense sources of current user.</returns>
-    Task<TypeResponse<ExpenseSource>> GetList(int userId, int page);
+    Task<TypeResponse<ExpenseSource>> GetList(int userId, int page, CategoriesSort expenseSortOrder);
 
     /// <summary>
     /// Returns expense source category by ID.

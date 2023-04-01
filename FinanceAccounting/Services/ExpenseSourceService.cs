@@ -17,14 +17,22 @@ public class ExpenseSourceService : IExpenseSourceService
         _ctx = ctx;
     }
     
-    /// <inheritdoc cref="IExpenseService.GetList(int, CashflowSearchContext)"/>
-    public async Task<TypeResponse<ExpenseSource>> GetList(int userId, int page)
+    /// <inheritdoc cref="IExpenseService.GetList(int, CashflowSearchContext, int, CashflowSort)"/>
+    public async Task<TypeResponse<ExpenseSource>> GetList(int userId, int page, CategoriesSort expenseSortOrder)
     {
         var pageResults = 3f;
         var pageCount = Math.Ceiling(_ctx.ExpenseSources.Count() / pageResults);
-        var expenseSourceList = await _ctx.ExpenseSources
+        
+        IQueryable<ExpenseSource> expenseSource = _ctx.ExpenseSources;
+        expenseSource = expenseSortOrder switch
+        {
+            CategoriesSort.NameAsc => expenseSource.OrderBy(x => x.Name),
+            CategoriesSort.NameDesc => expenseSource.OrderByDescending(x=>x.Name),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        
+        var expenseSourceList = await expenseSource
             .Where(x => x.UserId == userId)
-            .OrderBy(x=> x.Id)
             .Skip((page - 1) * (int)pageResults)
             .Take((int)pageResults)
             .ToListAsync();

@@ -16,14 +16,26 @@ public class IncomeService : IIncomeService
         _ctx = ctx;
     }
     
-    /// <inheritdoc cref="IIncomeService.GetList(int, CashflowSearchContext)"/>
-    public async Task<TypeResponse<Income>> GetList(int userId, CashflowSearchContext incomeSearchContext, int page)
+    /// <inheritdoc cref="IIncomeService.GetList(int, CashflowSearchContext, int, CashflowSort)"/>
+    public async Task<TypeResponse<Income>> GetList(int userId, CashflowSearchContext incomeSearchContext, int page, CashflowSort incomeSortOrder)
     {
         var pageResults = 3f;
         var pageCount = Math.Ceiling(_ctx.Income.Count() / pageResults);
-        var incomeList = await _ctx.Income
+        
+        IQueryable<Income> income = _ctx.Income;
+        income = incomeSortOrder switch
+        {
+            CashflowSort.AmountAsc => income.OrderBy(x => x.Amount),
+            CashflowSort.AmountDesc => income.OrderByDescending(x => x.Amount),
+            CashflowSort.NameDesc => income.OrderByDescending(x=>x.Name),
+            CashflowSort.NameAsc => income.OrderBy(x=>x.Name),
+            CashflowSort.CategoryAsc => income.OrderBy(x=>x.CategoryId),
+            CashflowSort.CategoryDesc => income.OrderByDescending(x=>x.CategoryId),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        
+        var incomeList = await income
             .Where(x => x.User == userId && x.CreatedAt >= incomeSearchContext.From && x.CreatedAt <= incomeSearchContext.To)
-            .OrderBy(x=> x.Id)
             .Skip((page - 1) * (int)pageResults)
             .Take((int)pageResults)
             .ToListAsync();

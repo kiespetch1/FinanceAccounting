@@ -16,20 +16,33 @@ public class UsersService : IUsersService
         _ctx = ctx;
     }
     
-    /// <inheritdoc cref="IUsersService.GetList(int)"/>
-    public async Task<TypeResponse<User>> GetList(int page)
+    /// <inheritdoc cref="IUsersService.GetList(int, UsersSort)"/>
+    public async Task<TypeResponse<User>> GetList(int page, UsersSort usersSortOrder)
     {
         var pageResults = 3f;
         var pageCount = Math.Ceiling(_ctx.Users.Count() / pageResults);
-        var users = await _ctx.Users
-            .OrderBy(x=> x.Id)
-            .Skip((page - 1) * (int)pageResults)
-            .Take((int)pageResults)
-            .ToListAsync();
+
+        IQueryable<User> users = _ctx.Users;
+        users = usersSortOrder switch
+        {
+            UsersSort.EmailAsc => users.OrderBy(x => x.Email),
+            UsersSort.EmailDesc => users.OrderByDescending(x => x.Email),
+            UsersSort.NameDesc => users.OrderByDescending(x => x.Name),
+            UsersSort.NameAsc => users.OrderBy(x => x.Name),
+            UsersSort.MiddleNameAsc => users.OrderBy(x => x.MiddleName),
+            UsersSort.MiddleNameDesc => users.OrderByDescending(x => x.MiddleName),
+            UsersSort.LastNameAsc => users.OrderBy(x => x.LastName),
+            UsersSort.LastNameDesc => users.OrderByDescending(x => x.LastName),
+            UsersSort.BirthDateAsc => users.OrderBy(x => x.BirthDate),
+            UsersSort.BirthDateDesc => users.OrderByDescending(x => x.BirthDate),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        var orderedUsers = await users.Skip((page - 1) * (int)pageResults).Take((int)pageResults).ToListAsync();
         
         var response = new TypeResponse<User>
         {
-            TypeList = users,
+            TypeList = orderedUsers,
             CurrentPage = page,
             Pages = (int) pageCount
         };

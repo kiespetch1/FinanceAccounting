@@ -1,4 +1,5 @@
 ﻿using FinanceAccounting.Controllers.Abstractions;
+using FinanceAccounting.Entities;
 using FinanceAccounting.Interfaces;
 using FinanceAccounting.Models;
 using FinanceAccounting.SearchContexts;
@@ -20,12 +21,13 @@ public class ExpenseController : BaseController
     {
         _expenseService = expenseService;
     }
-    
+
     /// <summary>
     /// Returns all expenses for the specified period.
     /// </summary>
     /// <param name="expenseSearchContext">Specified period of time.</param>
-    /// /// <param name="page">Number of expenses list page</param>
+    /// <param name="sortingOrder">Sorting order.</param>
+    /// <param name="page">Number of expenses list page.</param>
     /// <returns>List of the specified user's expense for a given period.</returns>
     /// <response code="200">Success.</response>
     /// <response code="401">Unauthorized.</response>
@@ -35,10 +37,10 @@ public class ExpenseController : BaseController
     [Route("list/{page}")]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public async Task<IActionResult> GetList([FromQuery]CashflowSearchContext expenseSearchContext, int page = 1)
+    public async Task<IActionResult> GetList([FromQuery]CashflowSearchContext expenseSearchContext, int page = 1, CashflowSort sortingOrder = CashflowSort.NameAsc)
     {
         var userId = GetUserId();
-        var expenseList =  await _expenseService.GetList(userId, expenseSearchContext, page);
+        var expenseList =  await _expenseService.GetList(userId, expenseSearchContext, page, sortingOrder);
         
         return Ok(expenseList);
     }
