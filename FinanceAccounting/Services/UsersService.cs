@@ -16,18 +16,30 @@ public class UsersService : IUsersService
         _ctx = ctx;
     }
     
-    /// <inheritdoc cref="IUsersService.GetList()"/>
-    public async Task<List<User>> GetList()
+    /// <inheritdoc cref="IUsersService.GetList(int)"/>
+    public async Task<TypeResponse<User>> GetList(int page)
     {
-        var users = await _ctx.Users.ToListAsync();
+        var pageResults = 3f;
+        var pageCount = Math.Ceiling(_ctx.Users.Count() / pageResults);
+        var users = await _ctx.Users
+            .OrderBy(x=> x.Id)
+            .Skip((page - 1) * (int)pageResults)
+            .Take((int)pageResults)
+            .ToListAsync();
         
-        return users;
+        var response = new TypeResponse<User>
+        {
+            TypeList = users,
+            CurrentPage = page,
+            Pages = (int) pageCount
+        };
+
+        return response;
     }
     
     /// <inheritdoc cref="IUsersService.Get(int)"/>
     public async Task<User> Get(int id)
     {
-        
         var user = _ctx.Users.SingleOrDefault(x => x.Id == id);
         if (user == null)
             throw new UserNotFoundException();

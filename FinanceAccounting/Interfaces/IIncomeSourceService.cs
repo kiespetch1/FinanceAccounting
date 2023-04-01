@@ -1,4 +1,5 @@
 ﻿using FinanceAccounting.Entities;
+using FinanceAccounting.Models;
 
 namespace FinanceAccounting.Interfaces;
 
@@ -11,8 +12,9 @@ public interface IIncomeSourceService
     /// Returns all income source categories.
     /// </summary>
     /// <param name="userId">Current user ID.</param>
+    /// <param name="page">Number of income sources list page</param>
     /// <returns>List of income sources of current user.</returns>
-    Task<List<IncomeSource>> GetList(int userId);
+    Task<TypeResponse<IncomeSource>> GetList(int userId, int page);
 
     /// <summary>
     /// Returns income source category by ID.

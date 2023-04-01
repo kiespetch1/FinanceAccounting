@@ -18,11 +18,25 @@ public class ExpenseSourceService : IExpenseSourceService
     }
     
     /// <inheritdoc cref="IExpenseService.GetList(int, CashflowSearchContext)"/>
-    public async Task<List<ExpenseSource>> GetList(int userId)
+    public async Task<TypeResponse<ExpenseSource>> GetList(int userId, int page)
     {
-        var expenseSourceList = await _ctx.ExpenseSources.Where(x => x.UserId == userId).ToListAsync();
+        var pageResults = 3f;
+        var pageCount = Math.Ceiling(_ctx.ExpenseSources.Count() / pageResults);
+        var expenseSourceList = await _ctx.ExpenseSources
+            .Where(x => x.UserId == userId)
+            .OrderBy(x=> x.Id)
+            .Skip((page - 1) * (int)pageResults)
+            .Take((int)pageResults)
+            .ToListAsync();
         
-        return expenseSourceList;
+        var response = new TypeResponse<ExpenseSource>
+        {
+            TypeList = expenseSourceList,
+            CurrentPage = page,
+            Pages = (int) pageCount
+        };
+        
+        return response;
     }
 
     /// <inheritdoc cref="IExpenseService.Get(int, int)"/>

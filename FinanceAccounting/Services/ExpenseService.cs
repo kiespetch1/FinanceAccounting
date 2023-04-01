@@ -17,13 +17,25 @@ public class ExpenseService : IExpenseService
     }
     
     /// <inheritdoc cref="IExpenseService.GetList(int, CashflowSearchContext)"/>
-    public async Task<List<Expense>> GetList(int userId, CashflowSearchContext expenseSearchContext)
+    public async Task<TypeResponse<Expense>> GetList(int userId, CashflowSearchContext expenseSearchContext, int page)
     {
+        var pageResults = 3f;
+        var pageCount = Math.Ceiling(_ctx.Expense.Count() / pageResults);
         var expenseList = await _ctx.Expense
             .Where(x => x.User == userId && x.CreatedAt >= expenseSearchContext.From && x.CreatedAt <= expenseSearchContext.To)
+            .OrderBy(x=> x.Id)
+            .Skip((page - 1) * (int)pageResults)
+            .Take((int)pageResults)
             .ToListAsync();
         
-        return expenseList;
+        var response = new TypeResponse<Expense>
+        {
+            TypeList = expenseList,
+            CurrentPage = page,
+            Pages = (int) pageCount
+        };
+        
+        return response;
     }
     
     /// <inheritdoc cref="IExpenseService.Get(int, int)"/>

@@ -1,6 +1,7 @@
 ﻿using FinanceAccounting.Entities;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
+using FinanceAccounting.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceAccounting.Services;
@@ -14,12 +15,26 @@ public class IncomeSourceService : IIncomeSourceService
         _ctx = ctx;
     }
 
-    /// <inheritdoc cref="IIncomeSourceService.GetList(int)"/>
-    public async Task<List<IncomeSource>> GetList(int userId)
+    /// <inheritdoc cref="IIncomeSourceService.GetList(int,int)"/>
+    public async Task<TypeResponse<IncomeSource>> GetList(int userId, int page)
     {
-        var incomeSourceList = await _ctx.IncomeSources.Where(x => x.UserId == userId).ToListAsync();
+        var pageResults = 3f;
+        var pageCount = Math.Ceiling(_ctx.IncomeSources.Count() / pageResults);
+        var incomeSourceList = await _ctx.IncomeSources
+            .Where(x => x.UserId == userId)
+            .OrderBy(x=> x.Id)
+            .Skip((page - 1) * (int)pageResults)
+            .Take((int)pageResults)
+            .ToListAsync();
         
-        return incomeSourceList;
+        var response = new TypeResponse<IncomeSource>
+        {
+            TypeList = incomeSourceList,
+            CurrentPage = page,
+            Pages = (int) pageCount
+        };
+        
+        return response;
     }
 
     /// <inheritdoc cref="IIncomeSourceService.Get(int, int)"/>

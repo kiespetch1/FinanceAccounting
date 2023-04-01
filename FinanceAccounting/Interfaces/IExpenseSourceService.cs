@@ -1,4 +1,5 @@
 ﻿using FinanceAccounting.Entities;
+using FinanceAccounting.Models;
 
 namespace FinanceAccounting.Interfaces;
 
@@ -7,13 +8,13 @@ namespace FinanceAccounting.Interfaces;
 /// </summary>
 public interface IExpenseSourceService
 {
-    
     /// <summary>
     /// Returns all expense source categories.
     /// </summary>
     /// <param name="userId">Current user ID.</param>
+    /// <param name="page">Number of expence sources list page</param>
     /// <returns>List of expense sources of current user.</returns>
-    Task<List<ExpenseSource>> GetList(int userId);
+    Task<TypeResponse<ExpenseSource>> GetList(int userId, int page);
 
     /// <summary>
     /// Returns expense source category by ID.

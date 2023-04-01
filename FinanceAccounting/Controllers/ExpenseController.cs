@@ -25,18 +25,20 @@ public class ExpenseController : BaseController
     /// Returns all expenses for the specified period.
     /// </summary>
     /// <param name="expenseSearchContext">Specified period of time.</param>
+    /// /// <param name="page">Number of expenses list page</param>
     /// <returns>List of the specified user's expense for a given period.</returns>
     /// <response code="200">Success.</response>
     /// <response code="401">Unauthorized.</response>
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
+    [Route("list/{page}")]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public async Task<IActionResult> GetList([FromQuery]CashflowSearchContext expenseSearchContext)
+    public async Task<IActionResult> GetList([FromQuery]CashflowSearchContext expenseSearchContext, int page = 1)
     {
         var userId = GetUserId();
-        var expenseList =  await _expenseService.GetList(userId, expenseSearchContext);
+        var expenseList =  await _expenseService.GetList(userId, expenseSearchContext, page);
         
         return Ok(expenseList);
     }

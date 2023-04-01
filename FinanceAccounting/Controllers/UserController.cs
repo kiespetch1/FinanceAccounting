@@ -24,6 +24,7 @@ public class UserController : BaseController
     /// <summary>
     /// Returns all users.
     /// </summary>
+    /// <param name="page">Number of users list page</param>
     /// <returns>List of all users.</returns>
     /// <response code="200">Success.</response>
     /// <response code="401">Unauthorized.</response>
@@ -31,11 +32,12 @@ public class UserController : BaseController
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
+    [Route("list/{page}")]
     [Authorize(Roles = "Administrator")]
     [HttpGet]
-    public async Task<IActionResult> GetList()
+    public async Task<IActionResult> GetList(int page = 1)
     {
-        var allUsers = await _userService.GetList();
+        var allUsers = await _userService.GetList(page);
         
         return Ok(allUsers);
     }

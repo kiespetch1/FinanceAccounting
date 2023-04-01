@@ -14,8 +14,9 @@ public interface IExpenseService
     /// </summary>
     /// <param name="userId">Current user ID.</param>
     /// <param name="expenseSearchContext">Specified period of time.</param>
+    /// <param name="page">Number of expences list page</param>
     /// <returns>List of expenses.</returns>
-    Task<List<Expense>> GetList(int userId, CashflowSearchContext expenseSearchContext);
+    Task<TypeResponse<Expense>> GetList(int userId, CashflowSearchContext expenseSearchContext, int page);
     
     /// <summary>
     /// Returns expense by ID.

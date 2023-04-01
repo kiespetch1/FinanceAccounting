@@ -17,13 +17,25 @@ public class IncomeService : IIncomeService
     }
     
     /// <inheritdoc cref="IIncomeService.GetList(int, CashflowSearchContext)"/>
-    public async Task<List<Income>> GetList(int userId, CashflowSearchContext incomeSearchContext)
+    public async Task<TypeResponse<Income>> GetList(int userId, CashflowSearchContext incomeSearchContext, int page)
     {
+        var pageResults = 3f;
+        var pageCount = Math.Ceiling(_ctx.Income.Count() / pageResults);
         var incomeList = await _ctx.Income
             .Where(x => x.User == userId && x.CreatedAt >= incomeSearchContext.From && x.CreatedAt <= incomeSearchContext.To)
+            .OrderBy(x=> x.Id)
+            .Skip((page - 1) * (int)pageResults)
+            .Take((int)pageResults)
             .ToListAsync();
         
-        return incomeList;
+        var response = new TypeResponse<Income>
+        {
+            TypeList = incomeList,
+            CurrentPage = page,
+            Pages = (int) pageCount
+        };
+        
+        return response;
     }
     
     /// <inheritdoc cref="IIncomeService.Get(int, int)"/>

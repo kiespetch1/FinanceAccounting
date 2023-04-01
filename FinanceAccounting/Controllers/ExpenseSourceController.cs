@@ -22,18 +22,20 @@ public class ExpenseSourceController : BaseController
     /// <summary>
     /// Returns all expense source categories.
     /// </summary>
+    /// <param name="page">Number of expense sources list page</param>
     /// <returns>List of expense sources of current user.</returns>
     /// <response code="200">Success.</response>
     /// <response code="401">Unauthorized.</response>
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
+    [Route("list/{page}")]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public async Task<IActionResult> GetList()
+    public async Task<IActionResult> GetList(int page = 1)
     {
         var userId = GetUserId();
-        var expenseSourcesList =  await _expenseSourceService.GetList(userId);
+        var expenseSourcesList =  await _expenseSourceService.GetList(userId, page);
         
         return Ok(expenseSourcesList);
     }

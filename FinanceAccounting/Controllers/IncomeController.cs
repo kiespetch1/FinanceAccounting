@@ -20,23 +20,25 @@ public class IncomeController : BaseController
     {
         _incomeService = incomeService;
     }
-    
+
     /// <summary>
     /// Returns all income for the specified period.
     /// </summary>
     /// <param name="incomeSearchContext">Specified period of time.</param>
+    /// <param name="page">Number of income list page</param>
     /// <returns>List of the specified user's income for a given period.</returns>
     /// <response code="200">Success.</response>
     /// <response code="401">Unauthorized.</response>
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
+    [Route("list/{page}")]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public async Task<IActionResult> GetList(CashflowSearchContext incomeSearchContext)
+    public async Task<IActionResult> GetList(CashflowSearchContext incomeSearchContext, int page = 1)
     {
         var userId = GetUserId();
-        var incomeList =  await _incomeService.GetList(userId, incomeSearchContext);
+        var incomeList =  await _incomeService.GetList(userId, incomeSearchContext, page);
         
         return Ok(incomeList);
     }
