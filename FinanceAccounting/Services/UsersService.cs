@@ -16,13 +16,32 @@ public class UsersService : IUsersService
         _ctx = ctx;
     }
     
-    /// <inheritdoc cref="IUsersService.GetList(int, UsersSort)"/>
-    public async Task<TypeResponse<User>> GetList(int page, UsersSort usersSortOrder)
+    /// <inheritdoc cref="IUsersService.GetList(int, UsersSort, UsersFilter)"/>
+    public async Task<TypeResponse<User>> GetList(int page, UsersSort usersSortOrder, UsersFilter usersFilter)
     {
         var pageResults = 3f;
         var pageCount = Math.Ceiling(_ctx.Users.Count() / pageResults);
 
         IQueryable<User> users = _ctx.Users;
+
+        if (usersFilter != null)
+        {
+            if (!string.IsNullOrEmpty(usersFilter.Name))
+                users = users.Where(x => x.Name == usersFilter.Name);
+        
+            if (!string.IsNullOrEmpty(usersFilter.MiddleName))
+                users = users.Where(x => x.MiddleName == usersFilter.MiddleName);
+        
+            if (!string.IsNullOrEmpty(usersFilter.LastName))
+                users = users.Where(x => x.LastName == usersFilter.LastName);
+        
+            if (usersFilter.BirthDate != new DateTime(1,1,1,0,0,0))
+                users = users.Where(x => x.BirthDate == usersFilter.BirthDate);
+        
+            if (!string.IsNullOrEmpty(usersFilter.Email))
+                users = users.Where(x => x.Email == usersFilter.Email);
+        }
+        
         users = usersSortOrder switch
         {
             UsersSort.EmailAsc => users.OrderBy(x => x.Email),

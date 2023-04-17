@@ -15,19 +15,24 @@ public class IncomeSourceService : IIncomeSourceService
         _ctx = ctx;
     }
 
-    /// <inheritdoc cref="IIncomeSourceService.GetList(int, int, CashflowSort)"/>
-    public async Task<TypeResponse<IncomeSource>> GetList(int userId, int page, CategoriesSort incomeSourceSortOrder)
+    /// <inheritdoc cref="IIncomeSourceService.GetList(int, int, CategoriesSort)"/>
+    public async Task<TypeResponse<IncomeSource>> GetList(int userId, int page, CategoriesSort incomeSourceSortOrder, CategoriesFilter categoriesFilter)
     {
-        var pageResults = 3f;
-        var pageCount = Math.Ceiling(_ctx.IncomeSources.Count() / pageResults);
-        
+          
         IQueryable<IncomeSource> incomeSource = _ctx.IncomeSources;
+        
+        if (!string.IsNullOrEmpty(categoriesFilter.Name))
+            incomeSource = incomeSource.Where(x => x.Name == categoriesFilter.Name);
+        
         incomeSource = incomeSourceSortOrder switch
         {
             CategoriesSort.NameAsc => incomeSource.OrderBy(x => x.Name),
             CategoriesSort.NameDesc => incomeSource.OrderByDescending(x=>x.Name),
             _ => throw new ArgumentOutOfRangeException()
         };
+        
+        var pageResults = 3f;
+        var pageCount = Math.Ceiling(_ctx.IncomeSources.Count() / pageResults);
         
         var incomeSourceList = await incomeSource
             .Where(x => x.UserId == userId)

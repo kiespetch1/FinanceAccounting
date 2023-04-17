@@ -13,8 +13,9 @@ public interface IUsersService
     /// </summary>
     /// <param name="page">Number of users list page.</param>
     /// <param name="usersSortOrder">Sorting order.</param>
+    /// <param name="usersFilter">Filtering options.</param>
     /// <returns>List of all users.</returns>
-    Task<TypeResponse<User>> GetList(int page, UsersSort usersSortOrder);
+    Task<TypeResponse<User>> GetList(int page, UsersSort usersSortOrder, UsersFilter usersFilter);
     
     /// <summary>
     /// Returns user by ID.

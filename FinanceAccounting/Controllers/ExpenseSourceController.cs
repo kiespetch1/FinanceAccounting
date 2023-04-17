@@ -31,13 +31,13 @@ public class ExpenseSourceController : BaseController
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
-    [Route("list/{page}")]
+    [Route("list")]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public async Task<IActionResult> GetList(int page = 1, CategoriesSort sortingOrder = CategoriesSort.NameAsc)
+    public async Task<IActionResult> GetList([FromQuery]CategoriesFilter categoriesFilter, int page = 1, CategoriesSort sortingOrder = CategoriesSort.NameAsc)
     {
         var userId = GetUserId();
-        var expenseSourcesList =  await _expenseSourceService.GetList(userId, page, sortingOrder);
+        var expenseSourcesList =  await _expenseSourceService.GetList(userId, page, sortingOrder, categoriesFilter);
         
         return Ok(expenseSourcesList);
     }

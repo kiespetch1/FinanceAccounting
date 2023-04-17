@@ -14,8 +14,9 @@ public interface IIncomeSourceService
     /// <param name="userId">Current user ID.</param>
     /// <param name="page">Number of income sources list page.</param>
     /// <param name="incomeSourceSortOrder">Sorting order.</param>
+    /// <param name="categoriesFilter">Filtering options.</param>
     /// <returns>List of income sources of current user.</returns>
-    Task<TypeResponse<IncomeSource>> GetList(int userId, int page, CategoriesSort incomeSourceSortOrder);
+    Task<TypeResponse<IncomeSource>> GetList(int userId, int page, CategoriesSort incomeSourceSortOrder, CategoriesFilter categoriesFilter);
 
     /// <summary>
     /// Returns income source category by ID.

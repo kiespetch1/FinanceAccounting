@@ -34,13 +34,13 @@ public class IncomeController : BaseController
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
-    [Route("list/{page}")]
+    [Route("list")]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public async Task<IActionResult> GetList(CashflowSearchContext incomeSearchContext, int page = 1, CashflowSort sortingOrder = CashflowSort.NameAsc)
+    public async Task<IActionResult> GetList([FromQuery]CashflowFilter cashflowFilter, [FromQuery]CashflowSearchContext incomeSearchContext, int page = 1, CashflowSort sortingOrder = CashflowSort.NameAsc)
     {
         var userId = GetUserId();
-        var incomeList =  await _incomeService.GetList(userId, incomeSearchContext, page, sortingOrder);
+        var incomeList =  await _incomeService.GetList(userId, incomeSearchContext, page, sortingOrder, cashflowFilter);
         
         return Ok(incomeList);
     }

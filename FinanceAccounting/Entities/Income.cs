@@ -15,7 +15,7 @@ public class Income
     public string Name { get; set; } 
 
     [Column(TypeName = "money")] 
-    public float Amount { get; set; } 
+    public decimal Amount { get; set; } 
 
     [ForeignKey("IncomeSource")]
     public int CategoryId { get; set; }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
 using FinanceAccounting.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace FinanceAccounting.Controllers;
 
@@ -25,6 +26,7 @@ public class UserController : BaseController
     /// <summary>
     /// Returns all users.
     /// </summary>
+    /// <param name="usersFilter">Filtering options.</param>
     /// <param name="page">Number of users list page.</param>
     /// <param name="sortingOrder">Sorting order.</param>
     /// <returns>List of all users.</returns>
@@ -34,12 +36,13 @@ public class UserController : BaseController
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
-    [Route("list/{page}/{sortingOrder}")]
+    [Route("list")]
     [Authorize(Roles = "Administrator")]
     [HttpGet]
-    public async Task<IActionResult> GetList(int page = 1, UsersSort sortingOrder = UsersSort.NameAsc)
+    public async Task<IActionResult> GetList([FromQuery] [BindNever]UsersFilter usersFilter, int page = 1, 
+        UsersSort sortingOrder = UsersSort.NameAsc)
     {
-        var allUsers = await _userService.GetList(page, sortingOrder);
+        var allUsers = await _userService.GetList(page, sortingOrder, usersFilter);
         
         return Ok(allUsers);
     }

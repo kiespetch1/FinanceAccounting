@@ -30,13 +30,13 @@ public class IncomeSourceController : BaseController
     /// <response code="401">Unauthorized.</response>
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
-    [Route("list/{page}")]
+    [Route("list")]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public async Task<IActionResult> GetList(int page = 1, CategoriesSort sortingOrder = CategoriesSort.NameAsc)
+    public async Task<IActionResult> GetList([FromQuery]CategoriesFilter categoriesFilter, int page = 1, CategoriesSort sortingOrder = CategoriesSort.NameAsc)
     {
         var userId = GetUserId();
-        var incomeSourcesList =  await _incomeSourceService.GetList(userId, page, sortingOrder);
+        var incomeSourcesList =  await _incomeSourceService.GetList(userId, page, sortingOrder, categoriesFilter);
         
         return Ok(incomeSourcesList);
     }

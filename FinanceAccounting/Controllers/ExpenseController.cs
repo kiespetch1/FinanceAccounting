@@ -34,13 +34,15 @@ public class ExpenseController : BaseController
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
-    [Route("list/{page}")]
+    [Route("list")]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public async Task<IActionResult> GetList([FromQuery]CashflowSearchContext expenseSearchContext, int page = 1, CashflowSort sortingOrder = CashflowSort.NameAsc)
+    public async Task<IActionResult> GetList([FromQuery]CashflowSearchContext expenseSearchContext, int page = 1, 
+        CashflowSort sortingOrder = CashflowSort.NameAsc, [FromQuery]CashflowFilter cashflowFilter = null)
     {
         var userId = GetUserId();
-        var expenseList =  await _expenseService.GetList(userId, expenseSearchContext, page, sortingOrder);
+        var expenseList =  await _expenseService.GetList(userId, expenseSearchContext, page, 
+            sortingOrder, cashflowFilter);
         
         return Ok(expenseList);
     }

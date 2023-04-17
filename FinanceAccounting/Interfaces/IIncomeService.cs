@@ -14,10 +14,10 @@ public interface IIncomeService
     /// </summary>
     /// <param name="userId">Current user ID.</param>
     /// <param name="incomeSearchContext">Specified period of time.</param>
-    /// <param name="page">/// <param name="page">Number of income list page.</param></param>
+    /// <param name="page">Number of income list page.</param>
     /// <param name="incomeSortOrder">Sorting order.</param>
     /// <returns>List of the specified user's income for a given period.</returns>
-    Task<TypeResponse<Income>> GetList(int userId, CashflowSearchContext incomeSearchContext, int page, CashflowSort incomeSortOrder);
+    Task<TypeResponse<Income>> GetList(int userId, CashflowSearchContext incomeSearchContext, int page, CashflowSort incomeSortOrder, CashflowFilter cashflowFilter);
     
     /// <summary>
     /// Returns income by ID.

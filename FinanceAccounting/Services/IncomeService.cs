@@ -17,12 +17,19 @@ public class IncomeService : IIncomeService
     }
     
     /// <inheritdoc cref="IIncomeService.GetList(int, CashflowSearchContext, int, CashflowSort)"/>
-    public async Task<TypeResponse<Income>> GetList(int userId, CashflowSearchContext incomeSearchContext, int page, CashflowSort incomeSortOrder)
+    public async Task<TypeResponse<Income>> GetList(int userId, CashflowSearchContext incomeSearchContext, int page, CashflowSort incomeSortOrder, CashflowFilter cashflowFilter)
     {
-        var pageResults = 3f;
-        var pageCount = Math.Ceiling(_ctx.Income.Count() / pageResults);
-        
         IQueryable<Income> income = _ctx.Income;
+        
+        if (!string.IsNullOrEmpty(cashflowFilter.Name))
+            income = income.Where(x => x.Name == cashflowFilter.Name);
+        
+        if (cashflowFilter.Amount == 0)
+            income = income.Where(x => x.Amount == cashflowFilter.Amount);
+        
+        if (cashflowFilter.CategoryId == 0)
+            income = income.Where(x => x.CategoryId == cashflowFilter.CategoryId);
+        
         income = incomeSortOrder switch
         {
             CashflowSort.AmountAsc => income.OrderBy(x => x.Amount),
@@ -33,6 +40,9 @@ public class IncomeService : IIncomeService
             CashflowSort.CategoryDesc => income.OrderByDescending(x=>x.CategoryId),
             _ => throw new ArgumentOutOfRangeException()
         };
+        
+        var pageResults = 3f;
+        var pageCount = Math.Ceiling(income.Count(x=> x.Id == userId) / pageResults);
         
         var incomeList = await income
             .Where(x => x.User == userId && x.CreatedAt >= incomeSearchContext.From && x.CreatedAt <= incomeSearchContext.To)

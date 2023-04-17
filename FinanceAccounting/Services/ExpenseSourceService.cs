@@ -18,12 +18,16 @@ public class ExpenseSourceService : IExpenseSourceService
     }
     
     /// <inheritdoc cref="IExpenseService.GetList(int, CashflowSearchContext, int, CashflowSort)"/>
-    public async Task<TypeResponse<ExpenseSource>> GetList(int userId, int page, CategoriesSort expenseSortOrder)
+    public async Task<TypeResponse<ExpenseSource>> GetList(int userId, int page, CategoriesSort expenseSortOrder, CategoriesFilter categoriesFilter)
     {
         var pageResults = 3f;
         var pageCount = Math.Ceiling(_ctx.ExpenseSources.Count() / pageResults);
         
         IQueryable<ExpenseSource> expenseSource = _ctx.ExpenseSources;
+        
+        if (!string.IsNullOrEmpty(categoriesFilter.Name))
+            expenseSource = expenseSource.Where(x => x.Name == categoriesFilter.Name);
+        
         expenseSource = expenseSortOrder switch
         {
             CategoriesSort.NameAsc => expenseSource.OrderBy(x => x.Name),

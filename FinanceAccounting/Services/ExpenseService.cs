@@ -17,12 +17,19 @@ public class ExpenseService : IExpenseService
     }
     
     /// <inheritdoc cref="IExpenseService.GetList(int, CashflowSearchContext, int, CashflowSort)"/>
-    public async Task<TypeResponse<Expense>> GetList(int userId, CashflowSearchContext expenseSearchContext, int page, CashflowSort expenseSortOrder)
+    public async Task<TypeResponse<Expense>> GetList(int userId, CashflowSearchContext expenseSearchContext, int page, CashflowSort expenseSortOrder, CashflowFilter cashflowFilter)
     {
-        var pageResults = 3f;
-        var pageCount = Math.Ceiling(_ctx.Expense.Count() / pageResults);
-        
         IQueryable<Expense> expense = _ctx.Expense;
+        
+        if (!string.IsNullOrEmpty(cashflowFilter.Name))
+            expense = expense.Where(x => x.Name == cashflowFilter.Name);
+        
+        if (cashflowFilter.Amount != 0)
+            expense = expense.Where(x => x.Amount == cashflowFilter.Amount);
+        
+        if (cashflowFilter.CategoryId != 0)
+            expense = expense.Where(x => x.CategoryId == cashflowFilter.CategoryId);
+        
         expense = expenseSortOrder switch
         {
             CashflowSort.AmountAsc => expense.OrderBy(x => x.Amount),
@@ -34,9 +41,11 @@ public class ExpenseService : IExpenseService
             _ => throw new ArgumentOutOfRangeException()
         };
         
+        var pageResults = 3f;
+        var pageCount = Math.Ceiling(expense.Count(x=> x.Id == userId) / pageResults);
+        
         var expenseList = await expense
             .Where(x => x.User == userId && x.CreatedAt >= expenseSearchContext.From && x.CreatedAt <= expenseSearchContext.To)
-            .OrderBy(x=> x.Id)
             .Skip((page - 1) * (int)pageResults)
             .Take((int)pageResults)
             .ToListAsync();

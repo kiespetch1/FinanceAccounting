@@ -74,7 +74,7 @@ public class ExcelService : IExcelService
         {
             var idCell = Convert.ToInt32(incomeSheet.Cell($"A{incomeRowNumber}").GetString());
             var nameCell = incomeSheet.Cell($"B{incomeRowNumber}").GetString();
-            var amountCell = Convert.ToSingle(incomeSheet.Cell($"C{incomeRowNumber}").GetString());
+            var amountCell = Convert.ToDecimal(incomeSheet.Cell($"C{incomeRowNumber}").GetString());
             var dateCell = incomeSheet.Cell($"D{incomeRowNumber}").GetDateTime();
                 
             var currentRecord = _ctx.Income.SingleOrDefault(x => x.Id == idCell);
@@ -95,7 +95,7 @@ public class ExcelService : IExcelService
         {
             var idCell = Convert.ToInt32(expenseSheet.Cell($"A{expenseRowNumber}").GetString());
             var nameCell = expenseSheet.Cell($"B{expenseRowNumber}").GetString();
-            var amountCell = Convert.ToSingle(expenseSheet.Cell($"C{expenseRowNumber}").GetString());
+            var amountCell = Convert.ToDecimal(expenseSheet.Cell($"C{expenseRowNumber}").GetString());
             var dateCell = expenseSheet.Cell($"D{expenseRowNumber}").GetDateTime();
                 
             var currentRecord = _ctx.Expense.SingleOrDefault(x => x.Id == idCell);

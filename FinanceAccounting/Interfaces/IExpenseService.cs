@@ -17,7 +17,7 @@ public interface IExpenseService
     /// <param name="page">Number of expences list page.</param>
     /// <param name="expenseSortOrder">Sorting order.</param>
     /// <returns>List of expenses.</returns>
-    Task<TypeResponse<Expense>> GetList(int userId, CashflowSearchContext expenseSearchContext, int page, CashflowSort expenseSortOrder);
+    Task<TypeResponse<Expense>> GetList(int userId, CashflowSearchContext expenseSearchContext, int page, CashflowSort expenseSortOrder, CashflowFilter cashflowFilter);
     
     /// <summary>
     /// Returns expense by ID.
