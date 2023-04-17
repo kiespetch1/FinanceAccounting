@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using FluentValidation;
 
 namespace FinanceAccounting.Exceptions;
 
@@ -33,6 +34,11 @@ public class ExceptionsMiddleware
                     code = BaseException.ErrorCode;
                     break;
                 
+                case ValidationException:
+                    result = exception.Message;
+                    code = BaseException.ErrorCode;
+                    break;
+
                 default:
                     result = $"Internal server error. \n {exception.Message} {exception.StackTrace}";
                     code = HttpStatusCode.InternalServerError;
