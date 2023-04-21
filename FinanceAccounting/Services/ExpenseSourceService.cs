@@ -25,7 +25,7 @@ public class ExpenseSourceService : IExpenseSourceService
         
         IQueryable<ExpenseSource> expenseSource = _ctx.ExpenseSources;
         
-        if (!string.IsNullOrEmpty(categoriesFilter.Name))
+        if (categoriesFilter.Name is not ("" or null))
             expenseSource = expenseSource.Where(x => x.Name == categoriesFilter.Name);
         
         expenseSource = expenseSortOrder switch

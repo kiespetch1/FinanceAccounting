@@ -27,7 +27,7 @@ public class ExpenseService : IExpenseService
         if (cashflowFilter.Amount is not (0 or null))
             expense = expense.Where(x => x.Amount == cashflowFilter.Amount);
 
-        if (cashflowFilter.CategoryId is not (null or 0))
+        if (cashflowFilter.CategoryId is not (0 or null))
             expense = expense.Where(x => x.CategoryId == cashflowFilter.CategoryId);
 
 

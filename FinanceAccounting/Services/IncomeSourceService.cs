@@ -21,7 +21,7 @@ public class IncomeSourceService : IIncomeSourceService
           
         IQueryable<IncomeSource> incomeSource = _ctx.IncomeSources;
         
-        if (!string.IsNullOrEmpty(categoriesFilter.Name))
+        if (categoriesFilter.Name is not ("" or null))
             incomeSource = incomeSource.Where(x => x.Name == categoriesFilter.Name);
         
         incomeSource = incomeSourceSortOrder switch

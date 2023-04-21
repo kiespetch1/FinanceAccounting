@@ -26,19 +26,19 @@ public class UsersService : IUsersService
 
         if (usersFilter != null)
         {
-            if (!string.IsNullOrEmpty(usersFilter.Name))
+            if (usersFilter.Name is not ("" or null))
                 users = users.Where(x => x.Name == usersFilter.Name);
         
-            if (!string.IsNullOrEmpty(usersFilter.MiddleName))
+            if (usersFilter.MiddleName is not ("" or null))
                 users = users.Where(x => x.MiddleName == usersFilter.MiddleName);
         
-            if (!string.IsNullOrEmpty(usersFilter.LastName))
+            if (usersFilter.LastName is not ("" or null))
                 users = users.Where(x => x.LastName == usersFilter.LastName);
         
             if (usersFilter.BirthDate != new DateTime(1,1,1,0,0,0))
                 users = users.Where(x => x.BirthDate == usersFilter.BirthDate);
         
-            if (!string.IsNullOrEmpty(usersFilter.Email))
+            if (usersFilter.Email is not ("" or null))
                 users = users.Where(x => x.Email == usersFilter.Email);
         }
         

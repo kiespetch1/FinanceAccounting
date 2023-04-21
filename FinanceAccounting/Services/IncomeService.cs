@@ -21,13 +21,13 @@ public class IncomeService : IIncomeService
     {
         IQueryable<Income> income = _ctx.Income;
         
-        if (!string.IsNullOrEmpty(cashflowFilter.Name))
+        if (cashflowFilter.Name is not ("" or null))
             income = income.Where(x => x.Name == cashflowFilter.Name);
         
-        if (cashflowFilter.Amount == 0)
+        if (cashflowFilter.Amount  is not (0 or null))
             income = income.Where(x => x.Amount == cashflowFilter.Amount);
         
-        if (cashflowFilter.CategoryId == 0)
+        if (cashflowFilter.CategoryId is not (0 or null))
             income = income.Where(x => x.CategoryId == cashflowFilter.CategoryId);
         
         income = incomeSortOrder switch
