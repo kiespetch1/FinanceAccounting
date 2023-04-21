@@ -16,20 +16,21 @@ public class ExpenseService : IExpenseService
         _ctx = ctx;
     }
     
-    /// <inheritdoc cref="IExpenseService.GetList(int, CashflowSearchContext, int, CashflowSort)"/>
+    /// <inheritdoc cref="IExpenseService.GetList(int,CashflowSearchContext,int,CashflowSort,CashflowFilter)"/>
     public async Task<TypeResponse<Expense>> GetList(int userId, CashflowSearchContext expenseSearchContext, int page, CashflowSort expenseSortOrder, CashflowFilter cashflowFilter)
     {
         IQueryable<Expense> expense = _ctx.Expense;
         
-        if (!string.IsNullOrEmpty(cashflowFilter.Name))
+        if (cashflowFilter.Name is not ("" or null))
             expense = expense.Where(x => x.Name == cashflowFilter.Name);
         
-        if (cashflowFilter.Amount != 0)
+        if (cashflowFilter.Amount is not (0 or null))
             expense = expense.Where(x => x.Amount == cashflowFilter.Amount);
-        
-        if (cashflowFilter.CategoryId != 0)
+
+        if (cashflowFilter.CategoryId is not (null or 0))
             expense = expense.Where(x => x.CategoryId == cashflowFilter.CategoryId);
-        
+
+
         expense = expenseSortOrder switch
         {
             CashflowSort.AmountAsc => expense.OrderBy(x => x.Amount),
