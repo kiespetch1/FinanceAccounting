@@ -14,7 +14,7 @@ namespace FinanceAccounting.Services;
 public class AuthService : IAuthService
 {
     private readonly ApplicationContext _ctx;
-    private IValidator<RegistrationData> _validator;
+    private readonly IValidator<RegistrationData> _validator;
 
     public AuthService(ApplicationContext ctx, IValidator<RegistrationData> validator)
     {

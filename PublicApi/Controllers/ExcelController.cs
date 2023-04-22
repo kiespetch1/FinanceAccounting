@@ -3,6 +3,7 @@ using FinanceAccounting.Controllers.Abstractions;
 using FinanceAccounting.Interfaces;
 using FinanceAccounting.SearchContexts;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinanceAccounting.Controllers;

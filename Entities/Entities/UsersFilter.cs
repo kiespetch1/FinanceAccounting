@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-
-namespace FinanceAccounting.Entities;
+﻿namespace FinanceAccounting.Entities;
 
 public class UsersFilter
 {

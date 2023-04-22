@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+        <RootNamespace>FinanceAccounting</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,10 +21,15 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Npgsql" Version="6.0.6" />
+        <PackageReference Include="Npgsql" Version="6.0.8" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.6" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Entities\Entities.csproj" />
+      <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
