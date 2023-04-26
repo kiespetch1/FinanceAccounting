@@ -1,13 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using FinanceAccounting.Entities;
+using Entities.Entities;
+using Entities.Models;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
-using FinanceAccounting.Models;
 using Microsoft.IdentityModel.Tokens;
 using FluentValidation;
-using FluentValidation.Results;
+using Infrastructure;
 using static FinanceAccounting.PasswordHashing;
 
 namespace FinanceAccounting.Services;
@@ -25,10 +24,8 @@ public class AuthService : IAuthService
     /// <inheritdoc cref="IAuthService.Register(RegistrationData)"/>
     public async Task Register(RegistrationData user)
     {
-        var result = await _validator.ValidateAsync(user);
-        if (result.IsValid == false)
-            throw new FluentValidation.ValidationException(result.Errors);
-        
+        await _validator.ValidateAndThrowAsync(user);
+
         if (_ctx.Users.SingleOrDefault(x => x.Login == user.Login
                                             || x.Email == user.Email) != null)
         {

@@ -1,8 +1,9 @@
-﻿using FinanceAccounting.Entities;
+﻿using Entities.Entities;
+using Entities.Models;
+using Entities.SearchContexts;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
-using FinanceAccounting.Models;
-using FinanceAccounting.SearchContexts;
+using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceAccounting.Services;
@@ -20,12 +21,11 @@ public class ExpenseSourceService : IExpenseSourceService
     /// <inheritdoc cref="IExpenseService.GetList(int, CashflowSearchContext, int, CashflowSort)"/>
     public async Task<TypeResponse<ExpenseSource>> GetList(int userId, int page, CategoriesSort expenseSortOrder, CategoriesFilter categoriesFilter)
     {
-        var pageResults = 3f;
-        var pageCount = Math.Ceiling(_ctx.ExpenseSources.Count() / pageResults);
+        const int pageResults = 3;
         
         IQueryable<ExpenseSource> expenseSource = _ctx.ExpenseSources;
         
-        if (categoriesFilter.Name is not ("" or null))
+        if (!string.IsNullOrEmpty(categoriesFilter.Name))
             expenseSource = expenseSource.Where(x => x.Name == categoriesFilter.Name);
         
         expenseSource = expenseSortOrder switch
@@ -37,15 +37,14 @@ public class ExpenseSourceService : IExpenseSourceService
         
         var expenseSourceList = await expenseSource
             .Where(x => x.UserId == userId)
-            .Skip((page - 1) * (int)pageResults)
-            .Take((int)pageResults)
+            .Skip((page - 1) * pageResults)
+            .Take(pageResults)
             .ToListAsync();
         
         var response = new TypeResponse<ExpenseSource>
         {
-            TypeList = expenseSourceList,
-            CurrentPage = page,
-            Pages = (int) pageCount
+            Items = expenseSourceList,
+            Total = expenseSource.Count(x=> x.Id == userId)
         };
         
         return response;

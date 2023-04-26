@@ -1,4 +1,4 @@
-﻿namespace FinanceAccounting.Entities;
+﻿namespace Entities.Entities;
 
 public enum CashflowSort
 {

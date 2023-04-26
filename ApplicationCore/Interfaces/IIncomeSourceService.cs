@@ -1,5 +1,5 @@
-﻿using FinanceAccounting.Entities;
-using FinanceAccounting.Models;
+﻿using Entities.Entities;
+using Entities.Models;
 
 namespace FinanceAccounting.Interfaces;
 

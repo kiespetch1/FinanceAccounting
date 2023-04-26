@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FinanceAccounting.Entities;
+namespace Entities.Entities;
 
 /// <summary>
 /// Represents the source of the expense.

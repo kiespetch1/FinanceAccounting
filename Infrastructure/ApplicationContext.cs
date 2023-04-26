@@ -1,7 +1,7 @@
-﻿using FinanceAccounting.Entities;
+﻿using Entities.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinanceAccounting;
+namespace Infrastructure;
 
 /// <summary>
 /// Database context class

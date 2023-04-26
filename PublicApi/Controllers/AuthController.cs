@@ -1,10 +1,9 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using Entities.Models;
 using FinanceAccounting.Interfaces;
-using FinanceAccounting.Models;
 using Microsoft.AspNetCore.Mvc;
 
-
-namespace FinanceAccounting.Controllers;
+namespace PublicApi.Controllers;
 
 [ApiController]
 [Route("api/auth")]

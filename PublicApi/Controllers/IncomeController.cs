@@ -1,12 +1,12 @@
-﻿using FinanceAccounting.Controllers.Abstractions;
-using FinanceAccounting.Entities;
+﻿using Entities.Entities;
+using Entities.Models;
+using Entities.SearchContexts;
 using FinanceAccounting.Interfaces;
-using FinanceAccounting.Models;
-using FinanceAccounting.SearchContexts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PublicApi.Controllers.Abstractions;
 
-namespace FinanceAccounting.Controllers;
+namespace PublicApi.Controllers;
 
 [ApiController]
 [Route("income")]

@@ -1,8 +1,9 @@
-﻿using FinanceAccounting.Entities;
+﻿using Entities.Entities;
+using Entities.Models;
+using Entities.SearchContexts;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
-using FinanceAccounting.Models;
-using FinanceAccounting.SearchContexts;
+using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceAccounting.Services;
@@ -21,7 +22,7 @@ public class ExpenseService : IExpenseService
     {
         IQueryable<Expense> expense = _ctx.Expense;
         
-        if (cashflowFilter.Name is not ("" or null))
+        if (!string.IsNullOrEmpty(cashflowFilter.Name))
             expense = expense.Where(x => x.Name == cashflowFilter.Name);
         
         if (cashflowFilter.Amount is not (0 or null))
@@ -42,20 +43,18 @@ public class ExpenseService : IExpenseService
             _ => throw new ArgumentOutOfRangeException()
         };
         
-        var pageResults = 3f;
-        var pageCount = Math.Ceiling(expense.Count(x=> x.Id == userId) / pageResults);
+        const int pageResults = 3;
         
         var expenseList = await expense
             .Where(x => x.User == userId && x.CreatedAt >= expenseSearchContext.From && x.CreatedAt <= expenseSearchContext.To)
-            .Skip((page - 1) * (int)pageResults)
-            .Take((int)pageResults)
+            .Skip((page - 1) * pageResults)
+            .Take(pageResults)
             .ToListAsync();
         
         var response = new TypeResponse<Expense>
         {
-            TypeList = expenseList,
-            CurrentPage = page,
-            Pages = (int) pageCount
+            Items = expenseList,
+            Total = expense.Count(x=> x.Id == userId)
         };
         
         return response;

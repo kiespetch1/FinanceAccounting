@@ -1,4 +1,4 @@
-﻿namespace FinanceAccounting.Entities;
+﻿namespace Entities.Entities;
 
 /// <summary>
 /// Represents possible roles of user.

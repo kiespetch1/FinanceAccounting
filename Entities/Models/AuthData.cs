@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FinanceAccounting.Models;
+namespace Entities.Models;
 
 /// <summary>
 /// Represents login information.

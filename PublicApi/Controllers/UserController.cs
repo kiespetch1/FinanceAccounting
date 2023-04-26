@@ -1,13 +1,13 @@
-﻿using FinanceAccounting.Controllers.Abstractions;
-using FinanceAccounting.Entities;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Entities.Entities;
+using Entities.Models;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
-using FinanceAccounting.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using PublicApi.Controllers.Abstractions;
 
-namespace FinanceAccounting.Controllers;
+namespace PublicApi.Controllers;
 
 [ApiController]
 [Route("api/users")]
@@ -39,7 +39,7 @@ public class UserController : BaseController
     [Route("list")]
     [Authorize(Roles = "Administrator")]
     [HttpGet]
-    public async Task<IActionResult> GetList([FromQuery] [BindNever]UsersFilter usersFilter, int page = 1, 
+    public async Task<IActionResult> GetList([FromQuery] [BindNever]UsersFilter? usersFilter, int page = 1, 
         UsersSort sortingOrder = UsersSort.NameAsc)
     {
         var allUsers = await _userService.GetList(page, sortingOrder, usersFilter);

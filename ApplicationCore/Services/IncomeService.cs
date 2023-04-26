@@ -1,8 +1,9 @@
-﻿using FinanceAccounting.Entities;
+﻿using Entities.Entities;
+using Entities.Models;
+using Entities.SearchContexts;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
-using FinanceAccounting.Models;
-using FinanceAccounting.SearchContexts;
+using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceAccounting.Services;
@@ -21,7 +22,7 @@ public class IncomeService : IIncomeService
     {
         IQueryable<Income> income = _ctx.Income;
         
-        if (cashflowFilter.Name is not ("" or null))
+        if (!string.IsNullOrEmpty(cashflowFilter.Name))
             income = income.Where(x => x.Name == cashflowFilter.Name);
         
         if (cashflowFilter.Amount  is not (0 or null))
@@ -41,20 +42,18 @@ public class IncomeService : IIncomeService
             _ => throw new ArgumentOutOfRangeException()
         };
         
-        var pageResults = 3f;
-        var pageCount = Math.Ceiling(income.Count(x=> x.Id == userId) / pageResults);
+        const int pageResults = 3;
         
         var incomeList = await income
             .Where(x => x.User == userId && x.CreatedAt >= incomeSearchContext.From && x.CreatedAt <= incomeSearchContext.To)
-            .Skip((page - 1) * (int)pageResults)
-            .Take((int)pageResults)
+            .Skip((page - 1) * pageResults)
+            .Take(pageResults)
             .ToListAsync();
         
         var response = new TypeResponse<Income>
         {
-            TypeList = incomeList,
-            CurrentPage = page,
-            Pages = (int) pageCount
+            Items = incomeList,
+            Total = income.Count(x=> x.Id == userId)
         };
         
         return response;

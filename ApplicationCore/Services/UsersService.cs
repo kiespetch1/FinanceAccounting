@@ -1,8 +1,9 @@
-﻿using FinanceAccounting.Entities;
+﻿using Entities.Entities;
+using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
-using FinanceAccounting.Models;
+using Infrastructure;
 using static FinanceAccounting.PasswordHashing;
 
 namespace FinanceAccounting.Services;
@@ -17,28 +18,27 @@ public class UsersService : IUsersService
     }
     
     /// <inheritdoc cref="IUsersService.GetList(int, UsersSort, UsersFilter)"/>
-    public async Task<TypeResponse<User>> GetList(int page, UsersSort usersSortOrder, UsersFilter usersFilter)
+    public async Task<TypeResponse<User>> GetList(int page, UsersSort usersSortOrder, UsersFilter? usersFilter)
     {
-        var pageResults = 3f;
-        var pageCount = Math.Ceiling(_ctx.Users.Count() / pageResults);
+        const int pageResults = 3;
 
         IQueryable<User> users = _ctx.Users;
 
         if (usersFilter != null)
         {
-            if (usersFilter.Name is not ("" or null))
+            if (!string.IsNullOrEmpty(usersFilter.Name))
                 users = users.Where(x => x.Name == usersFilter.Name);
         
-            if (usersFilter.MiddleName is not ("" or null))
+            if (!string.IsNullOrEmpty(usersFilter.MiddleName))
                 users = users.Where(x => x.MiddleName == usersFilter.MiddleName);
         
-            if (usersFilter.LastName is not ("" or null))
+            if (!string.IsNullOrEmpty(usersFilter.LastName))
                 users = users.Where(x => x.LastName == usersFilter.LastName);
         
             if (usersFilter.BirthDate != new DateTime(1,1,1,0,0,0))
                 users = users.Where(x => x.BirthDate == usersFilter.BirthDate);
         
-            if (usersFilter.Email is not ("" or null))
+            if (!string.IsNullOrEmpty(usersFilter.Email))
                 users = users.Where(x => x.Email == usersFilter.Email);
         }
         
@@ -57,13 +57,12 @@ public class UsersService : IUsersService
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        var orderedUsers = await users.Skip((page - 1) * (int)pageResults).Take((int)pageResults).ToListAsync();
+        var orderedUsers = await users.Skip((page - 1) * pageResults).Take(pageResults).ToListAsync();
         
         var response = new TypeResponse<User>
         {
-            TypeList = orderedUsers,
-            CurrentPage = page,
-            Pages = (int) pageCount
+            Items = orderedUsers,
+            Total = _ctx.Users.Count()
         };
 
         return response;
@@ -72,9 +71,7 @@ public class UsersService : IUsersService
     /// <inheritdoc cref="IUsersService.Get(int)"/>
     public async Task<User> Get(int id)
     {
-        var user = _ctx.Users.SingleOrDefault(x => x.Id == id);
-        if (user == null)
-            throw new UserNotFoundException();
+        var user = _ctx.Users.SingleOrNotFound(x => x.Id == id);
         
         return user;
     }

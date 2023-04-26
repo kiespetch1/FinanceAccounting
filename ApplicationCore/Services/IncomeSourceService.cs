@@ -1,7 +1,8 @@
-﻿using FinanceAccounting.Entities;
+﻿using Entities.Entities;
+using Entities.Models;
 using FinanceAccounting.Exceptions;
 using FinanceAccounting.Interfaces;
-using FinanceAccounting.Models;
+using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceAccounting.Services;
@@ -21,7 +22,7 @@ public class IncomeSourceService : IIncomeSourceService
           
         IQueryable<IncomeSource> incomeSource = _ctx.IncomeSources;
         
-        if (categoriesFilter.Name is not ("" or null))
+        if (!string.IsNullOrEmpty(categoriesFilter.Name))
             incomeSource = incomeSource.Where(x => x.Name == categoriesFilter.Name);
         
         incomeSource = incomeSourceSortOrder switch
@@ -31,20 +32,18 @@ public class IncomeSourceService : IIncomeSourceService
             _ => throw new ArgumentOutOfRangeException()
         };
         
-        var pageResults = 3f;
-        var pageCount = Math.Ceiling(_ctx.IncomeSources.Count() / pageResults);
-        
+        const int pageResults = 3;
+
         var incomeSourceList = await incomeSource
             .Where(x => x.UserId == userId)
-            .Skip((page - 1) * (int)pageResults)
-            .Take((int)pageResults)
+            .Skip((page - 1) * pageResults)
+            .Take(pageResults)
             .ToListAsync();
         
         var response = new TypeResponse<IncomeSource>
         {
-            TypeList = incomeSourceList,
-            CurrentPage = page,
-            Pages = (int) pageCount
+            Items = incomeSourceList,
+            Total = incomeSource.Count(x=> x.Id == userId)
         };
         
         return response;

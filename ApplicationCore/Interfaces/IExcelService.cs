@@ -1,5 +1,5 @@
 ﻿using ClosedXML.Excel;
-using FinanceAccounting.SearchContexts;
+using Entities.SearchContexts;
 
 namespace FinanceAccounting.Interfaces;
 

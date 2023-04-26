@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FinanceAccounting.Entities;
+namespace Entities.Entities;
 
 /// <summary>
 /// Represents a user.
@@ -36,6 +36,4 @@ public class User
     
     public Role Role { get; set; }
 
-    public List<IncomeSource> IncomeSource { get; set; } = new();
-    
 }

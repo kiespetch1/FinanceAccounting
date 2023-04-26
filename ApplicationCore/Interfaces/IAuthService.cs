@@ -1,5 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using FinanceAccounting.Models;
+using Entities.Models;
 
 namespace FinanceAccounting.Interfaces;
 

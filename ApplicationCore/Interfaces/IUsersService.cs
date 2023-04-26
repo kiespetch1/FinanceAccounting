@@ -1,5 +1,5 @@
-﻿using FinanceAccounting.Entities;
-using FinanceAccounting.Models;
+﻿using Entities.Entities;
+using Entities.Models;
 
 namespace FinanceAccounting.Interfaces;
 
@@ -15,7 +15,7 @@ public interface IUsersService
     /// <param name="usersSortOrder">Sorting order.</param>
     /// <param name="usersFilter">Filtering options.</param>
     /// <returns>List of all users.</returns>
-    Task<TypeResponse<User>> GetList(int page, UsersSort usersSortOrder, UsersFilter usersFilter);
+    Task<TypeResponse<User>> GetList(int page, UsersSort usersSortOrder, UsersFilter? usersFilter);
     
     /// <summary>
     /// Returns user by ID.

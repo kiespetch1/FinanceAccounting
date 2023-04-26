@@ -1,4 +1,4 @@
-﻿namespace FinanceAccounting.SearchContexts;
+﻿namespace Entities.SearchContexts;
 
 /// <summary>
 /// Represents the data needed to search for cashflow.

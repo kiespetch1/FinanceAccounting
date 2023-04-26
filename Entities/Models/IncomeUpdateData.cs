@@ -1,4 +1,4 @@
-﻿namespace FinanceAccounting.Models;
+﻿namespace Entities.Models;
 
 /// <summary>
 /// Represents the data required to update an income.

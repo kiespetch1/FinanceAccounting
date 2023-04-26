@@ -1,10 +1,8 @@
-﻿namespace FinanceAccounting.Models;
+﻿namespace Entities.Models;
 
 public class TypeResponse<T>
 {
-    public List<T> TypeList { get; set; } = new List<T>();
-    
-    public int Pages { get; set; }
+    public List<T> Items { get; set; } = new List<T>();
 
-    public int CurrentPage { get; set; }
+    public int Total { get; set; }
 }
