@@ -1,12 +1,12 @@
 ﻿using Entities.Entities;
 using Entities.Models;
-using Microsoft.EntityFrameworkCore;
-using FinanceAccounting.Exceptions;
-using FinanceAccounting.Interfaces;
 using Infrastructure;
-using static FinanceAccounting.PasswordHashing;
+using Microsoft.EntityFrameworkCore;
+using PublicApi.Exceptions;
+using PublicApi.Interfaces;
+using static PublicApi.PasswordHashing;
 
-namespace FinanceAccounting.Services;
+namespace PublicApi.Services;
 
 public class UsersService : IUsersService
 {

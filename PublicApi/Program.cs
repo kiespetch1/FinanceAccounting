@@ -1,14 +1,15 @@
 using Entities.Models;
 using FinanceAccounting;
-using FinanceAccounting.Exceptions;
-using FinanceAccounting.Services;
-using FinanceAccounting.Interfaces;
 using FluentValidation;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using PublicApi;
+using PublicApi.Exceptions;
+using PublicApi.Interfaces;
+using PublicApi.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);

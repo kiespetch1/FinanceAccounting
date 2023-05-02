@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-namespace FinanceAccounting;
+namespace PublicApi;
 
 public class AuthOptions
 {

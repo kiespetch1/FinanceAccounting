@@ -1,6 +1,6 @@
 ﻿using ClosedXML.Excel;
 
-namespace FinanceAccounting;
+namespace PublicApi;
 
 public static class ExcelExtension
 {

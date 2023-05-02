@@ -1,12 +1,12 @@
 ﻿using Entities.Entities;
 using Entities.Models;
 using Entities.SearchContexts;
-using FinanceAccounting.Exceptions;
-using FinanceAccounting.Interfaces;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using PublicApi.Exceptions;
+using PublicApi.Interfaces;
 
-namespace FinanceAccounting.Services;
+namespace PublicApi.Services;
 
 public class ExpenseSourceService : IExpenseSourceService
 {
@@ -18,12 +18,15 @@ public class ExpenseSourceService : IExpenseSourceService
         _ctx = ctx;
     }
     
-    /// <inheritdoc cref="IExpenseService.GetList(int, CashflowSearchContext, int, CashflowSort)"/>
-    public async Task<TypeResponse<ExpenseSource>> GetList(int userId, int page, CategoriesSort expenseSortOrder, CategoriesFilter categoriesFilter)
+    /// <inheritdoc cref="IExpenseService.GetList(int,CashflowSearchContext,PaginationContext,CashflowSort)"/>
+    public async Task<TypeResponse<ExpenseSource>> GetList(int userId, PaginationContext? categoriesPaginationContext, CategoriesSort expenseSortOrder, CategoriesFilter categoriesFilter)
     {
         const int pageResults = 3;
         
         IQueryable<ExpenseSource> expenseSource = _ctx.ExpenseSources;
+        
+        if (categoriesPaginationContext is {Page: 0})
+            categoriesPaginationContext = new PaginationContext {Page = 1};
         
         if (!string.IsNullOrEmpty(categoriesFilter.Name))
             expenseSource = expenseSource.Where(x => x.Name == categoriesFilter.Name);
@@ -37,14 +40,14 @@ public class ExpenseSourceService : IExpenseSourceService
         
         var expenseSourceList = await expenseSource
             .Where(x => x.UserId == userId)
-            .Skip((page - 1) * pageResults)
+            .Skip((categoriesPaginationContext.Page - 1) * pageResults)
             .Take(pageResults)
             .ToListAsync();
         
         var response = new TypeResponse<ExpenseSource>
         {
             Items = expenseSourceList,
-            Total = expenseSource.Count(x=> x.Id == userId)
+            Total = expenseSourceList.Count
         };
         
         return response;

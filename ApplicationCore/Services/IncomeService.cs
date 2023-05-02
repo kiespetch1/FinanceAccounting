@@ -1,12 +1,12 @@
 ﻿using Entities.Entities;
 using Entities.Models;
 using Entities.SearchContexts;
-using FinanceAccounting.Exceptions;
-using FinanceAccounting.Interfaces;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using PublicApi.Exceptions;
+using PublicApi.Interfaces;
 
-namespace FinanceAccounting.Services;
+namespace PublicApi.Services;
 
 public class IncomeService : IIncomeService
 {
@@ -17,20 +17,26 @@ public class IncomeService : IIncomeService
         _ctx = ctx;
     }
     
-    /// <inheritdoc cref="IIncomeService.GetList(int, CashflowSearchContext, int, CashflowSort)"/>
-    public async Task<TypeResponse<Income>> GetList(int userId, CashflowSearchContext incomeSearchContext, int page, CashflowSort incomeSortOrder, CashflowFilter cashflowFilter)
+    /// <inheritdoc cref="IIncomeService.GetList(int,CashflowSearchContext,int,CashflowSort,CashflowFilter)"/>
+    public async Task<TypeResponse<Income>> GetList(int userId, CashflowSearchContext incomeSearchContext, PaginationContext? incomePaginationContext, CashflowSort incomeSortOrder)
     {
         IQueryable<Income> income = _ctx.Income;
-        
-        if (!string.IsNullOrEmpty(cashflowFilter.Name))
-            income = income.Where(x => x.Name == cashflowFilter.Name);
-        
-        if (cashflowFilter.Amount  is not (0 or null))
-            income = income.Where(x => x.Amount == cashflowFilter.Amount);
-        
-        if (cashflowFilter.CategoryId is not (0 or null))
-            income = income.Where(x => x.CategoryId == cashflowFilter.CategoryId);
-        
+
+        if (incomePaginationContext is {Page: 0})
+            incomePaginationContext = new PaginationContext {Page = 1};
+
+        if (incomeSearchContext.CashflowFilter != null)
+        {
+            if (!string.IsNullOrEmpty(incomeSearchContext.CashflowFilter.Name))
+                income = income.Where(x => x.Name == incomeSearchContext.CashflowFilter.Name);
+
+            if (incomeSearchContext.CashflowFilter.Amount is not (0 or null))
+                income = income.Where(x => x.Amount == incomeSearchContext.CashflowFilter.Amount);
+
+            if (incomeSearchContext.CashflowFilter.CategoryId is not (0 or null))
+                income = income.Where(x => x.CategoryId == incomeSearchContext.CashflowFilter.CategoryId);
+        }
+
         income = incomeSortOrder switch
         {
             CashflowSort.AmountAsc => income.OrderBy(x => x.Amount),
@@ -46,14 +52,14 @@ public class IncomeService : IIncomeService
         
         var incomeList = await income
             .Where(x => x.User == userId && x.CreatedAt >= incomeSearchContext.From && x.CreatedAt <= incomeSearchContext.To)
-            .Skip((page - 1) * pageResults)
+            .Skip((incomePaginationContext.Page - 1) * pageResults)
             .Take(pageResults)
             .ToListAsync();
         
         var response = new TypeResponse<Income>
         {
             Items = incomeList,
-            Total = income.Count(x=> x.Id == userId)
+            Total = incomeList.Count
         };
         
         return response;

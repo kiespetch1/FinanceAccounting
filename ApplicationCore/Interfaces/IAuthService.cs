@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Entities.Models;
 
-namespace FinanceAccounting.Interfaces;
+namespace PublicApi.Interfaces;
 
 /// <summary>
 /// Defines methods related to authorization.

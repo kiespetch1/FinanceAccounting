@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
-using FinanceAccounting.Exceptions;
+using PublicApi.Exceptions;
 
-namespace FinanceAccounting;
+namespace PublicApi;
 
 public static class QueryableExtension
 {

@@ -1,7 +1,7 @@
 ﻿using Entities.Entities;
 using Entities.Models;
 
-namespace FinanceAccounting.Interfaces;
+namespace PublicApi.Interfaces;
 
 /// <summary>
 /// Defines methods associated with users.

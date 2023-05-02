@@ -1,7 +1,8 @@
 ﻿using ClosedXML.Excel;
 using Entities.SearchContexts;
+using Microsoft.AspNetCore.Http;
 
-namespace FinanceAccounting.Interfaces;
+namespace PublicApi.Interfaces;
 
 public interface IExcelService
 {

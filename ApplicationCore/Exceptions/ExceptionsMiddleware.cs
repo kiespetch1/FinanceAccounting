@@ -1,7 +1,8 @@
 ﻿using System.Net;
-using FluentValidation;
+using Microsoft.AspNetCore.Http;
+using ValidationException = FluentValidation.ValidationException;
 
-namespace FinanceAccounting.Exceptions;
+namespace PublicApi.Exceptions;
 
 public class ExceptionsMiddleware
 {

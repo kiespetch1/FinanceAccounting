@@ -1,12 +1,11 @@
 ﻿using ClosedXML.Extensions;
 using Entities.SearchContexts;
-using FinanceAccounting.Interfaces;
+using FinanceAccounting.Controllers.Abstractions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PublicApi.Controllers.Abstractions;
+using PublicApi.Interfaces;
 
-namespace PublicApi.Controllers;
+namespace FinanceAccounting.Controllers;
 
 [ApiController]
 [Route("excel")]

@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace FinanceAccounting.Exceptions;
+namespace PublicApi.Exceptions;
 
 public class NoAccessException : BaseException
 {

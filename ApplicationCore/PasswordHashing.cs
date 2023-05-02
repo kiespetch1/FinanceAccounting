@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace FinanceAccounting;
+namespace PublicApi;
 
 /// <summary>
 /// Password hashing method.

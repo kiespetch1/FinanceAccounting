@@ -2,14 +2,14 @@
 using System.Security.Claims;
 using Entities.Entities;
 using Entities.Models;
-using FinanceAccounting.Exceptions;
-using FinanceAccounting.Interfaces;
-using Microsoft.IdentityModel.Tokens;
 using FluentValidation;
 using Infrastructure;
-using static FinanceAccounting.PasswordHashing;
+using Microsoft.IdentityModel.Tokens;
+using PublicApi.Exceptions;
+using PublicApi.Interfaces;
+using static PublicApi.PasswordHashing;
 
-namespace FinanceAccounting.Services;
+namespace PublicApi.Services;
 public class AuthService : IAuthService
 {
     private readonly ApplicationContext _ctx;

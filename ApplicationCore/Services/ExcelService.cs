@@ -1,9 +1,10 @@
 ﻿using ClosedXML.Excel;
 using Entities.SearchContexts;
-using FinanceAccounting.Interfaces;
 using Infrastructure;
+using Microsoft.AspNetCore.Http;
+using PublicApi.Interfaces;
 
-namespace FinanceAccounting.Services;
+namespace PublicApi.Services;
 
 public class ExcelService : IExcelService
 {

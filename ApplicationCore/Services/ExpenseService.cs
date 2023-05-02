@@ -1,12 +1,12 @@
 ﻿using Entities.Entities;
 using Entities.Models;
 using Entities.SearchContexts;
-using FinanceAccounting.Exceptions;
-using FinanceAccounting.Interfaces;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using PublicApi.Exceptions;
+using PublicApi.Interfaces;
 
-namespace FinanceAccounting.Services;
+namespace PublicApi.Services;
 
 public class ExpenseService : IExpenseService
 {
@@ -17,20 +17,25 @@ public class ExpenseService : IExpenseService
         _ctx = ctx;
     }
     
-    /// <inheritdoc cref="IExpenseService.GetList(int,CashflowSearchContext,int,CashflowSort,CashflowFilter)"/>
-    public async Task<TypeResponse<Expense>> GetList(int userId, CashflowSearchContext expenseSearchContext, int page, CashflowSort expenseSortOrder, CashflowFilter cashflowFilter)
+    /// <inheritdoc cref="IExpenseService.GetList(int,CashflowSearchContext,int,CashflowSort)"/>
+    public async Task<TypeResponse<Expense>> GetList(int userId, CashflowSearchContext? expenseSearchContext, PaginationContext? expensePaginationContext, CashflowSort expenseSortOrder)
     {
         IQueryable<Expense> expense = _ctx.Expense;
         
-        if (!string.IsNullOrEmpty(cashflowFilter.Name))
-            expense = expense.Where(x => x.Name == cashflowFilter.Name);
+        if (expensePaginationContext is {Page: 0})
+            expensePaginationContext = new PaginationContext {Page = 1};
         
-        if (cashflowFilter.Amount is not (0 or null))
-            expense = expense.Where(x => x.Amount == cashflowFilter.Amount);
+        if (expenseSearchContext.CashflowFilter != null)
+        {
+            if (!string.IsNullOrEmpty(expenseSearchContext.CashflowFilter.Name))
+                expense = expense.Where(x => x.Name == expenseSearchContext.CashflowFilter.Name);
+        
+            if (expenseSearchContext.CashflowFilter.Amount is not (0 or null))
+                expense = expense.Where(x => x.Amount == expenseSearchContext.CashflowFilter.Amount);
 
-        if (cashflowFilter.CategoryId is not (0 or null))
-            expense = expense.Where(x => x.CategoryId == cashflowFilter.CategoryId);
-
+            if (expenseSearchContext.CashflowFilter.CategoryId is not (0 or null))
+                expense = expense.Where(x => x.CategoryId == expenseSearchContext.CashflowFilter.CategoryId);
+        }
 
         expense = expenseSortOrder switch
         {
@@ -47,14 +52,14 @@ public class ExpenseService : IExpenseService
         
         var expenseList = await expense
             .Where(x => x.User == userId && x.CreatedAt >= expenseSearchContext.From && x.CreatedAt <= expenseSearchContext.To)
-            .Skip((page - 1) * pageResults)
+            .Skip((expensePaginationContext.Page - 1) * pageResults)
             .Take(pageResults)
             .ToListAsync();
         
         var response = new TypeResponse<Expense>
         {
             Items = expenseList,
-            Total = expense.Count(x=> x.Id == userId)
+            Total = expenseList.Count
         };
         
         return response;

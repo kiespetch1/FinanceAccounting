@@ -2,7 +2,7 @@
 using Entities.Models;
 using Entities.SearchContexts;
 
-namespace FinanceAccounting.Interfaces;
+namespace PublicApi.Interfaces;
 
 /// <summary>
 /// Defines methods related to income.
@@ -14,10 +14,10 @@ public interface IIncomeService
     /// </summary>
     /// <param name="userId">Current user ID.</param>
     /// <param name="incomeSearchContext">Specified period of time.</param>
-    /// <param name="page">Number of income list page.</param>
+    /// <param name="incomePaginationContext">Number of income list page.</param>
     /// <param name="incomeSortOrder">Sorting order.</param>
     /// <returns>List of the specified user's income for a given period.</returns>
-    Task<TypeResponse<Income>> GetList(int userId, CashflowSearchContext incomeSearchContext, int page, CashflowSort incomeSortOrder, CashflowFilter cashflowFilter);
+    Task<TypeResponse<Income>> GetList(int userId, CashflowSearchContext incomeSearchContext, PaginationContext incomePaginationContext, CashflowSort incomeSortOrder);
     
     /// <summary>
     /// Returns income by ID.

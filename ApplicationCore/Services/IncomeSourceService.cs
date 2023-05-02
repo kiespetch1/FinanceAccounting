@@ -1,11 +1,12 @@
 ﻿using Entities.Entities;
 using Entities.Models;
-using FinanceAccounting.Exceptions;
-using FinanceAccounting.Interfaces;
+using Entities.SearchContexts;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using PublicApi.Exceptions;
+using PublicApi.Interfaces;
 
-namespace FinanceAccounting.Services;
+namespace PublicApi.Services;
 
 public class IncomeSourceService : IIncomeSourceService
 {
@@ -16,11 +17,14 @@ public class IncomeSourceService : IIncomeSourceService
         _ctx = ctx;
     }
 
-    /// <inheritdoc cref="IIncomeSourceService.GetList(int, int, CategoriesSort)"/>
-    public async Task<TypeResponse<IncomeSource>> GetList(int userId, int page, CategoriesSort incomeSourceSortOrder, CategoriesFilter categoriesFilter)
+    /// <inheritdoc cref="IIncomeSourceService.GetList(int,int,CategoriesSort,CategoriesFilter)"/>
+    public async Task<TypeResponse<IncomeSource>> GetList(int userId, PaginationContext? categoriesPaginationContext, CategoriesSort incomeSourceSortOrder, CategoriesFilter categoriesFilter)
     {
-          
         IQueryable<IncomeSource> incomeSource = _ctx.IncomeSources;
+        
+        if (categoriesPaginationContext is {Page: 0})
+            categoriesPaginationContext = new PaginationContext {Page = 1};
+        
         
         if (!string.IsNullOrEmpty(categoriesFilter.Name))
             incomeSource = incomeSource.Where(x => x.Name == categoriesFilter.Name);
@@ -36,14 +40,14 @@ public class IncomeSourceService : IIncomeSourceService
 
         var incomeSourceList = await incomeSource
             .Where(x => x.UserId == userId)
-            .Skip((page - 1) * pageResults)
+            .Skip((categoriesPaginationContext.Page - 1) * pageResults)
             .Take(pageResults)
             .ToListAsync();
         
         var response = new TypeResponse<IncomeSource>
         {
             Items = incomeSourceList,
-            Total = incomeSource.Count(x=> x.Id == userId)
+            Total = incomeSourceList.Count
         };
         
         return response;

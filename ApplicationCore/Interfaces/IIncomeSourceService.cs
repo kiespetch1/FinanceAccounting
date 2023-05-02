@@ -1,7 +1,8 @@
 ﻿using Entities.Entities;
 using Entities.Models;
+using Entities.SearchContexts;
 
-namespace FinanceAccounting.Interfaces;
+namespace PublicApi.Interfaces;
 
 /// <summary>
 /// Defines methods related to source of income.
@@ -12,11 +13,11 @@ public interface IIncomeSourceService
     /// Returns all income source categories.
     /// </summary>
     /// <param name="userId">Current user ID.</param>
-    /// <param name="page">Number of income sources list page.</param>
+    /// <param name="categoriesPaginationContext">Number of income sources list page.</param>
     /// <param name="incomeSourceSortOrder">Sorting order.</param>
     /// <param name="categoriesFilter">Filtering options.</param>
     /// <returns>List of income sources of current user.</returns>
-    Task<TypeResponse<IncomeSource>> GetList(int userId, int page, CategoriesSort incomeSourceSortOrder, CategoriesFilter categoriesFilter);
+    Task<TypeResponse<IncomeSource>> GetList(int userId, PaginationContext? categoriesPaginationContext, CategoriesSort incomeSourceSortOrder, CategoriesFilter categoriesFilter);
 
     /// <summary>
     /// Returns income source category by ID.

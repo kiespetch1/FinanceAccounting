@@ -1,10 +1,11 @@
 ﻿using Entities.Entities;
-using FinanceAccounting.Interfaces;
+using Entities.SearchContexts;
+using FinanceAccounting.Controllers.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PublicApi.Controllers.Abstractions;
+using PublicApi.Interfaces;
 
-namespace PublicApi.Controllers;
+namespace FinanceAccounting.Controllers;
 
 [ApiController]
 [Route("income-source")]
@@ -33,10 +34,11 @@ public class IncomeSourceController : BaseController
     [Route("list")]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public async Task<IActionResult> GetList([FromQuery]CategoriesFilter categoriesFilter, int page = 1, CategoriesSort sortingOrder = CategoriesSort.NameAsc)
+    public async Task<IActionResult> GetList([FromQuery]CategoriesFilter categoriesFilter, 
+        [FromQuery]PaginationContext? categoriesPaginationContext = null, CategoriesSort sortingOrder = CategoriesSort.NameAsc)
     {
         var userId = GetUserId();
-        var incomeSourcesList =  await _incomeSourceService.GetList(userId, page, sortingOrder, categoriesFilter);
+        var incomeSourcesList =  await _incomeSourceService.GetList(userId, categoriesPaginationContext, sortingOrder, categoriesFilter);
         
         return Ok(incomeSourcesList);
     }

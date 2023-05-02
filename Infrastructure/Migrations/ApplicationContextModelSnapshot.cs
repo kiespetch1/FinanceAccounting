@@ -23,7 +23,7 @@ namespace FinanceAccounting.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ApplicationCore.Entities.Expense", b =>
+            modelBuilder.Entity("PublicApi.Entities.Expense", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -63,7 +63,7 @@ namespace FinanceAccounting.Migrations
                     b.ToTable("expense", (string)null);
                 });
 
-            modelBuilder.Entity("ApplicationCore.Entities.ExpenseSource", b =>
+            modelBuilder.Entity("PublicApi.Entities.ExpenseSource", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,7 +87,7 @@ namespace FinanceAccounting.Migrations
                     b.ToTable("expense_sources", (string)null);
                 });
 
-            modelBuilder.Entity("ApplicationCore.Entities.Income", b =>
+            modelBuilder.Entity("PublicApi.Entities.Income", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -127,7 +127,7 @@ namespace FinanceAccounting.Migrations
                     b.ToTable("income", (string)null);
                 });
 
-            modelBuilder.Entity("ApplicationCore.Entities.IncomeSource", b =>
+            modelBuilder.Entity("PublicApi.Entities.IncomeSource", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -154,7 +154,7 @@ namespace FinanceAccounting.Migrations
                     b.ToTable("income_sources", (string)null);
                 });
 
-            modelBuilder.Entity("ApplicationCore.Entities.User", b =>
+            modelBuilder.Entity("PublicApi.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -215,9 +215,9 @@ namespace FinanceAccounting.Migrations
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("ApplicationCore.Entities.IncomeSource", b =>
+            modelBuilder.Entity("PublicApi.Entities.IncomeSource", b =>
                 {
-                    b.HasOne("ApplicationCore.Entities.User", null)
+                    b.HasOne("PublicApi.Entities.User", null)
                         .WithMany("IncomeSource")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -225,7 +225,7 @@ namespace FinanceAccounting.Migrations
                         .HasConstraintName("fk_income_sources_users_user_id");
                 });
 
-            modelBuilder.Entity("ApplicationCore.Entities.User", b =>
+            modelBuilder.Entity("PublicApi.Entities.User", b =>
                 {
                     b.Navigation("IncomeSource");
                 });

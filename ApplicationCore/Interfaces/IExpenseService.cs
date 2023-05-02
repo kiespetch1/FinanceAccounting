@@ -2,7 +2,7 @@
 using Entities.Models;
 using Entities.SearchContexts;
 
-namespace FinanceAccounting.Interfaces;
+namespace PublicApi.Interfaces;
 
 /// <summary>
 /// Defines methods related to expenses.
@@ -14,10 +14,10 @@ public interface IExpenseService
     /// </summary>
     /// <param name="userId">Current user ID.</param>
     /// <param name="expenseSearchContext">Specified period of time.</param>
-    /// <param name="page">Number of expences list page.</param>
+    /// <param name="expensePaginationContext">Number of expences list page.</param>
     /// <param name="expenseSortOrder">Sorting order.</param>
     /// <returns>List of expenses.</returns>
-    Task<TypeResponse<Expense>> GetList(int userId, CashflowSearchContext expenseSearchContext, int page, CashflowSort expenseSortOrder, CashflowFilter cashflowFilter);
+    Task<TypeResponse<Expense>> GetList(int userId, CashflowSearchContext? expenseSearchContext, PaginationContext? expensePaginationContext, CashflowSort expenseSortOrder);
     
     /// <summary>
     /// Returns expense by ID.
