@@ -1,4 +1,8 @@
-using Entities.Models;
+using ApplicationCore;
+using ApplicationCore.Exceptions;
+using ApplicationCore.Interfaces;
+using ApplicationCore.Models;
+using ApplicationCore.Services;
 using FinanceAccounting;
 using FluentValidation;
 using Infrastructure;
@@ -7,9 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PublicApi;
-using PublicApi.Exceptions;
-using PublicApi.Interfaces;
-using PublicApi.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);

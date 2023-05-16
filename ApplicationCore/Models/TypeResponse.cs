@@ -1,4 +1,4 @@
-﻿namespace Entities.Models;
+﻿namespace ApplicationCore.Models;
 
 public class TypeResponse<T>
 {

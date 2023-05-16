@@ -1,11 +1,11 @@
-﻿using Entities.Entities;
-using Entities.SearchContexts;
-using FinanceAccounting.Controllers.Abstractions;
+﻿using ApplicationCore.Interfaces;
+using ApplicationCore.Models.SearchContexts;
+using Entities.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PublicApi.Interfaces;
+using PublicApi.Controllers.Abstractions;
 
-namespace FinanceAccounting.Controllers;
+namespace PublicApi.Controllers;
 
 [ApiController]
 [Route("expense-source")]
@@ -20,12 +20,13 @@ public class ExpenseSourceController : BaseController
     {
         _expenseSourceService = expenseSourceService;
     }
-    
+
     /// <summary>
     /// Returns all expense source categories.
     /// </summary>
-    /// <param name="page">Number of expense sources list page.</param>
+    /// <param name="categoriesPaginationContext">Pagination options.</param>
     /// <param name="sortingOrder">Sorting order.</param>
+    /// <param name="categoriesFilter">Filtering options.</param>
     /// <returns>List of expense sources of current user.</returns>
     /// <response code="200">Success.</response>
     /// <response code="401">Unauthorized.</response>
@@ -35,7 +36,7 @@ public class ExpenseSourceController : BaseController
     [Route("list")]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
-    public async Task<IActionResult> GetList([FromQuery]CategoriesFilter categoriesFilter = null, 
+    public async Task<IActionResult> GetList([FromQuery]CategoriesFilter? categoriesFilter = null, 
         [FromQuery]PaginationContext? categoriesPaginationContext = null, CategoriesSort sortingOrder = CategoriesSort.NameAsc)
     {
         var userId = GetUserId();

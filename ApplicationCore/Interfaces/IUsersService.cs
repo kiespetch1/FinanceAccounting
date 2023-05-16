@@ -1,7 +1,7 @@
-﻿using Entities.Entities;
-using Entities.Models;
+﻿using ApplicationCore.Models;
+using Entities.Entities;
 
-namespace PublicApi.Interfaces;
+namespace ApplicationCore.Interfaces;
 
 /// <summary>
 /// Defines methods associated with users.

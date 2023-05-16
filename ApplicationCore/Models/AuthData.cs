@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Entities.Models;
+namespace ApplicationCore.Models;
 
 /// <summary>
 /// Represents login information.

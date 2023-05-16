@@ -1,6 +1,6 @@
 ﻿using Entities.Entities;
 
-namespace Entities.SearchContexts;
+namespace ApplicationCore.Models.SearchContexts;
 
 /// <summary>
 /// Represents the data needed to search for cashflow.

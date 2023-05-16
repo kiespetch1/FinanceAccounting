@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using Entities.Models;
+using ApplicationCore.Models;
 
-namespace PublicApi.Interfaces;
+namespace ApplicationCore.Interfaces;
 
 /// <summary>
 /// Defines methods related to authorization.

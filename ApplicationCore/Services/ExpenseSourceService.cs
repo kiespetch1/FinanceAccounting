@@ -1,12 +1,12 @@
-﻿using Entities.Entities;
-using Entities.Models;
-using Entities.SearchContexts;
+﻿using ApplicationCore.Exceptions;
+using ApplicationCore.Interfaces;
+using ApplicationCore.Models;
+using ApplicationCore.Models.SearchContexts;
+using Entities.Entities;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using PublicApi.Exceptions;
-using PublicApi.Interfaces;
 
-namespace PublicApi.Services;
+namespace ApplicationCore.Services;
 
 public class ExpenseSourceService : IExpenseSourceService
 {

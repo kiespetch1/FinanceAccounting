@@ -1,8 +1,8 @@
 ﻿using System.Text.RegularExpressions;
-using Entities.Models;
+using ApplicationCore.Models;
 using FluentValidation;
 
-namespace FinanceAccounting;
+namespace PublicApi;
 
 public class AuthValidator : AbstractValidator<RegistrationData>
 {

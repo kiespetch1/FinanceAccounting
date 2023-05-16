@@ -1,13 +1,12 @@
-﻿using Entities.Entities;
-using Entities.Models;
-using Entities.SearchContexts;
-using FinanceAccounting.Controllers.Abstractions;
+﻿using ApplicationCore.Interfaces;
+using ApplicationCore.Models;
+using ApplicationCore.Models.SearchContexts;
+using Entities.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using PublicApi.Interfaces;
+using PublicApi.Controllers.Abstractions;
 
-namespace FinanceAccounting.Controllers;
+namespace PublicApi.Controllers;
 
 [ApiController]
 [Route("expense")]
@@ -27,8 +26,8 @@ public class ExpenseController : BaseController
     /// Returns all expenses for the specified period.
     /// </summary>
     /// <param name="expenseSearchContext">Specified period of time.</param>
+    /// <param name="expensePaginationContext">Pagination context.</param>
     /// <param name="sortingOrder">Sorting order.</param>
-    /// <param name="page">Number of expenses list page.</param>
     /// <returns>List of the specified user's expense for a given period.</returns>
     /// <response code="200">Success.</response>
     /// <response code="401">Unauthorized.</response>

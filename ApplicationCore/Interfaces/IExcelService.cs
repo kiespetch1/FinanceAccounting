@@ -1,8 +1,8 @@
-﻿using ClosedXML.Excel;
-using Entities.SearchContexts;
+﻿using ApplicationCore.Models.SearchContexts;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
 
-namespace PublicApi.Interfaces;
+namespace ApplicationCore.Interfaces;
 
 public interface IExcelService
 {

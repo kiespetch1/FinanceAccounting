@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
-using PublicApi.Exceptions;
+using ApplicationCore.Exceptions;
 
-namespace PublicApi;
+namespace ApplicationCore.Extensions;
 
 public static class QueryableExtension
 {

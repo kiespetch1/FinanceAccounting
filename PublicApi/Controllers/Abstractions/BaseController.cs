@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FinanceAccounting.Controllers.Abstractions;
+namespace PublicApi.Controllers.Abstractions;
 
 /// <summary>
 /// Base controller.

@@ -1,4 +1,4 @@
-﻿namespace Entities.SearchContexts;
+﻿namespace ApplicationCore.Models.SearchContexts;
 
 public class PaginationContext
 {

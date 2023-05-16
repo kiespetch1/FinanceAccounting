@@ -1,15 +1,15 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using ApplicationCore.Exceptions;
+using ApplicationCore.Interfaces;
+using ApplicationCore.Models;
 using Entities.Entities;
-using Entities.Models;
 using FluentValidation;
 using Infrastructure;
 using Microsoft.IdentityModel.Tokens;
-using PublicApi.Exceptions;
-using PublicApi.Interfaces;
-using static PublicApi.PasswordHashing;
+using static ApplicationCore.Utils.PasswordHashing;
 
-namespace PublicApi.Services;
+namespace ApplicationCore.Services;
 public class AuthService : IAuthService
 {
     private readonly ApplicationContext _ctx;

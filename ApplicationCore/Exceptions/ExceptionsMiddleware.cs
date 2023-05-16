@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using ValidationException = FluentValidation.ValidationException;
 
-namespace PublicApi.Exceptions;
+namespace ApplicationCore.Exceptions;
 
 public class ExceptionsMiddleware
 {

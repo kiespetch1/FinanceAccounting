@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace PublicApi.Exceptions;
+namespace ApplicationCore.Exceptions;
 
 public class BaseException : Exception
 {

@@ -1,12 +1,13 @@
-﻿using Entities.Entities;
-using Entities.Models;
+﻿using ApplicationCore.Exceptions;
+using ApplicationCore.Extensions;
+using ApplicationCore.Interfaces;
+using ApplicationCore.Models;
+using Entities.Entities;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using PublicApi.Exceptions;
-using PublicApi.Interfaces;
-using static PublicApi.PasswordHashing;
+using static ApplicationCore.Utils.PasswordHashing;
 
-namespace PublicApi.Services;
+namespace ApplicationCore.Services;
 
 public class UsersService : IUsersService
 {

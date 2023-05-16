@@ -1,13 +1,13 @@
-﻿using Entities.Entities;
-using Entities.Models;
-using FinanceAccounting.Controllers.Abstractions;
+﻿using ApplicationCore.Exceptions;
+using ApplicationCore.Interfaces;
+using ApplicationCore.Models;
+using Entities.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using PublicApi.Exceptions;
-using PublicApi.Interfaces;
+using PublicApi.Controllers.Abstractions;
 
-namespace FinanceAccounting.Controllers;
+namespace PublicApi.Controllers;
 
 [ApiController]
 [Route("api/users")]

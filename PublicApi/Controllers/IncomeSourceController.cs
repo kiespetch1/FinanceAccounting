@@ -1,11 +1,11 @@
-﻿using Entities.Entities;
-using Entities.SearchContexts;
-using FinanceAccounting.Controllers.Abstractions;
+﻿using ApplicationCore.Interfaces;
+using ApplicationCore.Models.SearchContexts;
+using Entities.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PublicApi.Interfaces;
+using PublicApi.Controllers.Abstractions;
 
-namespace FinanceAccounting.Controllers;
+namespace PublicApi.Controllers;
 
 [ApiController]
 [Route("income-source")]
@@ -24,8 +24,9 @@ public class IncomeSourceController : BaseController
     /// <summary>
     /// Returns all income source categories.
     /// </summary>
-    /// <param name="page">Number of income sources list page.</param>
+    /// <param name="categoriesPaginationContext">Pagination options.</param>
     /// <param name="sortingOrder">Sorting order.</param>
+    /// <param name="categoriesFilter">Filtering options.</param>
     /// <returns>List of income sources of current user.</returns>
     /// <response code="200">Success.</response>
     /// <response code="401">Unauthorized.</response>

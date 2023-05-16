@@ -1,6 +1,6 @@
 ﻿using ClosedXML.Excel;
 
-namespace PublicApi;
+namespace ApplicationCore.Extensions;
 
 public static class ExcelExtension
 {

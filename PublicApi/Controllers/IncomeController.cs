@@ -1,12 +1,12 @@
-﻿using Entities.Entities;
-using Entities.Models;
-using Entities.SearchContexts;
-using FinanceAccounting.Controllers.Abstractions;
+﻿using ApplicationCore.Interfaces;
+using ApplicationCore.Models;
+using ApplicationCore.Models.SearchContexts;
+using Entities.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PublicApi.Interfaces;
+using PublicApi.Controllers.Abstractions;
 
-namespace FinanceAccounting.Controllers;
+namespace PublicApi.Controllers;
 
 [ApiController]
 [Route("income")]
@@ -26,8 +26,8 @@ public class IncomeController : BaseController
     /// Returns all income for the specified period.
     /// </summary>
     /// <param name="incomeSearchContext">Specified period of time.</param>
+    /// <param name="incomePaginationContext">Pagination context.</param>
     /// <param name="sortingOrder">Sorting order.</param>
-    /// <param name="page">Number of income list page.</param>
     /// <returns>List of the specified user's income for a given period.</returns>
     /// <response code="200">Success.</response>
     /// <response code="401">Unauthorized.</response>

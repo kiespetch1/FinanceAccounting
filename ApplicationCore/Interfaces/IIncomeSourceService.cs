@@ -1,8 +1,8 @@
-﻿using Entities.Entities;
-using Entities.Models;
-using Entities.SearchContexts;
+﻿using ApplicationCore.Models;
+using ApplicationCore.Models.SearchContexts;
+using Entities.Entities;
 
-namespace PublicApi.Interfaces;
+namespace ApplicationCore.Interfaces;
 
 /// <summary>
 /// Defines methods related to source of income.

@@ -1,4 +1,4 @@
-﻿namespace Entities.Models;
+﻿namespace ApplicationCore.Models;
 
 /// <summary>
 /// Represents the data required to create an expense.

@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace PublicApi;
+namespace ApplicationCore.Utils;
 
 /// <summary>
 /// Password hashing method.
