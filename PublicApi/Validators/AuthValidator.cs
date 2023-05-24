@@ -2,7 +2,7 @@
 using ApplicationCore.Models;
 using FluentValidation;
 
-namespace PublicApi;
+namespace PublicApi.Validators;
 
 public class AuthValidator : AbstractValidator<RegistrationData>
 {

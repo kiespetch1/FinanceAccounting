@@ -3,14 +3,13 @@ using ApplicationCore.Exceptions;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
 using ApplicationCore.Services;
-using FinanceAccounting;
 using FluentValidation;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using PublicApi;
+using PublicApi.Validators;
 
 
 var builder = WebApplication.CreateBuilder(args);
