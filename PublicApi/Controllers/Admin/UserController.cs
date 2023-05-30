@@ -36,7 +36,6 @@ public class UserController : BaseController
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
     [ProducesResponseType(403)]
-    [Route("list")]
     [Authorize(Roles = "Administrator")]
     [HttpGet]
     public async Task<IActionResult> GetList([FromQuery] [BindNever]UsersFilter? usersFilter, int page = 1, 

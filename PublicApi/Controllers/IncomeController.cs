@@ -9,7 +9,7 @@ using PublicApi.Controllers.Abstractions;
 namespace PublicApi.Controllers;
 
 [ApiController]
-[Route("income")]
+[Route("api/income")]
 public class IncomeController : BaseController
 {
 
@@ -34,7 +34,6 @@ public class IncomeController : BaseController
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
-    [Route("list")]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
     public async Task<IActionResult> GetList([FromQuery]CashflowSearchContext incomeSearchContext,

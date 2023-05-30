@@ -8,7 +8,7 @@ using PublicApi.Controllers.Abstractions;
 namespace PublicApi.Controllers;
 
 [ApiController]
-[Route("excel")]
+[Route("api/excel")]
 public class ExcelController : BaseController
 {
     

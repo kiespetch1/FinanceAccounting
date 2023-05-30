@@ -8,7 +8,7 @@ using PublicApi.Controllers.Abstractions;
 namespace PublicApi.Controllers;
 
 [ApiController]
-[Route("expense-source")]
+[Route("api/expense-source")]
 
 public class ExpenseSourceController : BaseController
 {
@@ -33,7 +33,6 @@ public class ExpenseSourceController : BaseController
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
-    [Route("list")]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
     public async Task<IActionResult> GetList([FromQuery]CategoriesFilter? categoriesFilter = null, 

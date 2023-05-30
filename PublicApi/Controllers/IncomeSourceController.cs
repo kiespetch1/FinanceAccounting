@@ -8,7 +8,7 @@ using PublicApi.Controllers.Abstractions;
 namespace PublicApi.Controllers;
 
 [ApiController]
-[Route("income-source")]
+[Route("api/income-source")]
 
 public class IncomeSourceController : BaseController
 {
@@ -32,7 +32,6 @@ public class IncomeSourceController : BaseController
     /// <response code="401">Unauthorized.</response>
     [ProducesResponseType(200)]
     [ProducesResponseType(401)]
-    [Route("list")]
     [Authorize(Roles = "Administrator,User")]
     [HttpGet]
     public async Task<IActionResult> GetList([FromQuery]CategoriesFilter categoriesFilter, 
