@@ -5,9 +5,9 @@ namespace ApplicationCore.Utils;
 /// <summary>
 /// Password hashing method.
 /// </summary>
-internal static class PasswordHashing
+public static class PasswordHashing
 {
-    internal static string HashPassword(string password)
+    public static string HashPassword(string password)
     {
         byte[] salt;
         byte[] buffer2;
@@ -27,7 +27,7 @@ internal static class PasswordHashing
         return Convert.ToBase64String(dst);
     }
     
-    internal static bool VerifyHashedPassword(string hashedPassword, string password)
+    public static bool VerifyHashedPassword(string hashedPassword, string password)
     {
         byte[] buffer4;
         var buffer = new Span<byte>(new byte[hashedPassword.Length]);

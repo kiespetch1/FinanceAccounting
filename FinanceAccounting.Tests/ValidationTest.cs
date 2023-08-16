@@ -40,68 +40,22 @@ public class ValidationTest
         result.ShouldHaveValidationErrorFor(x => x.ConfirmPassword);
     }
     
-    [Fact]
-    public void WhenThereIsNoCharactersInUpperCase_ShouldHaveValidationError()
+    [Theory]
+    [InlineData("string1!", "string1!")]
+    [InlineData("String!", "String!")]
+    [InlineData("String1", "String1")]
+    [InlineData("Str1!", "Str1!")]
+    public void WhenSomeRequirementsAreNotMet_ShouldHaveValidationError(string password, string confirmPassword)
     {
         var validator = new AuthValidator();
         var model = new RegistrationData
         {
-            Password = "string1!",
-            ConfirmPassword = "string1!"
+            Password = password,
+            ConfirmPassword = confirmPassword
         };
 
         var result = validator.TestValidate(model);
-
-
+        
         result.ShouldHaveValidationErrorFor(x => x.Password);
     }
-    
-    [Fact]
-    public void WhenThereIsNoNumbers_ShouldHaveValidationError()
-    {
-        var validator = new AuthValidator();
-        var model = new RegistrationData
-        {
-            Password = "String!",
-            ConfirmPassword = "String!"
-        };
-
-        var result = validator.TestValidate(model);
-
-
-        result.ShouldHaveValidationErrorFor(x => x.Password);
-    }
-    
-    [Fact]
-    public void WhenThereIsNoSpecialCharacters_ShouldHaveValidationError()
-    {
-        var validator = new AuthValidator();
-        var model = new RegistrationData
-        {
-            Password = "String1",
-            ConfirmPassword = "String1"
-        };
-
-        var result = validator.TestValidate(model);
-
-
-        result.ShouldHaveValidationErrorFor(x => x.Password);
-    }
-    
-    [Fact]
-    public void WhenThereIsLessThanSixCharacters_ShouldHaveValidationError()
-    {
-        var validator = new AuthValidator();
-        var model = new RegistrationData
-        {
-            Password = "Str1!",
-            ConfirmPassword = "Str1!"
-        };
-
-        var result = validator.TestValidate(model);
-
-
-        result.ShouldHaveValidationErrorFor(x => x.Password);
-    }
-    
 }
