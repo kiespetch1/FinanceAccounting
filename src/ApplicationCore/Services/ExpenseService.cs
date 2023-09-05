@@ -17,7 +17,7 @@ public class ExpenseService : IExpenseService
         _ctx = ctx;
     }
     
-    /// <inheritdoc cref="IExpenseService.GetList(int,CashflowSearchContext,int,CashflowSort)"/>
+    /// <inheritdoc cref="IExpenseService.GetList(int, CashflowSearchContext, PaginationContext, CashflowSort)"/>
     public async Task<TypeResponse<Expense>> GetList(int userId, CashflowSearchContext? expenseSearchContext, PaginationContext? expensePaginationContext, CashflowSort expenseSortOrder)
     {
         IQueryable<Expense> expense = _ctx.Expense;

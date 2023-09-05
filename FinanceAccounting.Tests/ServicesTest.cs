@@ -45,6 +45,49 @@ public class ServicesTest
             Assert.True(isUserExists);
 
         }
+        
+        [Fact]
+        public async void Authorization_Successful_When_ValidDataProvided()
+        {
+            var options = new DbContextOptionsBuilder<ApplicationContext>()
+                .UseInMemoryDatabase(databaseName: "TestDatabase1")
+                .Options;
+            
+            await using (new ApplicationContext(options)){}
+            var ctx = new ApplicationContext(options);
+            var validator = new Mock<IValidator<RegistrationData>>();
+            var service = new AuthService(ctx, validator.Object);
+            
+            var regUser = new RegistrationData
+            {
+                Login = "login",
+                Name = "Ivan",
+                MiddleName = "Ivanovich",
+                LastName = "Ivanov",
+                BirthDate = new DateTime(2023, 01, 01),
+                Password = "String1!",
+                ConfirmPassword = "String1!",
+                Email = "user@example.com"
+
+            };
+
+            await service.Register(regUser);
+            
+            var authUser = new AuthData()
+            {
+                Email = "user@example.com",
+                Password = "String1!"
+            };
+
+            service.Login(authUser);
+            
+
+            var isUserAuthorized = ctx.Users.SingleOrDefault(
+                x => x.Email == authUser.Email && VerifyHashedPassword(x.Password, authUser.Password)) != null;
+            Assert.True(isUserAuthorized);
+
+        }
+        
     }
     
 }
