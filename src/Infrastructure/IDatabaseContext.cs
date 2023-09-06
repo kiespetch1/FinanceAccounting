@@ -1,15 +1,14 @@
-﻿using Entities.Entities;
+using Entities.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Infrastructure;
 
 /// <summary>
 /// Database context class
 /// </summary>
-public class ApplicationContext: DbContext, IDatabaseContext
+public interface IDatabaseContext
 {
-    public virtual DbSet<User> Users { get; set; }
+    public DbSet<User> Users { get; set; }
     
     public DbSet<IncomeSource> IncomeSources { get; set; }
     
@@ -19,10 +18,5 @@ public class ApplicationContext: DbContext, IDatabaseContext
     
     public DbSet<Expense> Expense { get; set; }
 
-    /// <summary/>
-    public ApplicationContext(DbContextOptions<ApplicationContext> options)
-        : base(options)
-    {
-        Database.EnsureCreated();
-    }
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
 }
