@@ -9,9 +9,9 @@ namespace ApplicationCore.Services;
 
 public class ExcelService : IExcelService
 {
-    private readonly ApplicationContext _ctx;
+    private readonly IDatabaseContext _ctx;
 
-    public ExcelService(ApplicationContext ctx)
+    public ExcelService(IDatabaseContext ctx)
     {
         _ctx = ctx;
     }
