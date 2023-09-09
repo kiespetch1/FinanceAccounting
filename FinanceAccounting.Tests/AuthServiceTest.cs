@@ -1,12 +1,8 @@
+using ApplicationCore.Exceptions;
 using ApplicationCore.Models;
 using ApplicationCore.Services;
-using Entities.Entities;
 using FluentValidation;
-using Infrastructure;
-using Microsoft.EntityFrameworkCore;
 using Moq;
-using Moq.EntityFrameworkCore;
-using static ApplicationCore.Utils.PasswordHashing;
 
 namespace FinanceAccounting.Tests;
 
@@ -20,25 +16,19 @@ public class AuthServiceTest
         var service = new AuthService(ctx, validator.Object);
         var user = new RegistrationData
         {
-            Login = "login4",
+            Login = "login",
             Name = "Ivan",
             MiddleName = "Ivanovich",
             LastName = "Ivanov",
             BirthDate = new DateTime(2023, 01, 01),
             Password = "String1!",
-            ConfirmPassword = "String1!",
-            Email = "email4@mail.com"
+            Email = "email@mail.com",
         };
 
-        await service.Register(user);
-
-
-        var isUserExists = ctx.Users.SingleOrDefault(x => x.Login == user.Login && x.Name == user.Name &&
-                                                          x.MiddleName == user.MiddleName &&
-                                                          x.LastName == user.LastName &&
-                                                          x.BirthDate == user.BirthDate &&
-                                                          VerifyHashedPassword(x.Password, user.Password)) != null;
-        Assert.True(isUserExists);
+        await Assert.ThrowsAsync<ExistingLoginException>(async () =>
+        {
+            await service.Register(user);
+        });
     }
 
     [Fact]

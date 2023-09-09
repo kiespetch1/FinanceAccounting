@@ -1,7 +1,5 @@
 using ApplicationCore.Models.SearchContexts;
 using ApplicationCore.Services;
-using Microsoft.IdentityModel.Tokens;
-using Xunit.Sdk;
 
 namespace FinanceAccounting.Tests;
 
@@ -21,21 +19,20 @@ public class ExcelServiceTests
         });
         var incomeSheet = wb.Worksheet("Income");
 
-        if (incomeSheet.Cell(3, 1).GetString().IsNullOrEmpty())
-        {
-            throw new Exception();
-        }
-
-        var incomeIdValue = incomeSheet.Cell(3, 1).GetString();
+        var incomeIdValue = Convert.ToInt32(incomeSheet.Cell(3, 1).GetString());
         var incomeNameValue = incomeSheet.Cell(3, 2).GetString();
-        var incomeAmountValue = Convert.ToInt32(incomeSheet.Cell(3, 3).GetDouble());
+        var incomeAmountValue = Convert.ToDecimal(incomeSheet.Cell(3, 3).GetDouble());
         var incomeDateValue = incomeSheet.Cell(3, 4).GetDateTime();
+        
+        var income = ctx.Income.SingleOrDefault(x => x.Id == incomeIdValue);
+        
+        var namesAreIdentical = incomeNameValue == income.Name;
+        var amountsAreIdentical = incomeAmountValue == income.Amount;
+        var datesAreIdentical = TestDataHelper.DatesAreEqualIgnoringMilliseconds(incomeDateValue, income.CreatedAt);
 
 
-        //var income = ctx.Income.SingleOrDefault(x => x.Id == incomeIdValue);
-        //var areValuesInPlace = incomeNameValue == income.Name && incomeAmountValue == income.Amount &&
-        //                       incomeDateValue == income.CreatedAt;
+        var areValuesInPlace = namesAreIdentical && amountsAreIdentical && datesAreIdentical;
 
-        //Assert.True(areValuesInPlace);
+        Assert.True(areValuesInPlace);
     }
 }

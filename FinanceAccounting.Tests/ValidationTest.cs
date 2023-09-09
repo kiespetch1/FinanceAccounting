@@ -1,5 +1,4 @@
 ﻿using ApplicationCore.Models;
-using Microsoft.AspNetCore.Identity;
 using PublicApi.Validators;
 using FluentValidation.TestHelper;
 

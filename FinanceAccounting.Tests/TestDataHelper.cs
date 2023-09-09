@@ -9,7 +9,7 @@ namespace FinanceAccounting.Tests;
 public class TestDataHelper
 {
     
-    internal static Mock<IDatabaseContext> CreateMockDb()
+    internal static Mock<IDatabaseContext>CreateMockDb()
     {
         var dbContextMock = new Mock<IDatabaseContext>();
         dbContextMock.Setup(x => x.Users).ReturnsDbSet(GetUsersMock());
@@ -95,20 +95,14 @@ public class TestDataHelper
                 Email = "email@mail.com",
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
-            },
-            new()
-            {
-                Login = "login2",
-                Name = "Ivan2",
-                MiddleName = "Ivanovich2",
-                LastName = "Ivanov2",
-                BirthDate = new DateTime(2023, 01, 02),
-                Password = PasswordHashing.HashPassword("String2!"),
-                Email = "email2@mail.com",
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
             }
         };
     }
+    public static bool DatesAreEqualIgnoringMilliseconds(DateTime date1, DateTime date2)
+    {
+        var timeDifference = date1 - date2;
+        return Math.Abs(timeDifference.TotalSeconds) < 1;
+    }
+
 
 }
