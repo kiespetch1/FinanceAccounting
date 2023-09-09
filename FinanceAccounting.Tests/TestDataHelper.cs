@@ -17,6 +17,7 @@ public class TestDataHelper
         dbContextMock.Setup(x => x.IncomeSources).ReturnsDbSet(GetIncomeSourcesMock());
         dbContextMock.Setup(x => x.Expense).ReturnsDbSet(GetExpenseMock());
         dbContextMock.Setup(x => x.ExpenseSources).ReturnsDbSet(GetExpenseSourcesMock());
+        dbContextMock.Setup(x => x.ExpenseSources).ReturnsDbSet(GetExpenseSourcesMock());
 
         return dbContextMock;
     }

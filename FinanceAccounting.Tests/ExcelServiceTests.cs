@@ -13,7 +13,12 @@ public class ExcelServiceTests
         var ctx = TestDataHelper.CreateMockDb().Object;
         var service = new ExcelService(ctx);
 
-        var wb = await service.GetFile(1, new CashflowSearchContext());
+        var wb = await service.GetFile(1, new CashflowSearchContext
+        {
+            From = new DateTime(1,1,1),
+            To = new DateTime(3000,12,31),
+            CashflowFilter = null
+        });
         var incomeSheet = wb.Worksheet("Income");
 
         if (incomeSheet.Cell(3, 1).GetString().IsNullOrEmpty())
