@@ -1,3 +1,4 @@
+using ApplicationCore.Models;
 using ApplicationCore.Utils;
 using Entities.Entities;
 using Infrastructure;
@@ -8,8 +9,7 @@ namespace FinanceAccounting.Tests;
 
 public class TestDataHelper
 {
-    
-    internal static Mock<IDatabaseContext>CreateMockDb()
+    internal static Mock<IDatabaseContext> CreateMockDb()
     {
         var dbContextMock = new Mock<IDatabaseContext>();
         dbContextMock.Setup(x => x.Users).ReturnsDbSet(GetUsersMock());
@@ -35,11 +35,21 @@ public class TestDataHelper
                 User = 1,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
+            },
+            new()
+            {
+                Amount = 300.32m,
+                CategoryId = 1,
+                Id = 2,
+                Name = "incomeName2",
+                User = 1,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
             }
         };
     }
-    
-    private static List<Expense> GetExpenseMock()
+
+    internal static List<Expense> GetExpenseMock()
     {
         return new List<Expense>
         {
@@ -49,6 +59,16 @@ public class TestDataHelper
                 CategoryId = 1,
                 Id = 1,
                 Name = "expenseName",
+                User = 1,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            },
+            new()
+            {
+                Amount = 300.33m,
+                CategoryId = 1,
+                Id = 2,
+                Name = "expenseName2",
                 User = 1,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
@@ -67,7 +87,7 @@ public class TestDataHelper
             }
         };
     }
-    
+
     private static List<ExpenseSource> GetExpenseSourcesMock()
     {
         return new List<ExpenseSource>
@@ -79,7 +99,7 @@ public class TestDataHelper
             }
         };
     }
-    
+
     private static List<User> GetUsersMock()
     {
         return new List<User>
@@ -98,11 +118,42 @@ public class TestDataHelper
             }
         };
     }
+
     public static bool DatesAreEqualIgnoringMilliseconds(DateTime date1, DateTime date2)
     {
         var timeDifference = date1 - date2;
         return Math.Abs(timeDifference.TotalSeconds) < 1;
     }
 
+    public class TypeResponseComparer<T> : IEqualityComparer<TypeResponse<T>>
+    {
+        public bool Equals(TypeResponse<T> first, TypeResponse<T> second)
+        {
+            if (ReferenceEquals(first, second)) return true;
+
+            if (first == null || second == null) return false;
+
+            if (first.Total != second.Total) return false;
+            
+            if (first.Items.Count != second.Items.Count) return false;
+
+            for (int i = 0; i < first.Items.Count; i++)
+            {
+                if (!EqualityComparer<T>.Default.Equals(first.Items[i], second.Items[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public int GetHashCode(TypeResponse<T> obj)
+        {
+            if (obj == null) return 0;
+            
+            return obj.Total.GetHashCode();
+        }
+    }
 
 }

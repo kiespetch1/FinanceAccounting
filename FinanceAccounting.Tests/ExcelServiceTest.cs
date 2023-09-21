@@ -3,7 +3,7 @@ using ApplicationCore.Services;
 
 namespace FinanceAccounting.Tests;
 
-public class ExcelServiceTests
+public class ExcelServiceTest
 {
     [Fact]
     public async void DataAddedToExcelFileSuccessfully()

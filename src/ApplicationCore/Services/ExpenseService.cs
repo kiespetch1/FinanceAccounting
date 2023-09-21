@@ -10,9 +10,9 @@ namespace ApplicationCore.Services;
 
 public class ExpenseService : IExpenseService
 {
-    private readonly ApplicationContext _ctx;
+    private readonly IDatabaseContext _ctx;
 
-    public ExpenseService(ApplicationContext ctx)
+    public ExpenseService(IDatabaseContext ctx)
     {
         _ctx = ctx;
     }
