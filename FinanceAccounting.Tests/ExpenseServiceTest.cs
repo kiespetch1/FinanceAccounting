@@ -5,7 +5,7 @@ using Entities.Entities;
 
 namespace FinanceAccounting.Tests;
 
-public class ExpenseServiceTests
+public class ExpenseServiceTest
 {
     [Fact]
     public async void AllDataFromDbIsRetrievedSuccessfully()

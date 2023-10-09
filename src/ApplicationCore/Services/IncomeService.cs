@@ -10,9 +10,9 @@ namespace ApplicationCore.Services;
 
 public class IncomeService : IIncomeService
 {
-    private readonly ApplicationContext _ctx;
+    private readonly IDatabaseContext _ctx;
 
-    public IncomeService(ApplicationContext ctx)
+    public IncomeService(IDatabaseContext ctx)
     {
         _ctx = ctx;
     }

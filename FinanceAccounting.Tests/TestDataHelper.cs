@@ -24,7 +24,7 @@ public class TestDataHelper
         return dbContextMock;
     }
 
-    private static List<Income> GetIncomeMock()
+    internal static List<Income> GetIncomeMock()
     {
         return new List<Income>
         {
@@ -78,7 +78,7 @@ public class TestDataHelper
         };
     }
 
-    private static List<IncomeSource> GetIncomeSourcesMock()
+    internal static List<IncomeSource> GetIncomeSourcesMock()
     {
         return new List<IncomeSource>
         {
@@ -90,7 +90,7 @@ public class TestDataHelper
         };
     }
 
-    private static List<ExpenseSource> GetExpenseSourcesMock()
+    internal static List<ExpenseSource> GetExpenseSourcesMock()
     {
         return new List<ExpenseSource>
         {
@@ -102,7 +102,7 @@ public class TestDataHelper
         };
     }
 
-    private static List<User> GetUsersMock()
+    internal static List<User> GetUsersMock()
     {
         return new List<User>
         {
