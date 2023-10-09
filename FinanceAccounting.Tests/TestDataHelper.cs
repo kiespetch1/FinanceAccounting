@@ -1,9 +1,11 @@
+using System.Reflection;
 using ApplicationCore.Models;
 using ApplicationCore.Utils;
 using Entities.Entities;
 using Infrastructure;
 using Moq;
 using Moq.EntityFrameworkCore;
+using Xunit.Sdk;
 
 namespace FinanceAccounting.Tests;
 
@@ -127,22 +129,24 @@ public class TestDataHelper
 
     public class TypeResponseComparer<T> : IEqualityComparer<TypeResponse<T>>
     {
-        public bool Equals(TypeResponse<T> first, TypeResponse<T> second)
+        public bool Equals(TypeResponse<T> x, TypeResponse<T> y)
         {
-            if (ReferenceEquals(first, second)) return true;
+            if (ReferenceEquals(x, y))
+                return true;
 
-            if (first == null || second == null) return false;
+            if (x == null || y == null)
+                return false;
 
-            if (first.Total != second.Total) return false;
+            if (x.Total != y.Total)
+                return false;
+
+            if (x.Items.Count != y.Items.Count)
+                return false;
             
-            if (first.Items.Count != second.Items.Count) return false;
-
-            for (int i = 0; i < first.Items.Count; i++)
+            for (int i = 0; i < x.Items.Count; i++)
             {
-                if (!EqualityComparer<T>.Default.Equals(first.Items[i], second.Items[i]))
-                {
+                if (!EqualityComparer<T>.Default.Equals(x.Items[i], y.Items[i]))
                     return false;
-                }
             }
 
             return true;
@@ -150,9 +154,18 @@ public class TestDataHelper
 
         public int GetHashCode(TypeResponse<T> obj)
         {
-            if (obj == null) return 0;
-            
-            return obj.Total.GetHashCode();
+            if (obj == null)
+                throw new ArgumentNullException(nameof(obj));
+
+            var hash = 17;
+            hash = hash * 23 + obj.Total.GetHashCode();
+
+            foreach (var item in obj.Items)
+            {
+                hash = hash * 23 + EqualityComparer<T>.Default.GetHashCode(item);
+            }
+
+            return hash;
         }
     }
 
