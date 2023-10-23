@@ -6,7 +6,7 @@ namespace Entities.Entities;
 /// <summary>
 /// Represents the source of the expense.
 /// </summary>
-public class ExpenseSource
+public class ExpenseSource : IEquatable<ExpenseSource>
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -16,4 +16,21 @@ public class ExpenseSource
     
     [ForeignKey("User")]
     public int UserId { get; set; }
+
+    public bool Equals(ExpenseSource? other)
+    {
+        if (other == null)
+            return false;
+
+        if (Id != other.Id)
+            return false;
+
+        if (Name != other.Name)
+            return false;
+
+        if (UserId != other.UserId)
+            return false;
+
+        return true;
+    }
 }
