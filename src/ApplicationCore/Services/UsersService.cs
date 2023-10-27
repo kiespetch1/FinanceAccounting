@@ -11,9 +11,9 @@ namespace ApplicationCore.Services;
 
 public class UsersService : IUsersService
 {
-    private readonly ApplicationContext _ctx;
+    private readonly IDatabaseContext _ctx;
 
-    public UsersService(ApplicationContext ctx)
+    public UsersService(IDatabaseContext ctx)
     {
         _ctx = ctx;
     }

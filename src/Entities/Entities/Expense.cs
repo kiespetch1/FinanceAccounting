@@ -14,15 +14,20 @@ public class Expense : IEquatable<Expense>
 
     public string Name { get; set; }
 
-    [Column(TypeName = "money")] public decimal Amount { get; set; }
+    [Column(TypeName = "money")] 
+    public decimal Amount { get; set; }
 
-    [ForeignKey("ExpenseSource")] public int CategoryId { get; set; }
+    [ForeignKey("ExpenseSource")] 
+    public int CategoryId { get; set; }
 
-    [Column(TypeName = "timestamp")] public DateTime CreatedAt { get; set; }
+    [Column(TypeName = "timestamp")] 
+    public DateTime CreatedAt { get; set; }
 
-    [Column(TypeName = "timestamp")] public DateTime UpdatedAt { get; set; }
+    [Column(TypeName = "timestamp")] 
+    public DateTime UpdatedAt { get; set; }
 
-    [ForeignKey("User")] public int User { get; set; }
+    [ForeignKey("User")] 
+    public int User { get; set; }
 
     public bool Equals(Expense? other)
     {

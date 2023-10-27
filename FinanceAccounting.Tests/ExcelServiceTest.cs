@@ -1,5 +1,6 @@
 using ApplicationCore.Models.SearchContexts;
 using ApplicationCore.Services;
+using static FinanceAccounting.Tests.TestDataHelper;
 
 namespace FinanceAccounting.Tests;
 
@@ -8,7 +9,7 @@ public class ExcelServiceTest
     [Fact]
     public async void DataAddedToExcelFileSuccessfully()
     {
-        var ctx = TestDataHelper.CreateMockDb().Object;
+        var ctx = CreateMockDb().Object;
         var service = new ExcelService(ctx);
 
         var wb = await service.GetFile(1, new CashflowSearchContext

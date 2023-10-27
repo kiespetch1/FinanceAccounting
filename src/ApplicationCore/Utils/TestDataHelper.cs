@@ -1,17 +1,14 @@
-using System.Reflection;
-using ApplicationCore.Models;
 using ApplicationCore.Utils;
 using Entities.Entities;
 using Infrastructure;
 using Moq;
 using Moq.EntityFrameworkCore;
-using Xunit.Sdk;
 
 namespace FinanceAccounting.Tests;
 
 public class TestDataHelper
-{
-    internal static Mock<IDatabaseContext> CreateMockDb()
+{ 
+    public static Mock<IDatabaseContext> CreateMockDb()
     {
         var dbContextMock = new Mock<IDatabaseContext>();
         dbContextMock.Setup(x => x.Users).ReturnsDbSet(GetUsersMock());
@@ -24,7 +21,7 @@ public class TestDataHelper
         return dbContextMock;
     }
 
-    internal static List<Income> GetIncomeMock()
+    public static List<Income> GetIncomeMock()
     {
         return new List<Income>
         {
@@ -51,7 +48,7 @@ public class TestDataHelper
         };
     }
 
-    internal static List<Expense> GetExpenseMock()
+    public static List<Expense> GetExpenseMock()
     {
         return new List<Expense>
         {
@@ -78,7 +75,7 @@ public class TestDataHelper
         };
     }
 
-    internal static List<IncomeSource> GetIncomeSourcesMock()
+    public static List<IncomeSource> GetIncomeSourcesMock()
     {
         return new List<IncomeSource>
         {
@@ -90,7 +87,7 @@ public class TestDataHelper
         };
     }
 
-    internal static List<ExpenseSource> GetExpenseSourcesMock()
+    public static List<ExpenseSource> GetExpenseSourcesMock()
     {
         return new List<ExpenseSource>
         {
@@ -102,7 +99,7 @@ public class TestDataHelper
         };
     }
 
-    internal static List<User> GetUsersMock()
+    public static List<User> GetUsersMock()
     {
         return new List<User>
         {
@@ -125,48 +122,6 @@ public class TestDataHelper
     {
         var timeDifference = date1 - date2;
         return Math.Abs(timeDifference.TotalSeconds) < 1;
-    }
-
-    public class TypeResponseComparer<T> : IEqualityComparer<TypeResponse<T>>
-    {
-        public bool Equals(TypeResponse<T> x, TypeResponse<T> y)
-        {
-            if (ReferenceEquals(x, y))
-                return true;
-
-            if (x == null || y == null)
-                return false;
-
-            if (x.Total != y.Total)
-                return false;
-
-            if (x.Items.Count != y.Items.Count)
-                return false;
-            
-            for (int i = 0; i < x.Items.Count; i++)
-            {
-                if (!EqualityComparer<T>.Default.Equals(x.Items[i], y.Items[i]))
-                    return false;
-            }
-
-            return true;
-        }
-
-        public int GetHashCode(TypeResponse<T> obj)
-        {
-            if (obj == null)
-                throw new ArgumentNullException(nameof(obj));
-
-            var hash = 17;
-            hash = hash * 23 + obj.Total.GetHashCode();
-
-            foreach (var item in obj.Items)
-            {
-                hash = hash * 23 + EqualityComparer<T>.Default.GetHashCode(item);
-            }
-
-            return hash;
-        }
     }
 
 }

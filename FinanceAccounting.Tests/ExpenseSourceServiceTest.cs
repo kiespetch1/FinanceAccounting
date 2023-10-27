@@ -1,7 +1,7 @@
 using ApplicationCore.Models;
 using ApplicationCore.Models.SearchContexts;
 using ApplicationCore.Services;
-using DocumentFormat.OpenXml.Wordprocessing;
+using ApplicationCore.Utils;
 using Entities.Entities;
 
 namespace FinanceAccounting.Tests;
@@ -25,7 +25,7 @@ public class ExpenseSourceServiceTest
             Total = expectedList.Count
         };
         
-        Assert.Equal(expectedResponse, response, new TestDataHelper.TypeResponseComparer<ExpenseSource>());
+        Assert.Equal(expectedResponse, response, new TypeResponseComparer<ExpenseSource>());
 
     }
 }

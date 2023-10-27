@@ -1,6 +1,7 @@
 using ApplicationCore.Models;
 using ApplicationCore.Models.SearchContexts;
 using ApplicationCore.Services;
+using ApplicationCore.Utils;
 using Entities.Entities;
 
 namespace FinanceAccounting.Tests;
@@ -26,7 +27,7 @@ public class ExpenseServiceTest
             Total = expectedList.Count
         };
         
-        Assert.Equal(expectedResponse, response, new TestDataHelper.TypeResponseComparer<Expense>());
+        Assert.Equal(expectedResponse, response, new TypeResponseComparer<Expense>());
         
     }
 }

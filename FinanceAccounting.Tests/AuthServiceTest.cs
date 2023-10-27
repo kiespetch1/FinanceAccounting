@@ -44,9 +44,7 @@ public class AuthServiceTest
             Password = "String1!"
         };
 
-        service.Login(authUser);
-
-        var isUserAuthorized = true;
-        Assert.True(isUserAuthorized);
+        var result = service.Login(authUser);
+        Assert.NotNull(result);
     }
 }

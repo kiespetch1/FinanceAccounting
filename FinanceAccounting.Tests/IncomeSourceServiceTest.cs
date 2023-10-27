@@ -1,6 +1,7 @@
 using ApplicationCore.Models;
 using ApplicationCore.Models.SearchContexts;
 using ApplicationCore.Services;
+using ApplicationCore.Utils;
 using Entities.Entities;
 
 namespace FinanceAccounting.Tests;
@@ -24,7 +25,7 @@ public class IncomeSourceServiceTest
             Total = expectedList.Count
         };
         
-        Assert.Equal(expectedResponse, response, new TestDataHelper.TypeResponseComparer<IncomeSource>());
+        Assert.Equal(expectedResponse, response, new TypeResponseComparer<IncomeSource>());
 
     }
 }
