@@ -12,10 +12,10 @@ using static ApplicationCore.Utils.PasswordHashing;
 namespace ApplicationCore.Services;
 public class AuthService : IAuthService
 {
-    private readonly ApplicationContext _ctx;
+    private readonly IDatabaseContext _ctx;
     private readonly IValidator<RegistrationData> _validator;
 
-    public AuthService(ApplicationContext ctx, IValidator<RegistrationData> validator)
+    public AuthService(IDatabaseContext ctx, IValidator<RegistrationData> validator)
     {
         _validator = validator;
         _ctx = ctx;

@@ -7,7 +7,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Entities\Entities.csproj" />
-      <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -23,6 +22,8 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Moq" Version="4.18.4" />
+        <PackageReference Include="Moq.EntityFrameworkCore" Version="6.0.1.4" />
         <PackageReference Include="Npgsql" Version="6.0.8" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.6" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />

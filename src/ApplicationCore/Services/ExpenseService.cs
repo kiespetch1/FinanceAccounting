@@ -10,14 +10,14 @@ namespace ApplicationCore.Services;
 
 public class ExpenseService : IExpenseService
 {
-    private readonly ApplicationContext _ctx;
+    private readonly IDatabaseContext _ctx;
 
-    public ExpenseService(ApplicationContext ctx)
+    public ExpenseService(IDatabaseContext ctx)
     {
         _ctx = ctx;
     }
     
-    /// <inheritdoc cref="IExpenseService.GetList(int,CashflowSearchContext,int,CashflowSort)"/>
+    /// <inheritdoc cref="IExpenseService.GetList(int, CashflowSearchContext, PaginationContext, CashflowSort)"/>
     public async Task<TypeResponse<Expense>> GetList(int userId, CashflowSearchContext? expenseSearchContext, PaginationContext? expensePaginationContext, CashflowSort expenseSortOrder)
     {
         IQueryable<Expense> expense = _ctx.Expense;

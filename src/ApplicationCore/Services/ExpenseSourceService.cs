@@ -11,9 +11,9 @@ namespace ApplicationCore.Services;
 public class ExpenseSourceService : IExpenseSourceService
 {
     
-    private readonly ApplicationContext _ctx;
+    private readonly IDatabaseContext _ctx;
 
-    public ExpenseSourceService(ApplicationContext ctx)
+    public ExpenseSourceService(IDatabaseContext ctx)
     {
         _ctx = ctx;
     }
